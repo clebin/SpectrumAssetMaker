@@ -1,7 +1,10 @@
 <?php
 namespace ClebinGames\SpecScreenTool;
 
-class Tile {
+class Tile
+{
+    // graphics data
+    public $graphics = [];
 
     // individual tile info
     public $paper = 0;
@@ -12,7 +15,10 @@ class Tile {
     public $solid = false;
     public $lethal = false;
 
-    public function __construct($tile) {
+    public function __construct($tile)
+    {
+        // set graphics
+        //self::$graphics = Graphics::GetTileData($tile['num']);
 
         // set paper
         if( isset($tile['paper'])) {

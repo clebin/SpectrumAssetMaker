@@ -9,8 +9,8 @@ define('COLYELLOW', "");
 define('COLEND', "");
 define('COLMAGENTA', "");
 
-class CliTools {
-
+class CliTools
+{
     public static function GetAnswer($question, $default = false, $other_options = [], $strict_values = true)
     {
         // build the question

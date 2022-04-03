@@ -25,9 +25,9 @@ class Tilemap {
             return false;
         }
 
-        $json = readfile($filename);
+        $json = file_get_contents($filename);
         
-        self::$tileMap = json_decode($json);
+        self::$tileMap = json_decode($json, true);
     }
 
     /**

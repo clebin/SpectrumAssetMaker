@@ -3,14 +3,13 @@ namespace ClebinGames\SpecScreenTool;
 
 class Graphics
 {
-    public $image = false;
+    private static $image = false;
+    private static $data = [];
 
-    public $data = [];
-
-    public $columns = 0;
-    public $rows = 0;
-    public $numTiles = 0;
-
+    public static $numColumns = 0;
+    public static $numRows = 0;
+    public static $numTiles = 0;
+    
     public static function ReadFile($filename)
     {
         if(!file_exists($filename)) {
@@ -18,29 +17,55 @@ class Graphics
             return false;
         }
 
+        // read image file
+        $extension = substr($filename, -3);
+
+        if( $extension == 'png' ) {
+            self::$image = imagecreatefrompng($filename);
+        } else if( $extension == 'gif' ) {
+            self::$image = imagecreatefromgif($filename);
+        } else {
+            SpecScreenTool::AddError('Filetype ('.$extension.') not supported');
+            return false;
+        }
+
         // divide width and height into 8x8 pixel attributes      
         $dimensions = getimagesize($filename);
 
-        self::$columns = $dimensions[0]/2;
-        self::$rows = $dimension[1]/2;
+        self::$numColumns = $dimensions[0]/8;
+        self::$numRows = $dimensions[1]/8;
+        self::$numTiles = self::$numColumns * self::$numRows;
 
-        self::$numTiles = $tilesWidth * $tilesHeight;
+        echo 'Reading '.$extension.' image: '.
+            self::$numColumns.' x '.self::$numRows.
+            ' attributes ('.$dimensions[0].' x '.$dimensions[1].'px) = '.
+            self::$numTiles.' attributes. '.CR;
 
-
+        
         // loop through rows of atttributes
-        for($row=0;$row<self::$rows;$row++) {
+        for($row=0;$row<self::$numRows;$row++) {
 
             // loop through columns of atttributes
-            for($col=0;$col<self::$cols;$col++) {
-                self::$data[] = self::GetAttributeData($col, $row);
+            for($col=0;$col<self::$numColumns;$col++) {
+                self::$data[] = self::GetPixelData($col, $row);
             }
+        }
+    }
+
+    public static function GetTileData($num)
+    {
+
+        if( isset(self::$data[$num])) {
+            return self::$data[$num];
+        } else {
+            return false;
         }
     }
     
     /**
      * Read an individual attribute (or tile)
      */
-    public static function GetAttributeData($col, $row)
+    private static function GetPixelData($col, $row)
     {
         // starting values for x & y
         $startx = $col * 8;
@@ -52,10 +77,11 @@ class Graphics
         for($y=$starty;$y<$starty+8;$y++) {
 
             $datarow = [];
+
             // cols
             for($x=$startx;$x<$startx+8;$x++) {
 
-                $rgb = imagecolorat(self::$image, $x, $$y);
+                $rgb = imagecolorat(self::$image, $x, $y);
 
                 // get rgb values
                 $r = ($rgb >> 16) & 0xFF;
@@ -80,5 +106,24 @@ class Graphics
         }
 
         return $attribute;
+    }
+
+    public static function GetAsm()
+    {
+        $str = '';
+        $count = 0;
+        foreach(self::$data as $attribute) {
+            $str .= '._'.SpecScreenTool::$prefix.'_graphics_'.$count.CR;
+
+            // loop through rows
+            foreach($attribute as $datarow) {
+                $str .= 'defb @'.implode('', $datarow).CR;
+            }
+            $str .= CR;
+
+            $count++;
+        }
+        
+        return $str;
     }
 }

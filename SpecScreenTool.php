@@ -9,7 +9,20 @@ require("Tileset.php");
 require("Tilemap.php");
 require("Graphics.php");
 
-class SpecScreenTool {
+/**
+ * Spectrum Screen Tool
+ * Chris Owen 2022
+ * 
+ * Read Tiled map and tileset and save screen data for use on the Spectrum.
+ * Load PNG/GIF graphics data and save as graphics data
+ * 
+ * Load multiple Tiled layers and save as individual screens
+ * Add custom properites to attributes/tiles
+ */
+class SpecScreenTool
+{
+    // naming
+    public static $prefix = 'tiles';
     
     // filenames
     private static $mapFilename = false;
@@ -31,10 +44,19 @@ class SpecScreenTool {
     private static $error = false;
     private static $errorDetails = [];
 
-    public static function Run($options) {
-
+    public static function Run($options)
+    {
         self::OutputIntro();
 
+        // prefix
+        if( isset($options['p'])) {
+            self::$prefix = $options['p'];
+        } else if( isset($options['prefix'])) {
+            self::$prefix = $options['prefix'];
+        } else {
+            self::$prefix = CliTools::GetAnswer('Naming prefix', 'tiles');
+        }
+        
         // tilemaps
         if( isset($options['m'])) {
             self::$mapFilename = $options['m'];
@@ -59,7 +81,7 @@ class SpecScreenTool {
         } else if( isset($options['graphics'])) {
             self::$graphicsFilename = $options['graphics'];
         } else {
-            self::$graphicsFilename = CliTools::GetAnswer('Tile graphics filename', 'tiles.png');
+            self::$graphicsFilename = CliTools::GetAnswer('Tile graphics filename', 'tiles.gif');
         }
 
         // output file
@@ -86,11 +108,19 @@ class SpecScreenTool {
         // game properties
         // self::$saveSolidData = CliTools::GetAnswerBoolean('Save solid block details?', false);
         // self::$saveLethalData = CliTools::GetAnswerBoolean('Save lethal block details?', false);
-        
+
         // read graphics, map and tileset
         Graphics::ReadFile(self::$graphicsFilename);
-        Tilemap::ReadFile(self::$mapFilename);
+
+        if( self::$error === false ) {
+            // write graphics to file
+            file_put_contents(self::$prefix.'-graphics.asm', Graphics::GetAsm());
+        }
+        
         Tileset::ReadFile(self::$tilesetFilename);
+        Tilemap::ReadFile(self::$mapFilename);
+
+
 
         if( self::$error === true ) {
             echo 'Errors ('.sizeof(self::$errorDetails).'): '.implode('. ', self::$errorDetails);
@@ -98,7 +128,7 @@ class SpecScreenTool {
         }
         
         // now output the spectrum data
-        self::SaveSpectrumData();
+        //self::SaveSpectrumData();
     }
 
     public static function OutputIntro()
@@ -117,7 +147,7 @@ class SpecScreenTool {
 }
 
 // read filenames from command line arguments
-$options = getopt('hmtgo', ['help', 'map', 'tileset', 'graphics', 'output']);
+$options = getopt('hpmtgo', ['help', 'prefix', 'map', 'tileset', 'graphics', 'output']);
 
 // run
 SpecScreenTool::Run($options);
