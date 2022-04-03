@@ -5,6 +5,9 @@ class Tilemap {
 
     public static $prefix = 'tile';
 
+    // which map layer to start on? (eg. to use first map layer as a background colour)
+    public static $startLayer = 0;
+
     // data arrays
     private static $tileMap = [];
     private static $paperMap = [];

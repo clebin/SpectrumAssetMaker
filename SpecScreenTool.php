@@ -3,10 +3,11 @@ namespace ClebinGames\SpecScreenTool;
 
 define('CR', "\n");
 
+require("CliTools.php");
 require("Tile.php");
 require("Tileset.php");
 require("Tilemap.php");
-require("CliTools.php");
+require("Graphics.php");
 
 class SpecScreenTool {
     
@@ -18,14 +19,17 @@ class SpecScreenTool {
 
     // save game properties
     public static $saveSolidData = false;
-    public static $saveLethalDeata = false;
+    public static $saveLethalData = false;
 
+    // add custom game properties to tiles
+    public static $customProperties = [];
+    
     // output
     private static $output = '';
 
     // errors
     private static $error = false;
-    private static $errorDetails = '';
+    private static $errorDetails = [];
 
     public static function Run($options) {
 
@@ -67,7 +71,6 @@ class SpecScreenTool {
             self::$outputFilename = CliTools::GetAnswer('Output filename', 'tiles.asm');
         }
 
-
         // tileset not found
         if( self::$tilesetFilename === false ) {  
             echo 'Error: Tileset not specified'.CR;
@@ -81,16 +84,17 @@ class SpecScreenTool {
         }
 
         // game properties
-        self::$saveSolidData = CliTools::GetAnswerBoolean('Save solid block details?', false);
-        self::$saveLethalData = CliTools::GetAnswerBoolean('Save lethal block details?', false);
-
-        // read map and tileset
+        // self::$saveSolidData = CliTools::GetAnswerBoolean('Save solid block details?', false);
+        // self::$saveLethalData = CliTools::GetAnswerBoolean('Save lethal block details?', false);
+        
+        // read graphics, map and tileset
+        Graphics::ReadFile(self::$graphicsFilename);
         Tilemap::ReadFile(self::$mapFilename);
         Tileset::ReadFile(self::$tilesetFilename);
 
         if( self::$error === true ) {
-            echo 'Error: '.self::$errorDetails;
-            return;
+            echo 'Errors ('.sizeof(self::$errorDetails).'): '.implode('. ', self::$errorDetails);
+            return false;
         }
         
         // now output the spectrum data
@@ -108,12 +112,12 @@ class SpecScreenTool {
     public static function AddError($error)
     {
         self::$error = true;
-        self::$errorDetails .= ltrim($error, '.').'. ';
+        self::$errorDetails[] = ltrim($error, '.');
     }
 }
 
 // read filenames from command line arguments
-$options = getopt('mtgo', ['map', 'tileset', 'graphics', 'output']);
+$options = getopt('hmtgo', ['help', 'map', 'tileset', 'graphics', 'output']);
 
 // run
 SpecScreenTool::Run($options);
