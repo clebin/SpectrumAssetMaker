@@ -34,33 +34,51 @@ class Tilemap {
         foreach($data['layers'] as $layer) {
 
             // now do paper, ink, etc
-            $paperMap = [];
-            $inkMap = [];
-            $brightMap = [];
+            $screen = [];
 
             foreach($layer['data'] as $tileNum) {
 
                 $tileNum = intval($tileNum);
 
                 if( Tileset::TileExists($tileNum) === true ) {
-                    $paperMap[] = Tileset::GetPaper($tileNum);
-                    $inkMap[] = Tileset::GetInk($tileNum);
-                    $brightMap[] = (Tileset::GetBright($tileNum) == true ? 1 : 0);
+
+                    $screen[] = [
+                        'tile' => $tileNum,
+                        'paper' => Tileset::GetPaper($tileNum), 
+                        'ink' => Tileset::GetInk($tileNum), 
+                        'bright' => Tileset::GetBright($tileNum), 
+                        'flash' => false
+                    ];
+                    
+
                 } else {
+
+                    $screen[] = [
+                        'tile' => 0,
+                        'paper' => 0, 
+                        'ink' => 7, 
+                        'bright' => false, 
+                        'flash' => false
+                    ];
+
                     echo 'Warning: '.$tileNum.' not found. '.CR;
                 }
             }
 
             // add to screens
-            self::$screens[] = [
-                'attributes' => $layer['data'], 
-                'paper' => $paperMap,  
-                'ink' => $inkMap, 
-                'bright' => $brightMap
-            ];
+            self::$screens[] = $screen;
+
         }
     }
     
+    /**
+     * Return a binary string of a set length from a number
+     */
+    public static function GetBinaryVal($num, $length) {
+
+        return str_pad( decbin($num), $length, '0', STR_PAD_LEFT );
+    }
+
     /**
      * Get the assembly code for this tilemap
      */
@@ -71,34 +89,56 @@ class Tilemap {
         $count = 0;
         foreach(self::$screens as $screen) {
 
-            // output attribute numbers
-            $str .= '._'.SpecScreenTool::$prefix.'_screen_'.$count.'_attr'.CR;
-            $str .= implode(',', $screen['attributes']).CR.CR;
+            // output tile numbers
+            $str .= '._'.SpecScreenTool::$prefix.'_screen_'.$count.'_attribute_tiles'.CR;
 
-            // output paper
-            $str .= '._'.SpecScreenTool::$prefix.'_screen_'.$count.'_paper'.CR;
-            $str .= implode(',', $screen['paper']).CR.CR;
+            $count = 0;
+            foreach($screen as $attr) {
 
-            // output ink
-            $str .= '._'.SpecScreenTool::$prefix.'_screen_'.$count.'_ink'.CR;
-            $str .= implode(',', $screen['ink']).CR.CR;
+                if( $count > 0 ) {
+                    if( $count % 4 == 0 ) {
+                        $str .= CR;
+                    } else {
+                        $str .= ', ';
+                    }
+                }
+                $str .= 'defb @'.self::GetBinaryVal($attr['tile'], 8);
+                $count++;
+            }
 
-            // output bright
-            $str .= '._'.SpecScreenTool::$prefix.'_screen_'.$count.'_bright'.CR;
-            $str .= implode(',', $screen['bright']).CR.CR;
+            $str .= CR.CR;
 
-            // output solid map
-            // $str .= '._'.SpecScreenTool::$prefix.'_screen_'.$count.'_solid'.CR;
-            // $str .= implode(',', $screen['solid']);
+            // output paper/ink/bright/flash
+            $str .= '._'.SpecScreenTool::$prefix.'_screen_'.$count.'_attribute_values'.CR;
 
-            // output lethal map
-            // $str .= '._'.SpecScreenTool::$prefix.'_screen_'.$count.'_lethal'.CR;
-            // $str .= implode(',', $screen['lethal']);
-            
+            $count = 0;
+            foreach($screen as $attr) {
+
+                if( $count > 0 ) {
+                    if( $count % 4 == 0 ) {
+                        $str .= CR;
+                    } else {
+                        $str .= ', ';
+                    }
+                }
+
+                $str .= 'defb @';
+                $str .= self::GetScreenByte($attr);
+
+                $count++;
+            }
+
             $count++;
         }
-
+        
         return $str;
     }
 
+    public static function GetScreenByte($attr)
+    {
+        return '0'. // flash
+        ( $attr['bright'] == true ? '1' : '0'). // bright
+        self::GetBinaryVal($attr['paper'], 3). // paper
+        self::GetBinaryVal($attr['ink'], 3); // ink
+    }
 }
