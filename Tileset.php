@@ -36,7 +36,7 @@ class Tileset
      */
     private static function GetAsm()
     {
-        $str = '._'.$prefix.'_'.$num.CR;
+        $str = '._'.SpecScreenTool::GetPrefix().'_'.$num.CR;
 
         foreach($lines as $line) {
             $str .= 'defb @'.implode('', $line).CR;
