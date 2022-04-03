@@ -192,7 +192,7 @@ defb @00001000, defb @00001000, defb @00001000, defb @00001000
 defb @00001000, defb @00001000, defb @00001000, defb @00001000
 defb @00001000, defb @00001000, defb @00001000, defb @00001000
 
-._tiles_screen_768_attribute_values
+._tiles_screen_0_attribute_values
 defb @00000000, defb @00000000, defb @00000000, defb @00000000
 defb @00000000, defb @00000000, defb @00000000, defb @01000101
 defb @00000000, defb @00000000, defb @00000000, defb @00000000

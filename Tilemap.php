@@ -86,11 +86,11 @@ class Tilemap {
     {
         $str = '';
 
-        $count = 0;
+        $screenNum = 0;
         foreach(self::$screens as $screen) {
 
             // output tile numbers
-            $str .= '._'.SpecScreenTool::$prefix.'_screen_'.$count.'_attribute_tiles'.CR;
+            $str .= '._'.SpecScreenTool::$prefix.'_screen_'.$screenNum.'_attribute_tiles'.CR;
 
             $count = 0;
             foreach($screen as $attr) {
@@ -109,7 +109,7 @@ class Tilemap {
             $str .= CR.CR;
 
             // output paper/ink/bright/flash
-            $str .= '._'.SpecScreenTool::$prefix.'_screen_'.$count.'_attribute_values'.CR;
+            $str .= '._'.SpecScreenTool::$prefix.'_screen_'.$screenNum.'_attribute_values'.CR;
 
             $count = 0;
             foreach($screen as $attr) {
@@ -128,7 +128,7 @@ class Tilemap {
                 $count++;
             }
 
-            $count++;
+            $screenNum++;
         }
         
         return $str;
