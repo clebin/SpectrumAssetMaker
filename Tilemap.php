@@ -31,7 +31,7 @@ class Tilemap {
 
             foreach($layer['data'] as $tileNum) {
 
-                $tileNum = intval($tileNum);
+                $tileNum = intval($tileNum)-1;
 
                 if( Tileset::TileExists($tileNum) === true ) {
 
@@ -43,14 +43,13 @@ class Tilemap {
                         Tileset::GetInk($tileNum), 
                     );
                     
-
                 } else {
 
                     $screen[] = new Attribute();
-                    echo 'Warning: '.$tileNum.' not found. '.CR;
+                    // echo 'Warning: '.$tileNum.' not found. '.CR;
                 }
             }
-
+            
             // add to screens
             self::$screens[] = $screen;
 
@@ -123,7 +122,7 @@ class Tilemap {
         $screen = self::$screens[$screenNum];
 
         // tile numbers
-        $str = 'Dim '.SpecScreenTool::GetPrefix().'ScreenTiles'.$screenNum.'(768) as uByte => {'.CR;
+        $str = 'Dim '.SpecScreenTool::GetPrefix().'ScreenTiles'.$screenNum.'(767) as uByte => { _'.CR;
 
         $count = 0;
         foreach($screen as $attr) {
@@ -131,30 +130,30 @@ class Tilemap {
             if( $count > 0 ) {
                 $str .= ',';
                 if( $count % 32 == 0 ) {
-                    $str .= CR;
+                    $str .= ' _'.CR;
                 }
             }
             $str .= $attr->tileNum;
             $count++;
         }
-        $str .= CR.'}'.CR.CR;
+        $str .= ' _'.CR.'}'.CR.CR;
         
         // attribute values
-        $str .= 'Dim '.SpecScreenTool::GetPrefix().'ScreenValues'.$screenNum.'(768) => {'.CR;
+        $str .= 'Dim '.SpecScreenTool::GetPrefix().'ScreenValues'.$screenNum.'(767) => { _'.CR;
         
         $count = 0;
         foreach($screen as $attr) {
             if( $count > 0 ) {
                 $str .= ',';
                 if( $count % 32 == 0 ) {
-                    $str .= CR;
+                    $str .= ' _'.CR;
                 }
             }
             $str .= bindec(self::GetScreenByte($attr));
-
             $count++;
         }
-        $str .= CR.'}'.CR;
+
+        $str .= ' _'.CR.'}'.CR;
 
         return $str;
     }

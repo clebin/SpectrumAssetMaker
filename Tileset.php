@@ -25,7 +25,7 @@ class Tileset
             $id = intval($tile['id']);
 
             // save to tiles array using id as key
-            self::$tiles[$id] = new Tile($id, $tile['properties']);
+            self::$tiles[] = new Tile($id, $tile['properties']);
 
             $count++;
         }

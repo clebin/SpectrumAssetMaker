@@ -133,24 +133,35 @@ class Graphics
     // }
     public static function GetBasic()
     {
-        $str = 'Dim '.SpecScreenTool::GetPrefix().'('.sizeof(self::$data).',7) as uByte => {'.CR;
+        $str = 'Dim '.SpecScreenTool::GetPrefix().'('.(sizeof(self::$data)-1).',7) as uByte => { _'.CR;
         
+        // loop through individual graphics
+        $attrcount = 0;
         foreach(self::$data as $attribute) {
 
+            // new line
+            if( $attrcount > 0 ) {
+                $str .= ', _'.CR;
+            }
+
             $str .= '    {';
-            $count = 0;
+
+            // loop through pixel rows
+            $rowcount = 0;
             foreach($attribute as $datarow) {
-                if( $count > 0 ) {
+                if( $rowcount > 0 ) {
                     $str .= ',';
                 }
                 $val = implode('', $datarow);
                 $str .= bindec($val);
-                $count++;
+                $rowcount++;
             }
-            $str .= '}'.CR;
+            $str .= '}';
+
+            $attrcount++;
         }
 
-        $str .= '}'.CR;
+        $str .= ' _'.CR.'}'.CR;
 
         return $str;
     }
