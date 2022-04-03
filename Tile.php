@@ -6,6 +6,8 @@ class Tile
     // graphics data
     public $graphics = [];
 
+    public $id = 0;
+
     // individual tile info
     public $paper = 0;
     public $ink = 7;
@@ -15,36 +17,31 @@ class Tile
     public $solid = false;
     public $lethal = false;
 
-    public function __construct($tile)
+    public function __construct($id, $properties)
     {
+        // id
+        $this->id = $id;
+
+        // loop through properties
+        foreach($properties as $prop) {
+
+            // paper
+            if( $prop['name'] == 'paper' ) {
+                $this->paper = intval($prop['value']);
+            }
+            // ink
+            elseif( $prop['name'] == 'ink' ) {
+                $this->ink = intval($prop['value']);
+            }
+            // bright
+            elseif( $prop['name'] == 'bright' ) {
+                $this->bright = $prop['value'];
+            }
+        }
+
         // set graphics
         //self::$graphics = Graphics::GetTileData($tile['num']);
 
-        // set paper
-        if( isset($tile['paper'])) {
-
-            $paper = intval($tile['paper']);
-            if( $paper >= 0 && $paper <= 7 ) {
-                $this->paper = $paper;
-            }
-        }
-
-        // set ink
-        if( isset($tile['ink'])) {
-
-            $ink = intval($tile['ink']);
-            if( $ink >= 0 && $ink <= 7 ) {
-                $this->ink = $ink;
-            }
-        }
-
-        // set bright
-        if( isset($tile['bright'])) {
-
-            if( $tile['bright'] === true ) {
-                $this->bright = true;
-            }
-        }
     }
     
 }

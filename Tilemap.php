@@ -9,10 +9,12 @@ class Tilemap {
     public static $startLayer = 0;
 
     // data arrays
-    private static $tileMap = [];
-    private static $paperMap = [];
-    private static $inkMap = [];
-    private static $brightMap = [];
+    private static $screens = [];
+
+    private static $attributeMaps = [];
+    private static $paperMaps = [];
+    private static $inkMaps = [];
+    private static $brightMaps = [];
 
     /**
      * Read the tilemap JSON file.
@@ -26,39 +28,77 @@ class Tilemap {
         }
 
         $json = file_get_contents($filename);
-        
-        self::$tileMap = json_decode($json, true);
-    }
+        $data = json_decode($json, true);
 
+        // each layer counts as one screen
+        foreach($data['layers'] as $layer) {
+
+            // now do paper, ink, etc
+            $paperMap = [];
+            $inkMap = [];
+            $brightMap = [];
+
+            foreach($layer['data'] as $tileNum) {
+
+                $tileNum = intval($tileNum);
+
+                if( Tileset::TileExists($tileNum) === true ) {
+                    $paperMap[] = Tileset::GetPaper($tileNum);
+                    $inkMap[] = Tileset::GetInk($tileNum);
+                    $brightMap[] = (Tileset::GetBright($tileNum) == true ? 1 : 0);
+                } else {
+                    echo 'Warning: '.$tileNum.' not found. '.CR;
+                }
+            }
+
+            // add to screens
+            self::$screens[] = [
+                'attributes' => $layer['data'], 
+                'paper' => $paperMap,  
+                'ink' => $inkMap, 
+                'bright' => $brightMap
+            ];
+        }
+    }
+    
     /**
      * Get the assembly code for this tilemap
      */
     public static function GetAsm()
     {
-        // output tile numbers
+        $str = '';
 
-        // output paper
+        $count = 0;
+        foreach(self::$screens as $screen) {
 
-        // output ink
+            // output attribute numbers
+            $str .= '._'.SpecScreenTool::$prefix.'_screen_'.$count.'_attr'.CR;
+            $str .= implode(',', $screen['attributes']).CR.CR;
 
-        // output bright
+            // output paper
+            $str .= '._'.SpecScreenTool::$prefix.'_screen_'.$count.'_paper'.CR;
+            $str .= implode(',', $screen['paper']).CR.CR;
 
-        // output solid map
+            // output ink
+            $str .= '._'.SpecScreenTool::$prefix.'_screen_'.$count.'_ink'.CR;
+            $str .= implode(',', $screen['ink']).CR.CR;
 
-        // output lethal map
-    }
+            // output bright
+            $str .= '._'.SpecScreenTool::$prefix.'_screen_'.$count.'_bright'.CR;
+            $str .= implode(',', $screen['bright']).CR.CR;
 
-    /**
-     * Save screen attribute information. Save various properties in individual arrays.
-     */
-    private static function SaveAttributes() {
-        
-        foreach(self::$tileMap as $tileNum) {
-            self::$paperMap[] = Tile::GetPaper($tileNum);
-            self::$inkMap[] = Tile::GetInk($tileNum);
-            self::$brightMap[] = Tile::GetBright($tileNum);
-            self::$solidMap[] = Tile::GetSolid($tileNum);
-            self::$lethalMap[] = Tile::GetLethal($tileNum);
+            // output solid map
+            // $str .= '._'.SpecScreenTool::$prefix.'_screen_'.$count.'_solid'.CR;
+            // $str .= implode(',', $screen['solid']);
+
+            // output lethal map
+            // $str .= '._'.SpecScreenTool::$prefix.'_screen_'.$count.'_lethal'.CR;
+            // $str .= implode(',', $screen['lethal']);
+            
+            $count++;
         }
+
+        return $str;
     }
+
 }

@@ -4,7 +4,7 @@ namespace ClebinGames\SpecScreenTool;
 class Tileset
 {
     // static array of tiles
-    public static $tiles = [];
+    private static $tiles = [];
 
     /**
      * Read the tileset JSON file
@@ -20,9 +20,13 @@ class Tileset
         $data = json_decode($json, true);
 
         $count = 0;
-        foreach($data as $tile) {
-            //$tile['num'] = $count;
-            Tileset::AddTile($tile);
+        foreach($data['tiles'] as $tile) {
+
+            $id = intval($tile['id']);
+
+            // save to tiles array using id as key
+            self::$tiles[$id] = new Tile($id, $tile['properties']);
+
             $count++;
         }
     }
@@ -41,34 +45,38 @@ class Tileset
         return $str.CR;
     }
 
+    public static function GetNumTiles()
+    {
+        return sizeof(self::$tiles);
+    }
+
+    public static function TileExists($id){
+        return isset(self::$tiles[$id]);
+    }
+
     /* static functions */
-    public static function GetPaper($num)
+    public static function GetPaper($id)
     {
-        return self::$tiles[$num]->paper;
+        return self::$tiles[$id]->paper;
     }
 
-    public static function GetInk($num)
+    public static function GetInk($id)
     {
-        return self::$tiles[$num]->ink;
+        return self::$tiles[$id]->ink;
     }
 
-    public static function GetBright($num)
+    public static function GetBright($id)
     {
-        return self::$tiles[$num]->bright;
+        return self::$tiles[$id]->bright;
     }
 
-    public static function GetSolid($num)
+    public static function GetSolid($id)
     {
-        return self::$tiles[$num]->solid;
+        return self::$tiles[$id]->solid;
     }
 
-    public static function GetLethal($num)
+    public static function GetLethal($id)
     {
-        return self::$tiles[$num]->lethal;
-    }
-
-    public static function AddTile($tile)
-    {
-        self::$tiles[] = new Tile($tile);
+        return self::$tiles[$id]->lethal;
     }
 }

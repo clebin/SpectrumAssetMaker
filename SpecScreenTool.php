@@ -56,7 +56,7 @@ class SpecScreenTool
         } else {
             self::$prefix = CliTools::GetAnswer('Naming prefix', 'tiles');
         }
-        
+
         // tilemaps
         if( isset($options['m'])) {
             self::$mapFilename = $options['m'];
@@ -84,13 +84,13 @@ class SpecScreenTool
             self::$graphicsFilename = CliTools::GetAnswer('Tile graphics filename', 'tiles.gif');
         }
 
-        // output file
-        if( isset($options['o'])) {
-            self::$outputFilename = $options['o'];
-        } else if( isset($options['output'])) {
-            self::$outputFilename = $options['output'];
+        // start layer
+        if( isset($options['s'])) {
+            Tilemap::$startLayer = intval($options['s']);
+        } else if( isset($options['start'])) {
+            Tilemap::$startLayer = intval($options['start']);
         } else {
-            self::$outputFilename = CliTools::GetAnswer('Output filename', 'tiles.asm');
+            Tilemap::$startLayer = CliTools::GetAnswer('Which layer to start?', 0);
         }
 
         // tileset not found
@@ -121,14 +121,15 @@ class SpecScreenTool
         Tilemap::ReadFile(self::$mapFilename);
 
 
-
+        if( self::$error === false ) {
+            // write graphics to file
+            file_put_contents(self::$prefix.'-screens.asm', Tilemap::GetAsm());
+        }
+        
         if( self::$error === true ) {
             echo 'Errors ('.sizeof(self::$errorDetails).'): '.implode('. ', self::$errorDetails);
             return false;
         }
-        
-        // now output the spectrum data
-        //self::SaveSpectrumData();
     }
 
     public static function OutputIntro()
@@ -147,7 +148,7 @@ class SpecScreenTool
 }
 
 // read filenames from command line arguments
-$options = getopt('hpmtgo', ['help', 'prefix', 'map', 'tileset', 'graphics', 'output']);
+$options = getopt('h::p::m::t::g::s::', ['help::', 'prefix::', 'map::', 'tileset::', 'graphics::', 'start::']);
 
 // run
 SpecScreenTool::Run($options);
