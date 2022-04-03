@@ -75,6 +75,33 @@ class Tilemap {
         
     }
 
+    public static function GetNumScreens()
+    {
+        return sizeof(self::$screens);
+    }
+    
+    public static function GetCode()
+    {
+        switch( SpecScreenTool::GetFormat() ) {
+            case 'basic':
+                return self::GetBasic();
+            default:
+                return self::GetAsm();
+            break;
+        }
+    }
+
+    public static function GetScreenCode($screenNum)
+    {
+        switch( SpecScreenTool::GetFormat() ) {
+            case 'basic':
+                return self::GetScreenBasic($screenNum);
+            default:
+                return self::GetScreenAsm($screenNum);
+            break;
+        }
+    }
+
     /**
      * Get BASIC code for thsi tilemap
      * 
@@ -82,7 +109,54 @@ class Tilemap {
      */
     public static function GetBasic()
     {
+        $str = '';
+        $screenNum = 0;
+        for($i=0;$i<sizeof(self::$screens);$i++) {
+            $str .= self::GetScreenBasic($i);
+        }
+        return $str;
+    }
 
+
+    public static function GetScreenBasic($screenNum)
+    {
+        $screen = self::$screens[$screenNum];
+
+        // tile numbers
+        $str = 'Dim '.SpecScreenTool::GetPrefix().'ScreenTiles'.$screenNum.'(768) as uByte => {'.CR;
+
+        $count = 0;
+        foreach($screen as $attr) {
+
+            if( $count > 0 ) {
+                $str .= ',';
+                if( $count % 32 == 0 ) {
+                    $str .= CR;
+                }
+            }
+            $str .= $attr->tileNum;
+            $count++;
+        }
+        $str .= CR.'}'.CR.CR;
+        
+        // attribute values
+        $str .= 'Dim '.SpecScreenTool::GetPrefix().'ScreenValues'.$screenNum.'(768) => {'.CR;
+        
+        $count = 0;
+        foreach($screen as $attr) {
+            if( $count > 0 ) {
+                $str .= ',';
+                if( $count % 32 == 0 ) {
+                    $str .= CR;
+                }
+            }
+            $str .= bindec(self::GetScreenByte($attr));
+
+            $count++;
+        }
+        $str .= CR.'}'.CR;
+
+        return $str;
     }
 
     /**
@@ -99,11 +173,6 @@ class Tilemap {
         return $str;
     }
 
-    public static function GetNumScreens()
-    {
-        return sizeof(self::$screens);
-    }
-    
     /**
      * Get assembly code for this tilemap
      */

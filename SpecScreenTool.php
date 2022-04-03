@@ -128,24 +128,24 @@ class SpecScreenTool
         Graphics::ReadFile(self::$graphicsFilename);
 
         if( self::$error === false ) {
+
             // write graphics to file
-            file_put_contents(self::$prefix.'-graphics.asm', Graphics::GetAsm());
+            file_put_contents(self::$prefix.'-graphics.'.self::GetOutputFileExtension(), Graphics::GetCode());
         }
         
         Tileset::ReadFile(self::$tilesetFilename);
         Tilemap::ReadFile(self::$mapFilename);
-
 
         if( self::$error === false ) {
             // write graphics to file
             if( self::$saveScreensInOwnFile ===  true ) {
 
                 for($i=0;$i<Tilemap::GetNumScreens();$i++) {
-                    file_put_contents(self::$prefix.'-screens-'.$i.'.asm', Tilemap::GetScreenAsm($i));
+                    file_put_contents(self::$prefix.'-screens-'.$i.'.'.self::GetOutputFileExtension(), Tilemap::GetScreenCode($i));
                 }
             }
             else {
-                file_put_contents(self::$prefix.'-screens.asm', Tilemap::GetAsm());
+                file_put_contents(self::$prefix.'-screens.'.self::GetOutputFileExtension(), Tilemap::GetCode());
             }
         }
         
@@ -153,6 +153,27 @@ class SpecScreenTool
             echo 'Errors ('.sizeof(self::$errorDetails).'): '.implode('. ', self::$errorDetails);
             return false;
         }
+    }
+
+    public static function GetOutputFileExtension()
+    {
+        switch(self::$format) {
+            case 'basic':
+                return 'bas';
+                break;
+            
+            case 'c':
+                return 'c';
+                break;
+
+            default:
+                return 'asm';
+        }
+    }
+
+    public static function GetFormat()
+    {
+        return self::$format;
     }
 
     public static function GetPrefix()

@@ -108,27 +108,51 @@ class Graphics
         return $attribute;
     }
 
+    public static function GetCode()
+    {
+        switch( SpecScreenTool::GetFormat() ) {
+            case 'basic':
+                return self::GetBasic();
+                break;
+            
+            default:
+                return self::GetAsm();
+                break;
+        }
+    }
+
+    // Dim spriteData1(7) as uByte => { 64,70,70,64,8,244,2,1 }
+    // Dim spriteData2(15) as uByte => { 20,189,66,74,34,28,8,20, 50,34,70,101,58,18,19,24 }
+    // Dim spriteData3(31) as uByte => { 73,73,73,73,73,73,73,73, 0,0,255,0,0,255,0,0, 73,73,73,73,73,73,73,73, 0,0,255,0,0,255,0,0 }
+    
+    // Dim tileSet(3,7) as uByte => { _ 
+    //     {0,0,0,0,0,0,0,0}, _
+    //     {0,60,66,66,66,66,60,0 }, _
+    //     {0,24,24,36,66,66,126,0 }, _
+    //     {12,34,44,65,93,234,26,0 } _
+    // }
     public static function GetBasic()
     {
-        $str .= 'Dim '.SpecScreenTool::GetPrefix().' as uByte => {';
-                
-        $count = 0;
+        $str = 'Dim '.SpecScreenTool::GetPrefix().'('.sizeof(self::$data).',7) as uByte => {'.CR;
+        
         foreach(self::$data as $attribute) {
-            $str .= '{'.implode(',', $attribute).'}'.CR;
+
+            $str .= '    {';
+            $count = 0;
+            foreach($attribute as $datarow) {
+                if( $count > 0 ) {
+                    $str .= ',';
+                }
+                $val = implode('', $datarow);
+                $str .= bindec($val);
+                $count++;
+            }
+            $str .= '}'.CR;
         }
 
         $str .= '}'.CR;
 
-        // Dim spriteData1(7) as uByte => { 64,70,70,64,8,244,2,1 }
-        // Dim spriteData2(15) as uByte => { 20,189,66,74,34,28,8,20, 50,34,70,101,58,18,19,24 }
-        // Dim spriteData3(31) as uByte => { 73,73,73,73,73,73,73,73, 0,0,255,0,0,255,0,0, 73,73,73,73,73,73,73,73, 0,0,255,0,0,255,0,0 }
-        
-        // Dim tileSet(3,7) as uByte => { _ 
-        //     {0,0,0,0,0,0,0,0}, _
-        //     {0,60,66,66,66,66,60,0 }, _
-        //     {0,24,24,36,66,66,126,0 }, _
-        //     {12,34,44,65,93,234,26,0 } _
-        // }
+        return $str;
     }
 
     public static function GetAsm()
