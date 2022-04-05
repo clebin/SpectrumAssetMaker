@@ -3,9 +3,12 @@ Utility to read  tilesets and tilemaps from tiled along with a black & white gif
 Chris Owen 2022
 
 ** Known Issues: **
+
 * Currently tilesets and tilemaps must be exported as JSON (.tsj and .tmj files)
+
 * Don't leave gaps in the middle of tilesets as this will cause errors.
-* This tool is work-in-progress. Only BASIC export has been tested, and not thoroughly.
+
+* This tool is work-in-progress.
 
 **Usage:**
 
