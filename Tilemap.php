@@ -6,9 +6,6 @@ namespace ClebinGames\SpecTiledTool;
  */
 class Tilemap {
 
-    // which map layer to start on? (eg. to use first map layer as a background colour)
-    public static $startLayer = 0;
-
     // data arrays
     private static $screens = [];
 
@@ -59,7 +56,6 @@ class Tilemap {
             
             // add to screens
             self::$screens[] = $screen;
-
         }
     }
     

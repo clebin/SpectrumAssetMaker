@@ -32,6 +32,7 @@ class SpecTiledTool
     
     // naming
     public static $prefix = 'tiles';
+
     
     // filenames
     private static $mapFilename = false;
@@ -69,8 +70,7 @@ class SpecTiledTool
             self::$mapFilename = CliTools::GetAnswer('Map filename', 'map.tmj');
             self::$tilesetFilename = CliTools::GetAnswer('Tileset filename', 'tileset.tsj');
             self::$graphicsFilename = CliTools::GetAnswer('Tile graphics filename', 'tiles.gif');
-            Tilemap::$startLayer = CliTools::GetAnswer('Which layer to start?', 0);
-            self::$format = CliTools::GetAnswer('Which format?', 'asm', ['basic','c']);
+            self::$format = CliTools::GetAnswer('Which format?', 'c', ['basic','c']);
 
         } else {
 
@@ -121,7 +121,6 @@ class SpecTiledTool
             } else if( isset($options['format'])) {
                 self::$format = $options['format'];
             }
-
         }
 
         // game properties
