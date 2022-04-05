@@ -10,6 +10,9 @@ class Graphics
     public static $numRows = 0;
     public static $numTiles = 0;
     
+    /**
+     * Read a black & white PNG or GIF file
+     */
     public static function ReadFile($filename)
     {
         if(!file_exists($filename)) {
@@ -52,6 +55,9 @@ class Graphics
         }
     }
 
+    /**
+     * Get raw tile data for a numbered tile
+     */
     public static function GetTileData($num)
     {
 
@@ -108,6 +114,9 @@ class Graphics
         return $attribute;
     }
 
+    /**
+     * Get tile graphics code in currently set format/language
+     */
     public static function GetCode()
     {
         switch( SpecTiledTool::GetFormat() ) {
@@ -125,8 +134,9 @@ class Graphics
         }
     }
 
-    // const uchar numbers[] = {
-    //     0x00, 0x7e, 0x46, 0x4a, 0x56, 0x66, 0x7e, 0x00,
+    /**
+     * Return tile graphics in C format
+     */
     public static function GetC()
     {
         $str = '';
@@ -165,13 +175,9 @@ class Graphics
         return $str;
     }
 
-    // Dim spriteData1(7) as uByte => { 64,70,70,64,8,244,2,1 }
-    // Dim tileSet(3,7) as uByte => { _ 
-    //     {0,0,0,0,0,0,0,0}, _
-    //     {0,60,66,66,66,66,60,0 }, _
-    //     {0,24,24,36,66,66,126,0 }, _
-    //     {12,34,44,65,93,234,26,0 } _
-    // }
+    /**
+     * Return tile graphics in BASIC format
+     */
     public static function GetBasic()
     {
         $str = 'Dim '.SpecTiledTool::GetPrefix().'('.(sizeof(self::$data)-1).',7) as uByte => { _'.CR;
@@ -207,6 +213,9 @@ class Graphics
         return $str;
     }
 
+    /**
+     * Return tile graphics in assembly format
+     */
     public static function GetAsm()
     {
         $str = '';

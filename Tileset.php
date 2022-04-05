@@ -1,6 +1,9 @@
 <?php
 namespace ClebinGames\SpecTiledTool;
 
+/**
+ * Class representing a tileset with functions for reading and exporting
+ */
 class Tileset
 {
     // static array of tiles
@@ -48,36 +51,64 @@ class Tileset
         return $str.CR;
     }
 
+    /**
+     * Get number of tiles in tileset
+     */
     public static function GetNumTiles()
     {
         return sizeof(self::$tiles);
     }
 
+    /**
+     * Return whether a tile with a particular id exists in the tileset
+     */
     public static function TileExists($id){
         return isset(self::$tiles[$id]);
     }
 
-    /* static functions */
+    /**
+     * Return paper number for tile
+     */
     public static function GetPaper($id)
     {
         return self::$tiles[$id]->paper;
     }
 
+    /**
+     * Return ink number for tile
+     */
     public static function GetInk($id)
     {
         return self::$tiles[$id]->ink;
     }
 
+    /**
+     * Return whether bright is set on tile
+     */
     public static function GetBright($id)
     {
         return self::$tiles[$id]->bright;
     }
 
+    /**
+     * Return whether flash is set on tile
+     */
+    public static function GetFlash($id)
+    {
+        return self::$tiles[$id]->flash;
+    }
+
+    /**
+     * Return whether solid is set on tile
+     */
     public static function GetSolid($id)
     {
         return self::$tiles[$id]->solid;
     }
 
+    /**
+     * Return whether lethal is set on tile
+     */
     public static function GetLethal($id)
     {
         return self::$tiles[$id]->lethal;

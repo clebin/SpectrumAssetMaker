@@ -1,6 +1,9 @@
 <?php
 namespace ClebinGames\SpecTiledTool;
 
+/**
+ * Class representing a screen attribute
+ */
 class Attribute
 {
     public $tileNum = 0;

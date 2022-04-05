@@ -1,6 +1,9 @@
 <?php
 namespace ClebinGames\SpecTiledTool;
 
+/**
+ * Class representing an individual tile in a tileset
+ */
 class Tile
 {
     // graphics data
@@ -12,6 +15,7 @@ class Tile
     public $paper = 0;
     public $ink = 7;
     public $bright = false;
+    public $flash = false;
 
     // game properties
     public $solid = false;
@@ -41,7 +45,6 @@ class Tile
 
         // set graphics
         //self::$graphics = Graphics::GetTileData($tile['num']);
-
     }
     
 }

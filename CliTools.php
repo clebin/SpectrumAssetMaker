@@ -11,6 +11,9 @@ define('COLMAGENTA', "");
 
 class CliTools
 {
+    /**
+     * Ask the user a question
+     */
     public static function GetAnswer($question, $default = false, $other_options = [], $strict_values = true)
     {
         // build the question
@@ -49,6 +52,9 @@ class CliTools
         return $answer;
     }
 
+    /**
+     * Prompt and read input
+     */
     private static function GetAnswerPrompt($question, $default = false, $other_options = [], $strict_values = true)
     {
         // prompt the user
@@ -66,6 +72,9 @@ class CliTools
         return $answer;
     }
  
+    /**
+     * Get answer to a true/false question
+     */
     public static function GetAnswerBoolean($question, $default = true)
     {
         if ($default === true) {

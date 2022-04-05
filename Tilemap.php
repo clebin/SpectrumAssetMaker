@@ -1,6 +1,9 @@
 <?php
 namespace ClebinGames\SpecTiledTool;
 
+/**
+ * Class representing a tilemap with functions for reading and exporting
+ */
 class Tilemap {
 
     // which map layer to start on? (eg. to use first map layer as a background colour)
@@ -56,11 +59,17 @@ class Tilemap {
         }
     }
     
+    /**
+     * Return the number of screens
+     */
     public static function GetNumScreens()
     {
         return sizeof(self::$screens);
     }
     
+    /**
+     * Get code for all screens in currently set language
+     */
     public static function GetCode()
     {
         $str = '';
@@ -83,6 +92,9 @@ class Tilemap {
         return $str;
     }
 
+    /**
+     * Get code for specified screen in current set language
+     */
     public static function GetScreenCode($screenNum)
     {
         switch( SpecTiledTool::GetFormat() ) {
@@ -98,6 +110,9 @@ class Tilemap {
         }
     }
 
+    /**
+     * Get array of tile numbers for specified screen
+     */
     public static function GetTileNumsFromScreen($num) {
 
         $screen = self::$screens[$num];
@@ -108,6 +123,9 @@ class Tilemap {
         return $tileNums;
     }
 
+    /**
+     * Get array of bytes (flash, bright, paper, ink) for specified screen
+     */
     public static function GetBytesFromScreen($num) {
 
         $screen = self::$screens[$num];
@@ -118,6 +136,9 @@ class Tilemap {
         return $screenBytes;
     }
 
+    /**
+     * Get screen represented in C
+     */
     public static function GetScreenC($screenNum)
     {
         $str = '';
@@ -165,6 +186,9 @@ class Tilemap {
         return $str;
     }
 
+    /**
+     * Get screen represented in BASIC
+     */
     public static function GetScreenBasic($screenNum)
     {
         $str = SpecTiledTool::GetBasicArray(
@@ -204,6 +228,10 @@ class Tilemap {
         return $str;
     }
 
+    /**
+     * Get byte containing flash, bright, paper and ink
+     * from attribute
+     */
     public static function GetScreenByte($attr)
     {
         return 

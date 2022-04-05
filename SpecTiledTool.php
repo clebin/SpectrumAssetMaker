@@ -54,6 +54,9 @@ class SpecTiledTool
     private static $error = false;
     private static $errorDetails = [];
 
+    /**
+     * Run the tool
+     */
     public static function Run($options)
     {
         self::OutputIntro();
@@ -155,6 +158,9 @@ class SpecTiledTool
         }
     }
 
+    /**
+     * Get output file extension for the current format/language
+     */
     public static function GetOutputFileExtension()
     {
         switch(self::$format) {
@@ -171,16 +177,25 @@ class SpecTiledTool
         }
     }
 
+    /**
+     * Get current format/langauge
+     */
     public static function GetFormat()
     {
         return self::$format;
     }
 
+    /**
+     * Get naming prefix
+     */
     public static function GetPrefix()
     {
         return self::$prefix;
     }
 
+    /**
+     * Return an array as a string in C format
+     */
     public static function GetCArray($name, $values, $numbase = 10)
     {
         $str = 'const unsigned char '.$name.'['.sizeof($values).'] = {'.CR;
@@ -222,6 +237,9 @@ class SpecTiledTool
         return $str;
     }
 
+    /**
+     * Return an array as a string in BASIC format
+     */
     public static function GetBasicArray($name, $values, $numbase = 10)
     {
         $str = 'Dim '.$name.'('.(sizeof($values)-1).') as uByte => { _'.CR;
@@ -261,6 +279,9 @@ class SpecTiledTool
         return $str;
     }
 
+    /**
+     * Return an array as a string in assembly format
+     */
     public static function GetAsmArray($name, $values, $numbase = 10, $length = false)
     {
         // output paper/ink/bright/flash
@@ -305,6 +326,9 @@ class SpecTiledTool
         return $str;
     }
 
+    /**
+     * Output intro text on command line
+     */
     public static function OutputIntro()
     {
         echo '****************************'.CR;
@@ -313,6 +337,9 @@ class SpecTiledTool
         echo '****************************'.CR;
     }
 
+    /**
+     * Add to errors list
+     */
     public static function AddError($error)
     {
         self::$error = true;
