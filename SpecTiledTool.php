@@ -183,7 +183,7 @@ class SpecTiledTool
 
     public static function GetCArray($name, $values, $numbase = 10)
     {
-        $str = 'const uchar '.$name.'[] = {'.CR;
+        $str = 'const unsigned char '.$name.'['.sizeof($values).'] = {'.CR;
         
         // tile numbers
         $count = 0;

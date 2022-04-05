@@ -143,21 +143,21 @@ class Tilemap {
             
             $str .= '// array of pointers to all screens'.CR;
 
-            $str .= 'const uchar '.SpecTiledTool::GetPrefix().'ScreensTiles = {';
+            $str .= 'const unsigned char *'.SpecTiledTool::GetPrefix().'ScreensTiles['.sizeof(self::$screens).'] = {';
             for($i=0;$i<sizeof(self::$screens);$i++) {
                 if($i>0) {
                     $str .= ', ';
                 }
-                $str .= '&'.SpecTiledTool::GetPrefix().'ScreenTiles'.$i;
+                $str .= SpecTiledTool::GetPrefix().'ScreenTiles'.$i;
             }
             $str .= '};'.CR;
 
-            $str .= 'const uchar '.SpecTiledTool::GetPrefix().'ScreensValues = {';
+            $str .= 'const unsigned char *'.SpecTiledTool::GetPrefix().'ScreensValues['.sizeof(self::$screens).'] = {';
                 for($i=0;$i<sizeof(self::$screens);$i++) {
                     if($i>0) {
                         $str .= ', ';
                     }
-                    $str .= '&'.SpecTiledTool::GetPrefix().'ScreenValues'.$i;
+                    $str .= SpecTiledTool::GetPrefix().'ScreenValues'.$i;
                 }
                 $str .= '};'.CR;
             }

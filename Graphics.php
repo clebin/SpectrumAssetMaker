@@ -132,7 +132,7 @@ class Graphics
         $str = '';
         
         $str .= '#define '.strtoupper(SpecTiledTool::GetPrefix()).'_LEN '.sizeof(self::$data).CR.CR;
-        $str .= 'const uchar '.SpecTiledTool::GetPrefix().'[] = {'.CR;
+        $str .= 'const unsigned char '.SpecTiledTool::GetPrefix().'['.sizeof(self::$data).'][8] = {'.CR;
         
         // loop through individual graphics
         $attrcount = 0;
