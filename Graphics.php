@@ -1,5 +1,5 @@
 <?php
-namespace ClebinGames\SpecScreenTool;
+namespace ClebinGames\SpecTiledTool;
 
 class Graphics
 {
@@ -13,7 +13,7 @@ class Graphics
     public static function ReadFile($filename)
     {
         if(!file_exists($filename)) {
-            SpecScreenTool::AddError('Graphics file not found');
+            SpecTiledTool::AddError('Graphics file not found');
             return false;
         }
 
@@ -25,7 +25,7 @@ class Graphics
         } else if( $extension == 'gif' ) {
             self::$image = imagecreatefromgif($filename);
         } else {
-            SpecScreenTool::AddError('Filetype ('.$extension.') not supported');
+            SpecTiledTool::AddError('Filetype ('.$extension.') not supported');
             return false;
         }
 
@@ -82,7 +82,7 @@ class Graphics
             for($x=$startx;$x<$startx+8;$x++) {
 
                 $rgb = imagecolorat(self::$image, $x, $y);
-
+                
                 // get rgb values
                 $r = ($rgb >> 16) & 0xFF;
                 $g = ($rgb >> 8) & 0xFF;
@@ -110,21 +110,62 @@ class Graphics
 
     public static function GetCode()
     {
-        switch( SpecScreenTool::GetFormat() ) {
+        switch( SpecTiledTool::GetFormat() ) {
             case 'basic':
                 return self::GetBasic();
                 break;
             
+            case 'c':
+                return self::GetC();
+                break;
+
             default:
                 return self::GetAsm();
                 break;
         }
     }
 
+    // const uchar numbers[] = {
+    //     0x00, 0x7e, 0x46, 0x4a, 0x56, 0x66, 0x7e, 0x00,
+    public static function GetC()
+    {
+        $str = '';
+        
+        $str .= '#define '.strtoupper(SpecTiledTool::GetPrefix()).'_LEN '.sizeof(self::$data).CR.CR;
+        $str .= 'const uchar '.SpecTiledTool::GetPrefix().'[] = {'.CR;
+        
+        // loop through individual graphics
+        $attrcount = 0;
+        foreach(self::$data as $attribute) {
+
+            // new line
+            if( $attrcount > 0 ) {
+                $str .= ','.CR;
+            }
+
+            $str .= '    {';
+
+            // loop through pixel rows
+            $rowcount = 0;
+            foreach($attribute as $datarow) {
+                if( $rowcount > 0 ) {
+                    $str .= ',';
+                }
+                $val = implode('', $datarow);
+                $str .= '0x'.dechex(bindec($val));
+                $rowcount++;
+            }
+            $str .= '}';
+
+            $attrcount++;
+        }
+
+        $str .= CR.'};'.CR;
+
+        return $str;
+    }
+
     // Dim spriteData1(7) as uByte => { 64,70,70,64,8,244,2,1 }
-    // Dim spriteData2(15) as uByte => { 20,189,66,74,34,28,8,20, 50,34,70,101,58,18,19,24 }
-    // Dim spriteData3(31) as uByte => { 73,73,73,73,73,73,73,73, 0,0,255,0,0,255,0,0, 73,73,73,73,73,73,73,73, 0,0,255,0,0,255,0,0 }
-    
     // Dim tileSet(3,7) as uByte => { _ 
     //     {0,0,0,0,0,0,0,0}, _
     //     {0,60,66,66,66,66,60,0 }, _
@@ -133,7 +174,7 @@ class Graphics
     // }
     public static function GetBasic()
     {
-        $str = 'Dim '.SpecScreenTool::GetPrefix().'('.(sizeof(self::$data)-1).',7) as uByte => { _'.CR;
+        $str = 'Dim '.SpecTiledTool::GetPrefix().'('.(sizeof(self::$data)-1).',7) as uByte => { _'.CR;
         
         // loop through individual graphics
         $attrcount = 0;
@@ -171,7 +212,7 @@ class Graphics
         $str = '';
         $count = 0;
         foreach(self::$data as $attribute) {
-            $str .= '._'.SpecScreenTool::GetPrefix().'_graphics_'.$count.CR;
+            $str .= '._'.SpecTiledTool::GetPrefix().'_graphics_'.$count.CR;
 
             // loop through rows
             foreach($attribute as $datarow) {

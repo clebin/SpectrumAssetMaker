@@ -1,5 +1,5 @@
 <?php
-namespace ClebinGames\SpecScreenTool;
+namespace ClebinGames\SpecTiledTool;
 
 class Tileset
 {
@@ -12,7 +12,7 @@ class Tileset
     public static function ReadFile($filename)
     {
         if(!file_exists($filename)) {
-            SpecScreenTool::AddError('Tileset file not found');
+            SpecTiledTool::AddError('Tileset file not found');
             return false;
         }
         
@@ -29,6 +29,9 @@ class Tileset
 
             $count++;
         }
+        echo CR;
+
+        echo 'Added '.$count.' tiles.'.CR;
     }
     
     /**
@@ -36,7 +39,7 @@ class Tileset
      */
     private static function GetAsm()
     {
-        $str = '._'.SpecScreenTool::GetPrefix().'_'.$num.CR;
+        $str = '._'.SpecTiledTool::GetPrefix().'_'.$num.CR;
 
         foreach($lines as $line) {
             $str .= 'defb @'.implode('', $line).CR;

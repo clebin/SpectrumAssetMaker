@@ -1,5 +1,5 @@
 <?php
-namespace ClebinGames\SpecScreenTool;
+namespace ClebinGames\SpecTiledTool;
 
 define('COLRED', "");
 define('COLGREEN', "");

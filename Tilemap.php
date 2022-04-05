@@ -1,5 +1,5 @@
 <?php
-namespace ClebinGames\SpecScreenTool;
+namespace ClebinGames\SpecTiledTool;
 
 class Tilemap {
 
@@ -16,7 +16,7 @@ class Tilemap {
 
         if(!file_exists($filename)) {
 
-            SpecScreenTool::AddError('Map file not found');
+            SpecTiledTool::AddError('Map file not found');
             return false;
         }
 
@@ -46,7 +46,7 @@ class Tilemap {
                 } else {
 
                     $screen[] = new Attribute();
-                    // echo 'Warning: '.$tileNum.' not found. '.CR;
+                    echo 'Warning: '.$tileNum.' not found. '.CR;
                 }
             }
             
@@ -56,24 +56,6 @@ class Tilemap {
         }
     }
     
-    /**
-     * Return a binary string of a set length from a number
-     */
-    public static function GetBinaryVal($num, $length) {
-
-        return str_pad( decbin($num), $length, '0', STR_PAD_LEFT );
-    }
-
-    /**
-     * Get C code for this tilemap
-     * 
-     * @todo Implement C support
-     */
-    public static function GetC()
-    {
-        
-    }
-
     public static function GetNumScreens()
     {
         return sizeof(self::$screens);
@@ -81,94 +63,122 @@ class Tilemap {
     
     public static function GetCode()
     {
-        switch( SpecScreenTool::GetFormat() ) {
-            case 'basic':
-                return self::GetBasic();
-            default:
-                return self::GetAsm();
-            break;
+        $str = '';
+        $screenNum = 0;
+
+        for($i=0;$i<sizeof(self::$screens);$i++) {
+
+            switch( SpecTiledTool::GetFormat() ) {
+                case 'basic':
+                    $str .= self::GetScreenBasic($i);
+                    break;
+                case 'c':
+                    $str .= self::GetScreenC($i);
+                    break;
+                default:
+                    $str .= self::GetScreenAsm($i);
+                break;
+            }
         }
+        return $str;
     }
 
     public static function GetScreenCode($screenNum)
     {
-        switch( SpecScreenTool::GetFormat() ) {
+        switch( SpecTiledTool::GetFormat() ) {
             case 'basic':
                 return self::GetScreenBasic($screenNum);
+                break;
+            case 'c':
+                return self::GetScreenC($screenNum);
+                break;
             default:
                 return self::GetScreenAsm($screenNum);
             break;
         }
     }
 
-    /**
-     * Get BASIC code for thsi tilemap
-     * 
-     * @todo Implement BASIC support
-     */
-    public static function GetBasic()
-    {
-        $str = '';
-        $screenNum = 0;
-        for($i=0;$i<sizeof(self::$screens);$i++) {
-            $str .= self::GetScreenBasic($i);
+    public static function GetTileNumsFromScreen($num) {
+
+        $screen = self::$screens[$num];
+        $tileNums = [];
+        foreach($screen as $attr) {
+            $tileNums[] = $attr->tileNum;
         }
-        return $str;
+        return $tileNums;
     }
 
+    public static function GetBytesFromScreen($num) {
+
+        $screen = self::$screens[$num];
+        $screenBytes = [];
+        foreach($screen as $attr) {
+            $screenBytes[] = self::GetScreenByte($attr);
+        }
+        return $screenBytes;
+    }
+
+    public static function GetScreenC($screenNum)
+    {
+        $str = '';
+
+        if( $screenNum == 0 ) {
+            $str .= '#define '.strtoupper(SpecTiledTool::GetPrefix()).'_SCREENS_LEN '.sizeof(self::$screens).CR.CR;
+        }
+        
+        $str .= SpecTiledTool::GetCArray(
+            SpecTiledTool::GetPrefix().'ScreenTiles'.$screenNum, 
+            self::GetTileNumsFromScreen($screenNum), 
+            10
+        ).CR;
+
+        $str .= SpecTiledTool::GetCArray(
+            SpecTiledTool::GetPrefix().'ScreenValues'.$screenNum, 
+            self::GetBytesFromScreen($screenNum), 
+            2
+        ).CR;
+
+        // last screen - set up an array of pointers to the screens
+        if( $screenNum == sizeof(self::$screens)-1 ) {
+            
+            $str .= '// array of pointers to all screens'.CR;
+
+            $str .= 'const uchar '.SpecTiledTool::GetPrefix().'ScreensTiles = {';
+            for($i=0;$i<sizeof(self::$screens);$i++) {
+                if($i>0) {
+                    $str .= ', ';
+                }
+                $str .= '&'.SpecTiledTool::GetPrefix().'ScreenTiles'.$i;
+            }
+            $str .= '};'.CR;
+
+            $str .= 'const uchar '.SpecTiledTool::GetPrefix().'ScreensValues = {';
+                for($i=0;$i<sizeof(self::$screens);$i++) {
+                    if($i>0) {
+                        $str .= ', ';
+                    }
+                    $str .= '&'.SpecTiledTool::GetPrefix().'ScreenValues'.$i;
+                }
+                $str .= '};'.CR;
+            }
+
+        return $str;
+    }
 
     public static function GetScreenBasic($screenNum)
     {
-        $screen = self::$screens[$screenNum];
+        $str = SpecTiledTool::GetBasicArray(
+            SpecTiledTool::GetPrefix().'ScreenTiles'.$screenNum, 
+            self::GetTileNumsFromScreen($screenNum), 
+            10
+        ).CR;
 
-        // tile numbers
-        $str = 'Dim '.SpecScreenTool::GetPrefix().'ScreenTiles'.$screenNum.'(767) as uByte => { _'.CR;
-
-        $count = 0;
-        foreach($screen as $attr) {
-
-            if( $count > 0 ) {
-                $str .= ',';
-                if( $count % 32 == 0 ) {
-                    $str .= ' _'.CR;
-                }
-            }
-            $str .= $attr->tileNum;
-            $count++;
-        }
-        $str .= ' _'.CR.'}'.CR.CR;
+        $str .= SpecTiledTool::GetBasicArray(
+            SpecTiledTool::GetPrefix().'ScreenValues'.$screenNum, 
+            self::GetBytesFromScreen($screenNum), 
+            2
+        ).CR;
         
-        // attribute values
-        $str .= 'Dim '.SpecScreenTool::GetPrefix().'ScreenValues'.$screenNum.'(767) => { _'.CR;
-        
-        $count = 0;
-        foreach($screen as $attr) {
-            if( $count > 0 ) {
-                $str .= ',';
-                if( $count % 32 == 0 ) {
-                    $str .= ' _'.CR;
-                }
-            }
-            $str .= bindec(self::GetScreenByte($attr));
-            $count++;
-        }
-
-        $str .= ' _'.CR.'}'.CR;
-
-        return $str;
-    }
-
-    /**
-     * Get assembly for all screens
-     */
-    public static function GetAsm()
-    {
-        $str = '';
-
-        $screenNum = 0;
-        for($i=0;$i<sizeof(self::$screens);$i++) {
-            $str .= self::GetScreenAsm($i);
-        }
         return $str;
     }
 
@@ -177,45 +187,19 @@ class Tilemap {
      */
     public static function GetScreenAsm($screenNum)
     {
-        $str = '';
+        $str = SpecTiledTool::GetAsmArray(
+            SpecTiledTool::GetPrefix().'_screen_'.$screenNum.'_attribute_tiles', 
+            self::GetTileNumsFromScreen($screenNum), 
+            10, 
+            8
+        ).CR;
 
-        $screen = self::$screens[$screenNum];
-
-        // output tile numbers
-        $str .= '._'.SpecScreenTool::GetPrefix().'_screen_'.$screenNum.'_attribute_tiles'.CR;
-
-        $count = 0;
-        foreach($screen as $attr) {
-
-            if( $count % 4 == 0 ) {
-                $str .= CR.'defb ';
-            } else {
-                $str .= ', ';
-            }
-        
-            $str .= '@'.self::GetBinaryVal($attr->tileNum, 8);
-            $count++;
-        }
-
-        $str .= CR.CR;
-
-        // output paper/ink/bright/flash
-        $str .= '._'.SpecScreenTool::GetPrefix().'_screen_'.$screenNum.'_attribute_values'.CR;
-
-        $count = 0;
-        foreach($screen as $attr) {
-
-            if( $count % 4 == 0 ) {
-                $str .= CR.'defb ';
-            } else {
-                $str .= ', ';
-            }
-
-            $str .= '@';
-            $str .= self::GetScreenByte($attr);
-
-            $count++;
-        }
+        $str .= SpecTiledTool::GetAsmArray(
+            SpecTiledTool::GetPrefix().'_screen_'.$screenNum.'_attribute_values', 
+            self::GetBytesFromScreen($screenNum), 
+            2, 
+            8
+        ).CR;
 
         return $str;
     }
@@ -225,7 +209,84 @@ class Tilemap {
         return 
         ( $attr->flash == true ? '1' : '0'). // flash
         ( $attr->bright == true ? '1' : '0'). // bright
-        self::GetBinaryVal($attr->paper, 3). // paper
-        self::GetBinaryVal($attr->ink, 3); // ink
+        str_pad(decbin($attr->paper), 3, '0', STR_PAD_LEFT ).
+        str_pad(decbin($attr->ink), 3, '0', STR_PAD_LEFT );
     }
 }
+
+
+        // // tile numbers
+        // $str = 'Dim '.SpecTiledTool::GetPrefix().'ScreenTiles'.$screenNum.'(767) as uByte => { _'.CR;
+
+        // $count = 0;
+        // foreach($screen as $attr) {
+
+        //     if( $count > 0 ) {
+        //         $str .= ',';
+        //         if( $count % 32 == 0 ) {
+        //             $str .= ' _'.CR;
+        //         }
+        //     }
+        //     $str .= $attr->tileNum;
+        //     $count++;
+        // }
+        // $str .= ' _'.CR.'}'.CR.CR;
+        
+        // // attribute values
+        // $str .= 'Dim '.SpecTiledTool::GetPrefix().'ScreenValues'.$screenNum.'(767) as uByte => { _'.CR;
+        
+        // $count = 0;
+        // foreach($screen as $attr) {
+        //     if( $count > 0 ) {
+        //         $str .= ',';
+        //         if( $count % 32 == 0 ) {
+        //             $str .= ' _'.CR;
+        //         }
+        //     }
+        //     $str .= bindec(self::GetScreenByte($attr));
+        //     $count++;
+        // }
+
+        // $str .= ' _'.CR.'}'.CR;
+
+        // return $str;
+
+
+    //     // output tile numbers
+    //     $str .= '._'.SpecTiledTool::GetPrefix().'_screen_'.$screenNum.'_attribute_tiles'.CR;
+
+    //     $count = 0;
+    //     foreach($screen as $attr) {
+
+    //         if( $count % 4 == 0 ) {
+    //             $str .= CR.'defb ';
+    //         } else {
+    //             $str .= ', ';
+    //         }
+        
+    //         $str .= '@'.self::GetBinaryVal($attr->tileNum, 8);
+    //         $count++;
+    //     }
+
+    //     $str .= CR.CR;
+
+    //     // output paper/ink/bright/flash
+    //     $str .= '._'.SpecTiledTool::GetPrefix().'_screen_'.$screenNum.'_attribute_values'.CR;
+
+    //     $count = 0;
+    //     foreach($screen as $attr) {
+
+    //         if( $count % 4 == 0 ) {
+    //             $str .= CR.'defb ';
+    //         } else {
+    //             $str .= ', ';
+    //         }
+
+    //         $str .= '@';
+    //         $str .= self::GetScreenByte($attr);
+
+    //         $count++;
+    //     }
+
+    //     return $str;
+    // }

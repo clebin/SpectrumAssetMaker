@@ -2,7 +2,7 @@ Utility to read JSON tilesets and tilemaps from Tiled and convert to Spectrum gr
 
 **Usage:**
 
-> php SpecScreenTool.php
+> php SpecTiledTool.php
 
 ***Parameters:***
 

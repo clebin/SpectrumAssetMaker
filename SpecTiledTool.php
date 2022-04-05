@@ -1,5 +1,5 @@
 <?php
-namespace ClebinGames\SpecScreenTool;
+namespace ClebinGames\SpecTiledTool;
 
 define('CR', "\n");
 
@@ -20,7 +20,7 @@ require("Graphics.php");
  * Load multiple Tiled layers and save as individual screens
  * Add custom properites to attributes/tiles
  */
-class SpecScreenTool
+class SpecTiledTool
 {
     // constants
     const FORMAT_ASM = 'asm';
@@ -181,6 +181,130 @@ class SpecScreenTool
         return self::$prefix;
     }
 
+    public static function GetCArray($name, $values, $numbase = 10)
+    {
+        $str = 'const uchar '.$name.'[] = {'.CR;
+        
+        // tile numbers
+        $count = 0;
+        foreach($values as $val) {
+
+            if( $count > 0 ) {
+                $str .= ',';
+                if( $count % 8 == 0 ) {
+                    $str .= CR;
+                }
+            }
+
+            // convert to numbers to hex
+            switch( $numbase ) {
+
+                // binary
+                case 2:
+                    $str .= '0x'.dechex(bindec($val));
+                break;
+                
+                // decimal
+                case 10:
+                    $str .= '0x'.dechex($val);
+                break;
+
+                // hex
+                case 15:
+                    $str .= '0x'.$val;
+            }
+
+            $count++;
+        }
+
+        $str .= CR.'};'.CR.CR;
+
+        return $str;
+    }
+
+    public static function GetBasicArray($name, $values, $numbase = 10)
+    {
+        $str = 'Dim '.$name.'('.(sizeof($values)-1).') as uByte => { _'.CR;
+        
+        $count = 0;
+        foreach($values as $val) {
+
+            if( $count > 0 ) {
+                $str .= ',';
+                if( $count % 32 == 0 ) {
+                    $str .= ' _'.CR;
+                }
+            }
+
+            // convert to numbers to decimal
+            switch( $numbase ) {
+
+                // binary
+                case 2:
+                    $str .= bindec($val);
+                break;
+                
+                // decimal
+                case 10:
+                    $str .= $val;
+                break;
+
+                // hex
+                case 15:
+                    $str .= hexdec($val);
+            }
+
+            $count++;
+        }
+        $str .= ' _'.CR.'}'.CR.CR;
+
+        return $str;
+    }
+
+    public static function GetAsmArray($name, $values, $numbase = 10, $length = false)
+    {
+        // output paper/ink/bright/flash
+        $str = CR.'._'.$name;
+        
+        $count = 0;
+        foreach($values as $val) {
+
+            if( $count % 4 == 0 ) {
+                $str .= CR.'defb ';
+            } else {
+                $str .= ', ';
+            }
+
+            // convert to numbers to binary
+            switch( $numbase ) {
+
+                // binary
+                case 2:
+                    // do nothing
+                break;
+                
+                // decimal
+                case 10:
+                    $val = decbin($val);
+                break;
+
+                // hex
+                case 15:
+                    $val = decbin(hexdec($val));
+            }
+
+            // pad binary string
+            if( $length !== false ) {
+                $val = str_pad( $val, $length, '0', STR_PAD_LEFT );
+            }
+            
+            $str .= '@'.$val;
+            
+            $count++;
+        }
+        return $str;
+    }
+
     public static function OutputIntro()
     {
         echo '****************************'.CR;
@@ -200,6 +324,6 @@ class SpecScreenTool
 $options = getopt('h::p::m::t::g::s::f::', ['help::', 'prefix::', 'map::', 'tileset::', 'graphics::', 'start::','format::']);
 
 // run
-SpecScreenTool::Run($options);
+SpecTiledTool::Run($options);
 
 echo CR;
