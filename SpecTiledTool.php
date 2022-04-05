@@ -49,6 +49,7 @@ class SpecTiledTool
     // output
     private static $output = '';
     public static $saveScreensInOwnFile = true;
+    public static $saveGameProperties = false;
 
     // errors
     private static $error = false;

@@ -113,4 +113,20 @@ class Tileset
     {
         return self::$tiles[$id]->lethal;
     }
+
+    /**
+     * Return whether lethal is set on tile
+     */
+    public static function GetPlatform($id)
+    {
+        return self::$tiles[$id]->platform;
+    }
+
+    /**
+     * Return whether custom1 is set on tile
+     */
+    public static function GetCustom($id)
+    {
+        return self::$tiles[$id]->custom;
+    }
 }

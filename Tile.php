@@ -20,6 +20,8 @@ class Tile
     // game properties
     public $solid = false;
     public $lethal = false;
+    public $platform = false;
+    public $custom = false;
 
     public function __construct($id, $properties)
     {
@@ -29,17 +31,39 @@ class Tile
         // loop through properties
         foreach($properties as $prop) {
 
-            // paper
-            if( $prop['name'] == 'paper' ) {
-                $this->paper = intval($prop['value']);
-            }
-            // ink
-            elseif( $prop['name'] == 'ink' ) {
-                $this->ink = intval($prop['value']);
-            }
-            // bright
-            elseif( $prop['name'] == 'bright' ) {
-                $this->bright = $prop['value'];
+            switch( $prop['name'] ) {
+
+                // attribute properties
+                case 'paper':
+                    $this->paper = intval($prop['value']);
+                    break;
+                case 'ink':
+                    $this->ink = intval($prop['value']);
+                    break;
+                case 'bright':
+                    $this->bright = intval($prop['value']);
+                    break;
+                case 'flash':
+                    $this->flash = intval($prop['value']);
+                    break;
+
+                // game properties
+                case 'solid':
+                    $this->solid = intval($prop['value']);
+                    SpecTiledTool::$saveGameProperties = true;
+                    break;
+                case 'lethal':
+                    $this->lethal = intval($prop['value']);
+                    SpecTiledTool::$saveGameProperties = true;
+                    break;
+                case 'platform':
+                    $this->platform = intval($prop['value']);
+                    SpecTiledTool::$saveGameProperties = true;
+                    break;
+                case 'custom':
+                    $this->custom = intval($prop['value']);
+                    SpecTiledTool::$saveGameProperties = true;
+                    break;
             }
         }
 

@@ -40,10 +40,14 @@ class Tilemap {
 
                     $screen[] = new Attribute(
                         $tileNum, 
-                        false, 
+                        Tileset::GetFlash($tileNum), 
                         Tileset::GetBright($tileNum), 
                         Tileset::GetPaper($tileNum), 
                         Tileset::GetInk($tileNum), 
+                        Tileset::GetSolid($tileNum), 
+                        Tileset::GetLethal($tileNum), 
+                        Tileset::GetPlatform($tileNum), 
+                        Tileset::GetCustom($tileNum)
                     );
                     
                 } else {
@@ -131,11 +135,39 @@ class Tilemap {
         $screen = self::$screens[$num];
         $screenBytes = [];
         foreach($screen as $attr) {
-            $screenBytes[] = self::GetScreenByte($attr);
+            $screenBytes[] = self::GetAttrValues($attr);
         }
         return $screenBytes;
     }
 
+    /**
+     * Get array of bytes (flash, bright, paper, ink) for specified screen
+     */
+    public static function GetGamePropertiesFromScreen($num) {
+
+        $screen = self::$screens[$num];
+
+        $screenGameProperties = [];
+        
+        $count = 0;
+        $val = '';
+        foreach($screen as $attr) {
+
+            // even numbers - first half of byte (high)
+            if( $count % 2 == 0 ) {
+                $val = self::GetAttrGameProperties($attr);
+            }
+            // odd numbers - second half of byte (low)
+            else {
+                $val .= self::GetAttrGameProperties($attr);
+                $screenGameProperties[] = $val; 
+                $val = '';
+            }
+            $count++;
+        }
+        return $screenGameProperties;
+    }
+    
     /**
      * Get screen represented in C
      */
@@ -147,23 +179,36 @@ class Tilemap {
             $str .= '#define '.strtoupper(SpecTiledTool::GetPrefix()).'_SCREENS_LEN '.sizeof(self::$screens).CR.CR;
         }
         
+        // tile numbers
         $str .= SpecTiledTool::GetCArray(
             SpecTiledTool::GetPrefix().'ScreenTiles'.$screenNum, 
             self::GetTileNumsFromScreen($screenNum), 
             10
         ).CR;
 
+        // attribute values
         $str .= SpecTiledTool::GetCArray(
             SpecTiledTool::GetPrefix().'ScreenValues'.$screenNum, 
             self::GetBytesFromScreen($screenNum), 
             2
         ).CR;
 
+        // game properties 
+        if( SpecTiledTool::$saveGameProperties === true ) {
+
+            $str .= SpecTiledTool::GetCArray(
+                SpecTiledTool::GetPrefix().'ScreenProperties'.$screenNum, 
+                self::GetGamePropertiesFromScreen($screenNum), 
+                2
+            ).CR;
+        }
+
         // last screen - set up an array of pointers to the screens
         if( $screenNum == sizeof(self::$screens)-1 ) {
             
             $str .= '// array of pointers to all screens'.CR;
 
+            // tile number arrays
             $str .= 'const unsigned char *'.SpecTiledTool::GetPrefix().'ScreensTiles['.sizeof(self::$screens).'] = {';
             for($i=0;$i<sizeof(self::$screens);$i++) {
                 if($i>0) {
@@ -173,16 +218,30 @@ class Tilemap {
             }
             $str .= '};'.CR;
 
+            // attribute arrays
             $str .= 'const unsigned char *'.SpecTiledTool::GetPrefix().'ScreensValues['.sizeof(self::$screens).'] = {';
+            for($i=0;$i<sizeof(self::$screens);$i++) {
+                if($i>0) {
+                    $str .= ', ';
+                }
+                $str .= SpecTiledTool::GetPrefix().'ScreenValues'.$i;
+            }
+            $str .= '};'.CR;
+
+            // game properties arrays
+            if( SpecTiledTool::$saveGameProperties === true ) {
+
+                $str .= 'const unsigned char *'.SpecTiledTool::GetPrefix().'ScreensProperties['.sizeof(self::$screens).'] = {';
                 for($i=0;$i<sizeof(self::$screens);$i++) {
                     if($i>0) {
                         $str .= ', ';
                     }
-                    $str .= SpecTiledTool::GetPrefix().'ScreenValues'.$i;
+                    $str .= SpecTiledTool::GetPrefix().'ScreenProperties'.$i;
                 }
                 $str .= '};'.CR;
             }
-
+        }
+        
         return $str;
     }
 
@@ -202,6 +261,16 @@ class Tilemap {
             self::GetBytesFromScreen($screenNum), 
             2
         ).CR;
+        
+        // game properties 
+        if( SpecTiledTool::$saveGameProperties === true ) {
+
+            $str .= SpecTiledTool::GetBasicArray(
+                SpecTiledTool::GetPrefix().'ScreenProperties'.$screenNum, 
+                self::GetGamePropertiesFromScreen($screenNum), 
+                2
+            ).CR;
+        }
         
         return $str;
     }
@@ -225,6 +294,17 @@ class Tilemap {
             8
         ).CR;
 
+        // game properties 
+        if( SpecTiledTool::$saveGameProperties === true ) {
+
+            $str .= SpecTiledTool::GetAsmArray(
+                SpecTiledTool::GetPrefix().'ScreenProperties'.$screenNum, 
+                self::GetGamePropertiesFromScreen($screenNum), 
+                2, 
+                8
+            ).CR;
+        }
+        
         return $str;
     }
 
@@ -232,12 +312,25 @@ class Tilemap {
      * Get byte containing flash, bright, paper and ink
      * from attribute
      */
-    public static function GetScreenByte($attr)
+    public static function GetAttrValues($attr)
     {
         return 
         ( $attr->flash == true ? '1' : '0'). // flash
         ( $attr->bright == true ? '1' : '0'). // bright
         str_pad(decbin($attr->paper), 3, '0', STR_PAD_LEFT ).
         str_pad(decbin($attr->ink), 3, '0', STR_PAD_LEFT );
+    }
+
+    /**
+     * Get byte containing flash, bright, paper and ink
+     * from attribute
+     */
+    public static function GetAttrGameProperties($attr)
+    {
+        return 
+        ( $attr->solid == true ? '1' : '0').
+        ( $attr->lethal == true ? '1' : '0').
+        ( $attr->platform == true ? '1' : '0').
+        ( $attr->custom == true ? '1' : '0');
     }
 }

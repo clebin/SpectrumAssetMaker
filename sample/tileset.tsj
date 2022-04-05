@@ -26,6 +26,11 @@
                  "name":"paper",
                  "type":"int",
                  "value":0
+                },
+                {
+                 "name":"solid",
+                 "type":"bool",
+                 "value":true
                 }]
         }, 
         {
