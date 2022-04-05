@@ -1,4 +1,11 @@
-Utility to read JSON tilesets and tilemaps from Tiled and convert to Spectrum graphics and screen layout/attributes
+Utility to read  tilesets and tilemaps from tiled along with a black & white gif and create Spectrum code.
+
+Chris Owen 2022
+
+** Known Issues: **
+* Currently tilesets and tilemaps must be exported as JSON (.tsj and .tmj files)
+* Don't leave gaps in the middle of tilesets as this will cause errors.
+* This tool is work-in-progress. Only BASIC export has been tested, and not thoroughly.
 
 **Usage:**
 
@@ -6,16 +13,14 @@ Utility to read JSON tilesets and tilemaps from Tiled and convert to Spectrum gr
 
 ***Parameters:***
 
---pref=<prefix for naming variables>
+--prefix=<prefix for naming variables>
 
 --map=<tilemap filename>
 
 --tileset=<tileset filename>
 
---graphics=<png/gif graphics filename>
+--graphics=<tileset graphics filename (black & white png or gif)>
 
---format=<basic|asm, default: asm>
+--format=<basic|c|asm, default: asm>
 
---start=<start on tilemap layer number, default: 0>
-
-Running without parameters will prompt for each setting.
+Running the script without parameters will prompt for each setting.
