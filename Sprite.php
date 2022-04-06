@@ -12,7 +12,6 @@ class Sprite
     public static $width = 0;
     public static $height = 0;
     public static $numColumns = 0;
-    public static $numRows = 0;
 
     /**
      * Read a black & white PNG or GIF file
@@ -34,10 +33,8 @@ class Sprite
         self::$width = imagesx(self::$spriteImage);
         self::$height = imagesy(self::$spriteImage);
         self::$numColumns = self::$width/8;
-        self::$numRows = self::$height/8;
 
-        echo 'Reading sprite: '.self::$numColumns.' x '.self::$numRows.
-        ' attributes ('.self::$width.' x '.self::$height.'px)';
+        echo 'Reading sprite: '.self::$numColumns.' columns ('.self::$width.' x '.self::$height.'px)';
         
         // get raw pixel data
         self::$spriteData = self::GetImageData(self::$spriteImage);
@@ -69,35 +66,34 @@ class Sprite
 
     public static function GetImageData($image)
     {
-        // loop through rows of atttributes
-        for($row=0;$row<self::$numRows;$row++) {
-            // loop through columns of atttributes
-            for($col=0;$col<self::$numColumns;$col++) {
-                self::$spriteData[] = self::GetPixelData($image, $col, $row);
-            }
+        $data = [];
+
+        // loop through columns
+        for($col=0;$col<self::$numColumns;$col++) {
+            $data[] = self::GetPixelData($image, $col);
         }
+        return $data;
     }
 
     /**
      * Read an individual attribute (or tile)
      */
-    private static function GetPixelData($image, $col, $row)
+    private static function GetPixelData($image, $col, $mask = false)
     {
-        // starting values for x & y
+        // starting values for x
         $startx = $col * 8;
-        $starty = $row * 8;
 
-        $attribute = [];
+        $coldata = [];
 
         // rows
-        for($y=$starty;$y<$starty+8;$y++) {
+        for($line=0;$line<self::$height;$line++) {
 
-            $datarow = [];
+            $linedata = [];
 
             // cols
             for($x=$startx;$x<$startx+8;$x++) {
 
-                $rgb = imagecolorat($image, $x, $y);
+                $rgb = imagecolorat($image, $x, $line);
                 
                 // get rgb values
                 $r = ($rgb >> 16) & 0xFF;
@@ -106,22 +102,27 @@ class Sprite
 
                 // pure black counts as ink
                 if( $r == 0 && $g == 0 && $b == 0 ) {
-                    $pixel = 1;
+                    $pixel = 0;
                 }
                 // anything else is paper
                 else {
-                    $pixel = 0;
+                    $pixel = 1;
                 }
 
+                // flip for mask
+                if( $mask === true ) {
+                    $pixel = !$pixel;
+                }
+                
                 // add pixel value to this row
-                $datarow[] = $pixel;
+                $linedata[] = $pixel;
             }
             
             // add row of data
-            $attribute[] = $datarow;
+            $coldata[] = $linedata;
         }
 
-        return $attribute;
+        return $coldata;
     }
 
     /**
@@ -151,12 +152,12 @@ class Sprite
     {
         $str = '';
         
-        $numBytes = ((sizeof(self::$spriteData)*8*2)+(2*self::$numRows));
+        $numBytes = ((sizeof(self::$spriteData)*8*2)+(2*self::$height));
 
         $str .= 'const unsigned char '.SpecTiledTool::GetPrefix().'Sprite['.$numBytes.'] = {'.CR;
         
         // output left padding
-        for($i=0;$i<self::$numRows;$i++) {
+        for($i=0;$i<self::$height;$i++) {
             if( $i > 0 ) {
                 $str .= ', ';
             } 
@@ -178,7 +179,7 @@ class Sprite
                 }
             }
         }
-
+        
         // output right padding
         for($i=0;$i<self::$numRows;$i++) {
             $str .= ', 0x00';
@@ -194,7 +195,7 @@ class Sprite
      */
     public static function GetBasic()
     {
-        $str = '';
+        $str = 'Error: BASIC sprite export is not implemented yet.';
 
         return $str;
     }
@@ -206,37 +207,54 @@ class Sprite
     {
         $str = '';
 
-        $name = '_'.SpecTiledTool::GetPrefix().'_sprite';
-
         $str .= 'SECTION rodata_user'.CR.CR;
-        $str .= 'PUBLIC '.$name.CR.CR;
-        
-        for($i=0;$i<self::$height;$i++) {
+
+        $baseName = SpecTiledTool::GetPrefix().'_sprite';
+
+        if(self::$numColumns > 1) {
+            for($i=1;$i<=self::$numColumns;$i++) {
+                $str .= 'PUBLIC _'.$baseName.$i.CR;
+            }
+        }
+        else {
+            $str .= 'PUBLIC _'.$baseName.CR;
+        }
+        $str .= CR;
+
+        // front padding
+        for($line=0;$line<self::$height;$line++) {
             $str .= 'defb @00000000, @11111111'.CR;
         }
 
-        $str .= CR.'.'.$name.CR;
+        for($col=0;$col<self::$numColumns;$col++) {
 
-        // loop through data
-        for($i=0;$i<sizeof(self::$spriteData);$i++) {
-            for($n=0;$n<8;$n++) {
+            if( self::$numColumns > 1 ) {
+                $str .= CR.'._'.$baseName.($col+1).CR;
+            } else {
+                $str .= CR.'._'.$baseName.CR;
+            }
+            
+            // loop through data
+            for($line=0;$line<sizeof(self::$spriteData[$col]);$line++) {
 
-                $val = implode('', self::$spriteData[$i][$n]);
+                // sprite
+                $val = implode('', self::$spriteData[$col][$line]);
                 $str .= 'defb @'.$val;
 
-                if( isset(self::$maskData[$i][$n])) {
-                    $val = implode('', self::$maskData[$i][$n]);
+                // mask
+                if( isset(self::$maskData[$col][$line])) {
+                    $val = implode('', self::$maskData[$col][$line]);
                     $str .= ', @'.$val;
                 } else {
                     $str .= ', @00000000';
                 }
                 $str .= CR;
             }
-        }
 
-        $str .= CR;
-        for($i=0;$i<self::$height;$i++) {
-            $str .= 'defb @00000000, @11111111'.CR;
+            $str .= CR;
+            for($line=0;$line<self::$height;$line++) {
+                $str .= 'defb @00000000, @11111111'.CR;
+            }
         }
 
         return $str;
