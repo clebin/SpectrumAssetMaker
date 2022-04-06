@@ -9,6 +9,7 @@ require("Tile.php");
 require("Tileset.php");
 require("Tilemap.php");
 require("Graphics.php");
+require("Sprite.php");
 
 /**
  * Spectrum Screen Tool
@@ -28,13 +29,15 @@ class SpecTiledTool
     const FORMAT_BASIC = 'basic';
     
     // current output format
-    public static $format = self::FORMAT_ASM;
+    public static $format = self::FORMAT_C;
     
     // naming
     public static $prefix = 'tiles';
 
     
     // filenames
+    private static $spriteFilename = false;
+    private static $maskFilename = false;
     private static $mapFilename = false;
     private static $tilesetFilename = false;
     private static $outputFilename = false;
@@ -72,47 +75,27 @@ class SpecTiledTool
             self::$graphicsFilename = CliTools::GetAnswer('Tile graphics filename', 'tiles.gif');
             self::$format = CliTools::GetAnswer('Which format?', 'c', ['basic','c']);
 
-        } else {
+        }
+        // get options from command line arguments
+        else {
 
             // prefix
-            if( isset($options['p'])) {
-                self::$prefix = $options['p'];
-            } else if( isset($options['prefix'])) {
+            if( isset($options['prefix'])) {
                 self::$prefix = $options['prefix'];
             }
 
             // tilemaps
-            if( isset($options['m'])) {
-                self::$mapFilename = $options['m'];
-            } else if( isset($options['map'])) {
+            if( isset($options['map'])) {
                 self::$mapFilename = $options['map'];
-            } else {
-                echo 'Error: Map not specified'.CR;
-                return;
             }
 
             // tileset
-            if( isset($options['t'])) {
-                self::$tilesetFilename = $options['t'];
-            } else if( isset($options['tileset'])) {
+            if( isset($options['tileset'])) {
                 self::$tilesetFilename = $options['tileset'];
-            } else {
-                echo 'Error: Tileset not specified'.CR;
-                return;
             }
-
             // graphics
-            if( isset($options['g'])) {
-                self::$graphicsFilename = $options['g'];
-            } else if( isset($options['graphics'])) {
+            if( isset($options['graphics'])) {
                 self::$graphicsFilename = $options['graphics'];
-            }
-
-            // start layer
-            if( isset($options['s'])) {
-                Tilemap::$startLayer = intval($options['s']);
-            } else if( isset($options['start'])) {
-                Tilemap::$startLayer = intval($options['start']);
             }
 
             // format
@@ -121,37 +104,71 @@ class SpecTiledTool
             } else if( isset($options['format'])) {
                 self::$format = $options['format'];
             }
-        }
 
-        // game properties
-        // self::$saveSolidData = CliTools::GetAnswerBoolean('Save solid block details?', false);
-        // self::$saveLethalData = CliTools::GetAnswerBoolean('Save lethal block details?', false);
+            // sprite file
+            if( isset($options['sprite'])) {
+                self::$spriteFilename = $options['sprite'];
 
-        // read graphics, map and tileset
-        Graphics::ReadFile(self::$graphicsFilename);
-
-        if( self::$error === false ) {
-
-            // write graphics to file
-            file_put_contents(self::$prefix.'-graphics.'.self::GetOutputFileExtension(), Graphics::GetCode());
-        }
-        
-        Tileset::ReadFile(self::$tilesetFilename);
-        Tilemap::ReadFile(self::$mapFilename);
-
-        if( self::$error === false ) {
-            // write graphics to file
-            if( self::$saveScreensInOwnFile ===  true ) {
-
-                for($i=0;$i<Tilemap::GetNumScreens();$i++) {
-                    file_put_contents(self::$prefix.'-screens-'.$i.'.'.self::GetOutputFileExtension(), Tilemap::GetScreenCode($i));
+                if( isset($options['mask'])) {
+                    self::$maskFilename = $options['mask'];
                 }
             }
-            else {
-                file_put_contents(self::$prefix.'-screens.'.self::GetOutputFileExtension(), Tilemap::GetCode());
+
+        }
+
+        // read files
+        self::ProcessTileGraphics();
+        self::ProcessMapTileset();
+        self::ProcessSprite();
+    }
+
+    private static function ProcessTileGraphics()
+    {
+        // read graphics, map and tileset
+        if( self::$graphicsFilename !== false ) {
+            Graphics::ReadFile(self::$graphicsFilename);
+        
+            if( self::$error === false ) {
+                // write graphics to file
+                file_put_contents(self::$prefix.'-graphics.'.self::GetOutputFileExtension(), Graphics::GetCode());
             }
         }
+    }
+
+    private static function ProcessMapTileset()
+    {
+        // read map and tilset
+        if( self::$tilesetFilename !== false ) {
+            Tileset::ReadFile(self::$tilesetFilename);
+            Tilemap::ReadFile(self::$mapFilename);
         
+
+            if( self::$error === false ) {
+                // write graphics to file
+                if( self::$saveScreensInOwnFile ===  true ) {
+
+                    for($i=0;$i<Tilemap::GetNumScreens();$i++) {
+                        file_put_contents(self::$prefix.'-screens-'.$i.'.'.self::GetOutputFileExtension(), Tilemap::GetScreenCode($i));
+                    }
+                }
+                else {
+                    file_put_contents(self::$prefix.'-screens.'.self::GetOutputFileExtension(), Tilemap::GetCode());
+                }
+            }
+        }
+    }
+
+    private static function ProcessSprite()
+    {
+        // read sprite
+        if( self::$spriteFilename !== false ) {
+            Sprite::ReadFiles(self::$spriteFilename, self::$maskFilename);
+        
+            if( self::$error === false ) {
+                file_put_contents(self::$prefix.'-sprite.'.self::GetOutputFileExtension(), Sprite::GetCode());
+            }
+        }
+
         if( self::$error === true ) {
             echo 'Errors ('.sizeof(self::$errorDetails).'): '.implode('. ', self::$errorDetails);
             return false;
@@ -345,10 +362,18 @@ class SpecTiledTool
         self::$error = true;
         self::$errorDetails[] = ltrim($error, '.');
     }
+
+    /**
+     * Did an error occur?
+     */
+    public static function DidErrorOccur()
+    {
+        return self::$error;
+    }
 }
 
 // read filenames from command line arguments
-$options = getopt('h::p::m::t::g::s::f::', ['help::', 'prefix::', 'map::', 'tileset::', 'graphics::', 'start::','format::']);
+$options = getopt('', ['help::', 'prefix::', 'map::', 'tileset::', 'graphics::','format::', 'sprite::', 'mask::']);
 
 // run
 SpecTiledTool::Run($options);
