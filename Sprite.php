@@ -164,8 +164,6 @@ class Sprite
         }
 
         // get image and mask data
-        $count = 0;
-
         for($i=0;$i<sizeof(self::$spriteData);$i++) {
             for($n=0;$n<8;$n++) {
 
@@ -196,58 +194,51 @@ class Sprite
      */
     public static function GetBasic()
     {
-        $str = 'Dim '.SpecTiledTool::GetPrefix().'('.(sizeof(self::$spriteData)-1).',7) as uByte => { _'.CR;
-        
-        // loop through individual graphics
-        $attrcount = 0;
-        foreach(self::$spriteData as $attribute) {
-
-            // new line
-            if( $attrcount > 0 ) {
-                $str .= ', _'.CR;
-            }
-
-            $str .= '    {';
-
-            // loop through pixel rows
-            $rowcount = 0;
-            foreach($attribute as $datarow) {
-                if( $rowcount > 0 ) {
-                    $str .= ',';
-                }
-                $val = implode('', $datarow);
-                $str .= bindec($val);
-                $rowcount++;
-            }
-            $str .= '}';
-
-            $attrcount++;
-        }
-
-        $str .= ' _'.CR.'}'.CR;
+        $str = '';
 
         return $str;
     }
 
     /**
-     * Return tile graphics in assembly format
+     * Return sprite graphics in assembly format
      */
     public static function GetAsm()
     {
         $str = '';
-        $count = 0;
-        foreach(self::$spriteData as $attribute) {
-            $str .= '._'.SpecTiledTool::GetPrefix().'_graphics_'.$count.CR;
 
-            // loop through rows
-            foreach($attribute as $datarow) {
-                $str .= 'defb @'.implode('', $datarow).CR;
-            }
-            $str .= CR;
+        $name = '_'.SpecTiledTool::GetPrefix().'_sprite';
 
-            $count++;
-        }
+        $str .= 'SECTION rodata_user'.CR.CR;
+        $str .= 'PUBLIC '.$name.CR.CR;
         
+        for($i=0;$i<self::$height;$i++) {
+            $str .= 'defb @00000000, @11111111'.CR;
+        }
+
+        $str .= CR.'.'.$name.CR;
+
+        // loop through data
+        for($i=0;$i<sizeof(self::$spriteData);$i++) {
+            for($n=0;$n<8;$n++) {
+
+                $val = implode('', self::$spriteData[$i][$n]);
+                $str .= 'defb @'.$val;
+
+                if( isset(self::$maskData[$i][$n])) {
+                    $val = implode('', self::$maskData[$i][$n]);
+                    $str .= ', @'.$val;
+                } else {
+                    $str .= ', @00000000';
+                }
+                $str .= CR;
+            }
+        }
+
+        $str .= CR;
+        for($i=0;$i<self::$height;$i++) {
+            $str .= 'defb @00000000, @11111111'.CR;
+        }
+
         return $str;
     }
 }
