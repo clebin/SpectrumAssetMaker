@@ -40,7 +40,7 @@ class Sprite
         self::$spriteData = self::GetImageData(self::$spriteImage);
 
         if( $maskFile !== false ) {
-            self::$maskData = self::GetImageData(self::$maskImage);
+            self::$maskData = self::GetImageData(self::$maskImage, true);
         }
     }
     
@@ -64,13 +64,13 @@ class Sprite
         }
     }
 
-    public static function GetImageData($image)
+    public static function GetImageData($image, $mask = false)
     {
         $data = [];
 
         // loop through columns
         for($col=0;$col<self::$numColumns;$col++) {
-            $data[] = self::GetPixelData($image, $col);
+            $data[] = self::GetPixelData($image, $col, $mask);
         }
         return $data;
     }
@@ -102,18 +102,14 @@ class Sprite
 
                 // pure black counts as ink
                 if( $r == 0 && $g == 0 && $b == 0 ) {
-                    $pixel = 0;
+                    
+                    $pixel = ($mask === true ? 1 : 0);
                 }
                 // anything else is paper
                 else {
-                    $pixel = 1;
+                    $pixel = ($mask === true ? 0 : 1);
                 }
 
-                // flip for mask
-                if( $mask === true ) {
-                    //$pixel = !$pixel;
-                }
-                
                 // add pixel value to this row
                 $linedata[] = $pixel;
             }
