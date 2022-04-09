@@ -242,14 +242,14 @@ class Sprite
                 // mask
                 if( isset(self::$maskData[$col][$line])) {
                     $val = implode('', self::$maskData[$col][$line]);
-                    $str .= ', @'.$val;
+                    $str .= 'defb @'.$val;
                 } else {
-                    $str .= ', @00000000';
+                    $str .= 'defb @00000000';
                 }
                 
                 // sprite
                 $val = implode('', self::$spriteData[$col][$line]);
-                $str .= 'defb @'.$val;
+                $str .= ', @'.$val;
 
                 $str .= CR;
             }
