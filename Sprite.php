@@ -146,7 +146,7 @@ class Sprite
     }
 
     /**
-     * Return tile graphics in C format
+     * Return sprite graphics in C format
      */
     public static function GetC()
     {
@@ -156,7 +156,7 @@ class Sprite
 
         $str .= 'const unsigned char '.SpecTiledTool::GetPrefix().'Sprite['.$numBytes.'] = {'.CR;
         
-        // output left padding
+        // output front padding
         for($i=0;$i<self::$height;$i++) {
             if( $i > 0 ) {
                 $str .= ', ';
@@ -168,19 +168,21 @@ class Sprite
         for($i=0;$i<sizeof(self::$spriteData);$i++) {
             for($n=0;$n<8;$n++) {
 
-                $val = implode('', self::$spriteData[$i][$n]);
-                $str .= ', 0x'.dechex(bindec($val));
-
+                // mask data
                 if( isset(self::$maskData[$i][$n])) {
                     $val = implode('', self::$maskData[$i][$n]);
                     $str .= ', 0x'.dechex(bindec($val));
                 } else {
                     $str .= ', 0x0';
                 }
+                
+                // sprite data
+                $val = implode('', self::$spriteData[$i][$n]);
+                $str .= ', 0x'.dechex(bindec($val));
             }
         }
         
-        // output right padding
+        // output end padding
         for($i=0;$i<self::$numRows;$i++) {
             $str .= ', 0x00';
         }
@@ -222,8 +224,8 @@ class Sprite
         $str .= CR;
 
         // front padding
-        for($line=0;$line<self::$height;$line++) {
-            $str .= 'defb @00000000, @11111111'.CR;
+        for($line=0;$line<7;$line++) {
+            $str .= 'defb @11111111, @00000000'.CR;
         }
 
         for($col=0;$col<self::$numColumns;$col++) {
@@ -237,10 +239,6 @@ class Sprite
             // loop through data
             for($line=0;$line<sizeof(self::$spriteData[$col]);$line++) {
 
-                // sprite
-                $val = implode('', self::$spriteData[$col][$line]);
-                $str .= 'defb @'.$val;
-
                 // mask
                 if( isset(self::$maskData[$col][$line])) {
                     $val = implode('', self::$maskData[$col][$line]);
@@ -248,12 +246,17 @@ class Sprite
                 } else {
                     $str .= ', @00000000';
                 }
+                
+                // sprite
+                $val = implode('', self::$spriteData[$col][$line]);
+                $str .= 'defb @'.$val;
+
                 $str .= CR;
             }
 
             $str .= CR;
-            for($line=0;$line<self::$height;$line++) {
-                $str .= 'defb @00000000, @11111111'.CR;
+            for($line=0;$line<8;$line++) {
+                $str .= 'defb @11111111, @00000000'.CR;
             }
         }
 
