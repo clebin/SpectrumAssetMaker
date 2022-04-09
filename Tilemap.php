@@ -131,7 +131,7 @@ class Tilemap {
         $screen = self::$screens[$num];
         $screenBytes = [];
         foreach($screen as $attr) {
-            $screenBytes[] = self::GetAttrValues($attr);
+            $screenBytes[] = self::GetAttrColours($attr);
         }
         return $screenBytes;
     }
@@ -171,20 +171,36 @@ class Tilemap {
     {
         $str = '';
 
+        if( SpecTiledTool::GetPrefix() !== false ) {
+            $baseName = SpecTiledTool::GetPrefix().'Screen';
+        } else {
+            $baseName = 'screen';
+        }
+
+        // add to first screen
         if( $screenNum == 0 ) {
             $str .= '#define '.strtoupper(SpecTiledTool::GetPrefix()).'_SCREENS_LEN '.sizeof(self::$screens).CR.CR;
+        
+            // typedef for screen structure
+            $str .= 'typedef struct screen {'.CR.
+                '   unsigned char *tiles;'.CR.
+                '   unsigned char *colours;'.CR.
+                '   unsigned char *properties;'.CR.
+                '   int exits[4];'.CR.
+                '   char *name;'.CR.
+            '};'.CR.CR;
         }
         
         // tile numbers
         $str .= SpecTiledTool::GetCArray(
-            SpecTiledTool::GetPrefix().'ScreenTiles'.$screenNum, 
+            $baseName.'Tiles'.$screenNum, 
             self::GetTileNumsFromScreen($screenNum), 
             10
         ).CR;
 
-        // attribute values
+        // attribute colours
         $str .= SpecTiledTool::GetCArray(
-            SpecTiledTool::GetPrefix().'ScreenValues'.$screenNum, 
+            $baseName.'Colours'.$screenNum, 
             self::GetBytesFromScreen($screenNum), 
             2
         ).CR;
@@ -193,7 +209,7 @@ class Tilemap {
         if( SpecTiledTool::$saveGameProperties === true ) {
 
             $str .= SpecTiledTool::GetCArray(
-                SpecTiledTool::GetPrefix().'ScreenProperties'.$screenNum, 
+                $baseName.'Properties'.$screenNum, 
                 self::GetGamePropertiesFromScreen($screenNum), 
                 2
             ).CR;
@@ -205,34 +221,34 @@ class Tilemap {
             $str .= '// array of pointers to all screens'.CR;
 
             // tile number arrays
-            $str .= 'const unsigned char *'.SpecTiledTool::GetPrefix().'ScreensTiles['.sizeof(self::$screens).'] = {';
+            $str .= 'const unsigned char *'.$baseName.'sTiles['.sizeof(self::$screens).'] = {';
             for($i=0;$i<sizeof(self::$screens);$i++) {
                 if($i>0) {
                     $str .= ', ';
                 }
-                $str .= SpecTiledTool::GetPrefix().'ScreenTiles'.$i;
+                $str .= $baseName.'Tiles'.$i;
             }
             $str .= '};'.CR;
 
             // attribute arrays
-            $str .= 'const unsigned char *'.SpecTiledTool::GetPrefix().'ScreensValues['.sizeof(self::$screens).'] = {';
+            $str .= 'const unsigned char *'.$baseName.'sColours['.sizeof(self::$screens).'] = {';
             for($i=0;$i<sizeof(self::$screens);$i++) {
                 if($i>0) {
                     $str .= ', ';
                 }
-                $str .= SpecTiledTool::GetPrefix().'ScreenValues'.$i;
+                $str .= $baseName.'Colours'.$i;
             }
             $str .= '};'.CR;
 
             // game properties arrays
             if( SpecTiledTool::$saveGameProperties === true ) {
 
-                $str .= 'const unsigned char *'.SpecTiledTool::GetPrefix().'ScreensProperties['.sizeof(self::$screens).'] = {';
+                $str .= 'const unsigned char *'.$baseName.'sProperties['.sizeof(self::$screens).'] = {';
                 for($i=0;$i<sizeof(self::$screens);$i++) {
                     if($i>0) {
                         $str .= ', ';
                     }
-                    $str .= SpecTiledTool::GetPrefix().'ScreenProperties'.$i;
+                    $str .= $baseName.'Properties'.$i;
                 }
                 $str .= '};'.CR;
             }
@@ -253,7 +269,7 @@ class Tilemap {
         ).CR;
 
         $str .= SpecTiledTool::GetBasicArray(
-            SpecTiledTool::GetPrefix().'ScreenValues'.$screenNum, 
+            SpecTiledTool::GetPrefix().'ScreenColours'.$screenNum, 
             self::GetBytesFromScreen($screenNum), 
             2
         ).CR;
@@ -284,7 +300,7 @@ class Tilemap {
         ).CR;
 
         $str .= SpecTiledTool::GetAsmArray(
-            SpecTiledTool::GetPrefix().'_screen_'.$screenNum.'_attribute_values', 
+            SpecTiledTool::GetPrefix().'_screen_'.$screenNum.'_attribute_colours', 
             self::GetBytesFromScreen($screenNum), 
             2, 
             8
@@ -294,7 +310,7 @@ class Tilemap {
         if( SpecTiledTool::$saveGameProperties === true ) {
 
             $str .= SpecTiledTool::GetAsmArray(
-                SpecTiledTool::GetPrefix().'ScreenProperties'.$screenNum, 
+                SpecTiledTool::GetPrefix().'_screen_'.$screenNum.'_attribute_properties', 
                 self::GetGamePropertiesFromScreen($screenNum), 
                 2, 
                 8
@@ -308,7 +324,7 @@ class Tilemap {
      * Get byte containing flash, bright, paper and ink
      * from attribute
      */
-    public static function GetAttrValues($attr)
+    public static function GetAttrColours($attr)
     {
         return 
         ( $attr->flash == true ? '1' : '0'). // flash

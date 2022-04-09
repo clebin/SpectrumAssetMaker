@@ -27,7 +27,7 @@ class Sprite
         if( SpecTiledTool::DidErrorOccur() === true ) {
             return false;
         }
-
+        
         // set dimensions for the main sprite
         // divide width and height into 8x8 pixel attributes      
         self::$width = imagesx(self::$spriteImage);
@@ -111,7 +111,7 @@ class Sprite
 
                 // flip for mask
                 if( $mask === true ) {
-                    $pixel = !$pixel;
+                    //$pixel = !$pixel;
                 }
                 
                 // add pixel value to this row
@@ -150,44 +150,7 @@ class Sprite
      */
     public static function GetC()
     {
-        $str = '';
-        
-        $numBytes = ((sizeof(self::$spriteData)*8*2)+(2*self::$height));
-
-        $str .= 'const unsigned char '.SpecTiledTool::GetPrefix().'Sprite['.$numBytes.'] = {'.CR;
-        
-        // output front padding
-        for($i=0;$i<self::$height;$i++) {
-            if( $i > 0 ) {
-                $str .= ', ';
-            } 
-            $str .= '0x00';
-        }
-
-        // get image and mask data
-        for($i=0;$i<sizeof(self::$spriteData);$i++) {
-            for($n=0;$n<8;$n++) {
-
-                // mask data
-                if( isset(self::$maskData[$i][$n])) {
-                    $val = implode('', self::$maskData[$i][$n]);
-                    $str .= ', 0x'.dechex(bindec($val));
-                } else {
-                    $str .= ', 0x0';
-                }
-                
-                // sprite data
-                $val = implode('', self::$spriteData[$i][$n]);
-                $str .= ', 0x'.dechex(bindec($val));
-            }
-        }
-        
-        // output end padding
-        for($i=0;$i<self::$numRows;$i++) {
-            $str .= ', 0x00';
-        }
-
-        $str .= CR.'};'.CR;
+        $str = 'Error: C sprite export is not supported.';
 
         return $str;
     }
@@ -197,7 +160,7 @@ class Sprite
      */
     public static function GetBasic()
     {
-        $str = 'Error: BASIC sprite export is not implemented yet.';
+        $str = 'Error: BASIC sprite export is not supported.';
 
         return $str;
     }
@@ -208,11 +171,16 @@ class Sprite
     public static function GetAsm()
     {
         $str = '';
-
+        
+        if( SpecTiledTool::GetPrefix() !== false ) {
+            $baseName = SpecTiledTool::GetPrefix().'_sprite';
+        } else {
+            $baseName = 'sprite';
+        }
+        
         $str .= 'SECTION rodata_user'.CR.CR;
 
-        $baseName = SpecTiledTool::GetPrefix().'_sprite';
-
+        
         if(self::$numColumns > 1) {
             for($i=1;$i<=self::$numColumns;$i++) {
                 $str .= 'PUBLIC _'.$baseName.$i.CR;

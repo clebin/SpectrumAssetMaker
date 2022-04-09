@@ -141,8 +141,14 @@ class Graphics
     {
         $str = '';
         
-        $str .= '#define '.strtoupper(SpecTiledTool::GetPrefix()).'_LEN '.sizeof(self::$data).CR.CR;
-        $str .= 'const unsigned char '.SpecTiledTool::GetPrefix().'['.sizeof(self::$data).'][8] = {'.CR;
+        if( SpecTiledTool::GetPrefix() !== false ) {
+            $baseName = SpecTiledTool::GetPrefix();
+        } else {
+            $baseName = 'tiles';
+        }
+
+        $str .= '#define '.strtoupper($baseName).'_LEN '.sizeof(self::$data).CR.CR;
+        $str .= 'const unsigned char '.$baseName.'['.sizeof(self::$data).'][8] = {'.CR;
         
         // loop through individual graphics
         $attrcount = 0;

@@ -38,20 +38,6 @@ class Tileset
     }
     
     /**
-     * Output assembly code for tiles
-     */
-    private static function GetAsm()
-    {
-        $str = '._'.SpecTiledTool::GetPrefix().'_'.$num.CR;
-
-        foreach($lines as $line) {
-            $str .= 'defb @'.implode('', $line).CR;
-        }
-
-        return $str.CR;
-    }
-
-    /**
      * Get number of tiles in tileset
      */
     public static function GetNumTiles()

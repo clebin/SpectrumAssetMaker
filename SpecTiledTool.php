@@ -32,7 +32,7 @@ class SpecTiledTool
     public static $format = self::FORMAT_C;
     
     // naming
-    public static $prefix = 'tiles';
+    public static $prefix = false;
 
     
     // filenames
@@ -42,6 +42,7 @@ class SpecTiledTool
     private static $tilesetFilename = false;
     private static $outputFilename = false;
     private static $graphicsFilename = false;
+    private static $spriteWidth = false;
 
     // save game properties
     public static $saveSolidData = false;
@@ -73,8 +74,8 @@ class SpecTiledTool
             self::$mapFilename = CliTools::GetAnswer('Map filename', 'map.tmj');
             self::$tilesetFilename = CliTools::GetAnswer('Tileset filename', 'tileset.tsj');
             self::$graphicsFilename = CliTools::GetAnswer('Tile graphics filename', 'tiles.gif');
-            self::$format = CliTools::GetAnswer('Which format?', 'c', ['basic','c']);
-
+            self::$format = CliTools::GetAnswer('Which format?', 'c', ['basic','c','asm']);
+            self::$spriteWidth = intval(CliTools::GetAnswer('Sprite width in columns', 1));
         }
         // get options from command line arguments
         else {
@@ -93,6 +94,7 @@ class SpecTiledTool
             if( isset($options['tileset'])) {
                 self::$tilesetFilename = $options['tileset'];
             }
+
             // graphics
             if( isset($options['graphics'])) {
                 self::$graphicsFilename = $options['graphics'];
@@ -114,6 +116,11 @@ class SpecTiledTool
                 }
             }
 
+            // graphics
+            if( isset($options['sprite-width'])) {
+                self::$spriteWidth = intval($options['sprite-width']);
+            }
+
         }
 
         // read files
@@ -129,8 +136,16 @@ class SpecTiledTool
             Graphics::ReadFile(self::$graphicsFilename);
         
             if( self::$error === false ) {
+
+                // output filename
+                if( self::$prefix !== false ) {
+                    $output_base_filename = self::$prefix.'-tile-graphics';
+                } else {
+                    $output_base_filename = 'tile-graphics';
+                }
+        
                 // write graphics to file
-                file_put_contents(self::$prefix.'-graphics.'.self::GetOutputFileExtension(), Graphics::GetCode());
+                file_put_contents($output_base_filename.'.'.self::GetOutputFileExtension(), Graphics::GetCode());
             }
         }
     }
@@ -139,20 +154,28 @@ class SpecTiledTool
     {
         // read map and tilset
         if( self::$tilesetFilename !== false ) {
+            
             Tileset::ReadFile(self::$tilesetFilename);
             Tilemap::ReadFile(self::$mapFilename);
         
-
             if( self::$error === false ) {
+
+                // output filename
+                if( self::$prefix !== false ) {
+                    $output_base_filename = self::$prefix.'-screens';
+                } else {
+                    $output_base_filename = 'screens';
+                }
+
                 // write graphics to file
                 if( self::$saveScreensInOwnFile ===  true ) {
 
                     for($i=0;$i<Tilemap::GetNumScreens();$i++) {
-                        file_put_contents(self::$prefix.'-screens-'.$i.'.'.self::GetOutputFileExtension(), Tilemap::GetScreenCode($i));
+                        file_put_contents($output_base_filename.'-'.$i.'.'.self::GetOutputFileExtension(), Tilemap::GetScreenCode($i));
                     }
                 }
                 else {
-                    file_put_contents(self::$prefix.'-screens.'.self::GetOutputFileExtension(), Tilemap::GetCode());
+                    file_put_contents($output_base_filename.'.'.self::GetOutputFileExtension(), Tilemap::GetCode());
                 }
             }
         }
@@ -165,7 +188,15 @@ class SpecTiledTool
             Sprite::ReadFiles(self::$spriteFilename, self::$maskFilename);
         
             if( self::$error === false ) {
-                file_put_contents(self::$prefix.'-sprite.'.self::GetOutputFileExtension(), Sprite::GetCode());
+
+                // output filename
+                if( self::$prefix !== false ) {
+                    $output_base_filename = self::$prefix.'-sprite';
+                } else {
+                    $output_base_filename = 'sprite';
+                }
+
+                file_put_contents($output_base_filename.'.'.self::GetOutputFileExtension(), Sprite::GetCode());
             }
         }
 
@@ -210,6 +241,14 @@ class SpecTiledTool
         return self::$prefix;
     }
 
+    /**
+     * Get sprite width
+     */
+    public static function getSpriteWidth()
+    {
+        return self::$spriteWidth;
+    }
+    
     /**
      * Return an array as a string in C format
      */
