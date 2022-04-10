@@ -15,7 +15,6 @@ class Tileset
     public static function ReadFile($filename)
     {
         if(!file_exists($filename)) {
-            SpecTiledTool::AddError('Tileset file not found');
             return false;
         }
         
@@ -35,6 +34,7 @@ class Tileset
         echo CR;
 
         echo 'Added '.$count.' tiles.'.CR;
+        return true;
     }
     
     /**

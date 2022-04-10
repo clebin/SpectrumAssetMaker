@@ -15,8 +15,6 @@ class Tilemap {
     public static function ReadFile($filename) {
 
         if(!file_exists($filename)) {
-
-            SpecTiledTool::AddError('Map file not found');
             return false;
         }
 
@@ -47,6 +45,7 @@ class Tilemap {
             // add to screens
             self::$screens[] = $screen;
         }
+        return true;
     }
     
     /**

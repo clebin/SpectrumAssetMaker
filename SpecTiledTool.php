@@ -141,9 +141,9 @@ class SpecTiledTool
         // read graphics, map and tileset
         if( self::$graphicsFilename !== false ) {
 
-            Graphics::ReadFile(self::$graphicsFilename);
+            $success = Graphics::ReadFile(self::$graphicsFilename);
             
-            if( self::$error === false ) {
+            if( $success === true ) {
 
                 // write graphics to file
                 $file_output .= Graphics::GetCode();
@@ -152,9 +152,9 @@ class SpecTiledTool
 
         if( self::$tilesetFilename !== false ) {
 
-            Tileset::ReadFile(self::$tilesetFilename);
+            $success = Tileset::ReadFile(self::$tilesetFilename);
 
-            if( self::$error === false ) {        
+            if( $success === true ) {        
                 // write graphics to file
                 $file_output .= Tileset::GetCode();
             }
@@ -164,10 +164,6 @@ class SpecTiledTool
         if( $file_output != '' ) {
             file_put_contents($output_base_filename.'.'.self::GetOutputFileExtension(), $file_output);
         }
-    }
-
-    private static function ProcessTilesetGraphics()
-    {
     }
 
     private static function ProcessScreens()
