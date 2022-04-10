@@ -60,7 +60,6 @@ class Graphics
      */
     public static function GetTileData($num)
     {
-
         if( isset(self::$data[$num])) {
             return self::$data[$num];
         } else {
@@ -142,9 +141,9 @@ class Graphics
         $str = '';
         
         if( SpecTiledTool::GetPrefix() !== false ) {
-            $baseName = SpecTiledTool::GetPrefix();
+            $baseName = SpecTiledTool::GetPrefix().'TilesetGraphics';
         } else {
-            $baseName = 'tiles';
+            $baseName = 'tilesetGraphics';
         }
 
         $str .= '#define '.strtoupper($baseName).'_LEN '.sizeof(self::$data).CR.CR;

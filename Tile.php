@@ -70,5 +70,94 @@ class Tile
         // set graphics
         //self::$graphics = Graphics::GetTileData($tile['num']);
     }
-    
+
+    /**
+     * Return paper number for tile
+     */
+    public function GetPaper($id)
+    {
+        return $this->paper;
+    }
+
+    /**
+     * Return ink number for tile
+     */
+    public function GetInk($id)
+    {
+        return $this->ink;
+    }
+
+    /**
+     * Return whether bright is set on tile
+     */
+    public function GetBright()
+    {
+        return $this->bright;
+    }
+
+    /**
+     * Return whether flash is set on tile
+     */
+    public function GetFlash()
+    {
+        return $this->flash;
+    }
+
+    /**
+     * Return whether solid is set on tile
+     */
+    public function GetSolid()
+    {
+        return $this->solid;
+    }
+
+    /**
+     * Return whether lethal is set on tile
+     */
+    public function GetLethal()
+    {
+        return $this->lethal;
+    }
+
+    /**
+     * Return whether lethal is set on tile
+     */
+    public function GetPlatform()
+    {
+        return $this->platform;
+    }
+
+    /**
+     * Return whether custom1 is set on tile
+     */
+    public function GetCustom1()
+    {
+        return $this->custom;
+    }
+
+    /**
+     * Get byte containing flash, bright, paper and ink as a string
+     */
+    public function GetColoursByte()
+    {
+        return 
+        ( $this->flash == true ? '1' : '0'). // flash
+        ( $this->bright == true ? '1' : '0'). // bright
+        str_pad(decbin($this->paper), 3, '0', STR_PAD_LEFT ).
+        str_pad(decbin($this->ink), 3, '0', STR_PAD_LEFT );
+    }
+
+    /**
+     * Get byte containing solid, lethal, platform, custom
+     * variables as a string
+     */
+    public function GetPropertiesByte()
+    {
+        return 
+        ( $this->solid == true ? '1' : '0').
+        ( $this->lethal == true ? '1' : '0').
+        ( $this->platform == true ? '1' : '0').
+        ( $this->custom == true ? '1' : '0').
+        '0000';
+    }
 }

@@ -53,66 +53,82 @@ class Tileset
     }
 
     /**
-     * Return paper number for tile
+     * Get tile graphics code in currently set format/language
      */
-    public static function GetPaper($id)
+    public static function GetCode()
     {
-        return self::$tiles[$id]->paper;
+        switch( SpecTiledTool::GetFormat() ) {
+            case 'basic':
+                return self::GetBasic();
+                break;
+            
+            case 'c':
+                return self::GetC();
+                break;
+
+            default:
+                return self::GetAsm();
+                break;
+        }
     }
 
     /**
-     * Return ink number for tile
+     * Return tilset in Assembly format
      */
-    public static function GetInk($id)
+    public static function GetAsm()
     {
-        return self::$tiles[$id]->ink;
+        $str = 'Error: Assembly tileset export is not supported.';
+
+        return $str;
     }
 
     /**
-     * Return whether bright is set on tile
+     * Return tileset in BASIC format
      */
-    public static function GetBright($id)
+    public static function GetBasic()
     {
-        return self::$tiles[$id]->bright;
+        $str = 'Error: BASIC tileset export is not supported.';
+
+        return $str;
     }
 
     /**
-     * Return whether flash is set on tile
+     * Return C array of tile colours and properties
      */
-    public static function GetFlash($id)
+    public static function GetC()
     {
-        return self::$tiles[$id]->flash;
-    }
+        $str = '';
 
-    /**
-     * Return whether solid is set on tile
-     */
-    public static function GetSolid($id)
-    {
-        return self::$tiles[$id]->solid;
-    }
+        if( SpecTiledTool::GetPrefix() !== false ) {
+            $baseName = SpecTiledTool::GetPrefix().'Tileset';
+        } else {
+            $baseName = 'tileset';
+        }
 
-    /**
-     * Return whether lethal is set on tile
-     */
-    public static function GetLethal($id)
-    {
-        return self::$tiles[$id]->lethal;
-    }
+        $str .= '#define '.strtoupper($baseName).'_LEN '.sizeof(self::$tiles).CR.CR;
 
-    /**
-     * Return whether lethal is set on tile
-     */
-    public static function GetPlatform($id)
-    {
-        return self::$tiles[$id]->platform;
-    }
+        // tile info
+        $colours = [];
+        $properties = [];
+        foreach(self::$tiles as $tile) {
+            $colours[] = $tile->GetColoursByte();
+            $properties[] = $tile->GetPropertiesByte();
+        }
 
-    /**
-     * Return whether custom1 is set on tile
-     */
-    public static function GetCustom($id)
-    {
-        return self::$tiles[$id]->custom;
+        // colours
+        $str .= SpecTiledTool::GetCArray(
+            $baseName.'Colours', 
+            $colours, 
+            2
+        ).CR;
+
+        // properties
+        $str .= SpecTiledTool::GetCArray(
+            $baseName.'Properties', 
+            $properties, 
+            2
+        ).CR;
+
+        return $str;
     }
 }

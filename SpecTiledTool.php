@@ -124,59 +124,76 @@ class SpecTiledTool
         }
 
         // read files
-        self::ProcessTileGraphics();
-        self::ProcessMapTileset();
+        self::ProcessTileset();
+        self::ProcessScreens();
         self::ProcessSprite();
     }
 
-    private static function ProcessTileGraphics()
+    private static function ProcessTileset()
     {
+        $file_output = '';
+        // output filename
+        if( self::$prefix !== false ) {
+            $output_base_filename = self::$prefix.'-tileset';
+        } else {
+            $output_base_filename = 'tileset';
+        }
+        
         // read graphics, map and tileset
         if( self::$graphicsFilename !== false ) {
+
             Graphics::ReadFile(self::$graphicsFilename);
-        
+            
             if( self::$error === false ) {
 
-                // output filename
-                if( self::$prefix !== false ) {
-                    $output_base_filename = self::$prefix.'-tile-graphics';
-                } else {
-                    $output_base_filename = 'tile-graphics';
-                }
-        
                 // write graphics to file
-                file_put_contents($output_base_filename.'.'.self::GetOutputFileExtension(), Graphics::GetCode());
+                $file_output .= Graphics::GetCode();
             }
+        }
+
+        if( self::$tilesetFilename !== false ) {
+
+            Tileset::ReadFile(self::$tilesetFilename);
+
+            if( self::$error === false ) {        
+                // write graphics to file
+                $file_output .= Tileset::GetCode();
+            }
+        }
+
+        // write data to file
+        if( $file_output != '' ) {
+            file_put_contents($output_base_filename.'.'.self::GetOutputFileExtension(), $file_output);
         }
     }
 
-    private static function ProcessMapTileset()
+    private static function ProcessTilesetGraphics()
+    {
+    }
+
+    private static function ProcessScreens()
     {
         // read map and tilset
-        if( self::$tilesetFilename !== false ) {
-            
-            Tileset::ReadFile(self::$tilesetFilename);
-            Tilemap::ReadFile(self::$mapFilename);
-        
-            if( self::$error === false ) {
+        Tilemap::ReadFile(self::$mapFilename);
+    
+        if( self::$error === false ) {
 
-                // output filename
-                if( self::$prefix !== false ) {
-                    $output_base_filename = self::$prefix.'-screens';
-                } else {
-                    $output_base_filename = 'screens';
-                }
+            // output filename
+            if( self::$prefix !== false ) {
+                $output_base_filename = self::$prefix.'-screens';
+            } else {
+                $output_base_filename = 'screens';
+            }
 
-                // write graphics to file
-                if( self::$saveScreensInOwnFile ===  true ) {
+            // write graphics to file
+            if( self::$saveScreensInOwnFile ===  true ) {
 
-                    for($i=0;$i<Tilemap::GetNumScreens();$i++) {
-                        file_put_contents($output_base_filename.'-'.$i.'.'.self::GetOutputFileExtension(), Tilemap::GetScreenCode($i));
-                    }
+                for($i=0;$i<Tilemap::GetNumScreens();$i++) {
+                    file_put_contents($output_base_filename.'-'.$i.'.'.self::GetOutputFileExtension(), Tilemap::GetScreenCode($i));
                 }
-                else {
-                    file_put_contents($output_base_filename.'.'.self::GetOutputFileExtension(), Tilemap::GetCode());
-                }
+            }
+            else {
+                file_put_contents($output_base_filename.'.'.self::GetOutputFileExtension(), Tilemap::GetCode());
             }
         }
     }
