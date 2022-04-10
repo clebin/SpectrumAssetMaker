@@ -127,10 +127,7 @@ class Sprite
     public static function GetCode()
     {
         switch( SpecTiledTool::GetFormat() ) {
-            case 'basic':
-                return self::GetBasic();
-                break;
-            
+
             case 'c':
                 return self::GetC();
                 break;
@@ -147,16 +144,6 @@ class Sprite
     public static function GetC()
     {
         $str = 'Error: C sprite export is not supported.';
-
-        return $str;
-    }
-
-    /**
-     * Return tile graphics in BASIC format
-     */
-    public static function GetBasic()
-    {
-        $str = 'Error: BASIC sprite export is not supported.';
 
         return $str;
     }

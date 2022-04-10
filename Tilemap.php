@@ -68,9 +68,6 @@ class Tilemap {
         for($i=0;$i<sizeof(self::$screens);$i++) {
 
             switch( SpecTiledTool::GetFormat() ) {
-                case 'basic':
-                    $str .= self::GetScreenBasic($i);
-                    break;
                 case 'c':
                     $str .= self::GetScreenC($i);
                     break;
@@ -88,9 +85,6 @@ class Tilemap {
     public static function GetScreenCode($screenNum)
     {
         switch( SpecTiledTool::GetFormat() ) {
-            case 'basic':
-                return self::GetScreenBasic($screenNum);
-                break;
             case 'c':
                 return self::GetScreenC($screenNum);
                 break;
@@ -154,20 +148,6 @@ class Tilemap {
             $str .= '};'.CR;
         }
         
-        return $str;
-    }
-
-    /**
-     * Get screen represented in BASIC
-     */
-    public static function GetScreenBasic($screenNum)
-    {
-        $str = SpecTiledTool::GetBasicArray(
-            SpecTiledTool::GetPrefix().'ScreenTiles'.$screenNum, 
-            self::$screens[$screenNum], 
-            10
-        ).CR;
-
         return $str;
     }
 

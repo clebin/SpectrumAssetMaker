@@ -58,9 +58,6 @@ class Tileset
     public static function GetCode()
     {
         switch( SpecTiledTool::GetFormat() ) {
-            case 'basic':
-                return self::GetBasic();
-                break;
             
             case 'c':
                 return self::GetC();
@@ -78,16 +75,6 @@ class Tileset
     public static function GetAsm()
     {
         $str = 'Error: Assembly tileset export is not supported.';
-
-        return $str;
-    }
-
-    /**
-     * Return tileset in BASIC format
-     */
-    public static function GetBasic()
-    {
-        $str = 'Error: BASIC tileset export is not supported.';
 
         return $str;
     }

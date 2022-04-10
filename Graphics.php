@@ -118,11 +118,7 @@ class Graphics
      */
     public static function GetCode()
     {
-        switch( SpecTiledTool::GetFormat() ) {
-            case 'basic':
-                return self::GetBasic();
-                break;
-            
+        switch( SpecTiledTool::GetFormat() ) {            
             case 'c':
                 return self::GetC();
                 break;
@@ -176,44 +172,6 @@ class Graphics
         }
 
         $str .= CR.'};'.CR;
-
-        return $str;
-    }
-
-    /**
-     * Return tile graphics in BASIC format
-     */
-    public static function GetBasic()
-    {
-        $str = 'Dim '.SpecTiledTool::GetPrefix().'('.(sizeof(self::$data)-1).',7) as uByte => { _'.CR;
-        
-        // loop through individual graphics
-        $attrcount = 0;
-        foreach(self::$data as $attribute) {
-
-            // new line
-            if( $attrcount > 0 ) {
-                $str .= ', _'.CR;
-            }
-
-            $str .= '    {';
-
-            // loop through pixel rows
-            $rowcount = 0;
-            foreach($attribute as $datarow) {
-                if( $rowcount > 0 ) {
-                    $str .= ',';
-                }
-                $val = implode('', $datarow);
-                $str .= bindec($val);
-                $rowcount++;
-            }
-            $str .= '}';
-
-            $attrcount++;
-        }
-
-        $str .= ' _'.CR.'}'.CR;
 
         return $str;
     }

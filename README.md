@@ -24,6 +24,6 @@ Chris Owen 2022
 
 --graphics=<tileset graphics filename (black & white png or gif)>
 
---format=<basic|c|asm, default: asm>
+--format=<c|asm, default: asm>
 
 Running the script without parameters will prompt for each setting.

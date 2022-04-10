@@ -26,7 +26,6 @@ class SpecTiledTool
     // constants
     const FORMAT_ASM = 'asm';
     const FORMAT_C = 'c';
-    const FORMAT_BASIC = 'basic';
     
     // current output format
     public static $format = self::FORMAT_C;
@@ -74,7 +73,7 @@ class SpecTiledTool
             self::$mapFilename = CliTools::GetAnswer('Map filename', 'map.tmj');
             self::$tilesetFilename = CliTools::GetAnswer('Tileset filename', 'tileset.tsj');
             self::$graphicsFilename = CliTools::GetAnswer('Tile graphics filename', 'tiles.gif');
-            self::$format = CliTools::GetAnswer('Which format?', 'c', ['basic','c','asm']);
+            self::$format = CliTools::GetAnswer('Which format?', 'c', ['c','asm']);
             self::$spriteWidth = intval(CliTools::GetAnswer('Sprite width in columns', 1));
         }
         // get options from command line arguments
@@ -228,11 +227,7 @@ class SpecTiledTool
      */
     public static function GetOutputFileExtension()
     {
-        switch(self::$format) {
-            case 'basic':
-                return 'bas';
-                break;
-            
+        switch(self::$format) {            
             case 'c':
                 return 'c';
                 break;
@@ -306,48 +301,6 @@ class SpecTiledTool
         }
 
         $str .= CR.'};'.CR.CR;
-
-        return $str;
-    }
-
-    /**
-     * Return an array as a string in BASIC format
-     */
-    public static function GetBasicArray($name, $values, $numbase = 10)
-    {
-        $str = 'Dim '.$name.'('.(sizeof($values)-1).') as uByte => { _'.CR;
-        
-        $count = 0;
-        foreach($values as $val) {
-
-            if( $count > 0 ) {
-                $str .= ',';
-                if( $count % 32 == 0 ) {
-                    $str .= ' _'.CR;
-                }
-            }
-
-            // convert to numbers to decimal
-            switch( $numbase ) {
-
-                // binary
-                case 2:
-                    $str .= bindec($val);
-                break;
-                
-                // decimal
-                case 10:
-                    $str .= $val;
-                break;
-
-                // hex
-                case 15:
-                    $str .= hexdec($val);
-            }
-
-            $count++;
-        }
-        $str .= ' _'.CR.'}'.CR.CR;
 
         return $str;
     }
