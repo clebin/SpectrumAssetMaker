@@ -114,14 +114,16 @@ class Tilemap {
         $str = '';
 
         if( SpecTiledTool::GetPrefix() !== false ) {
+            $defineName = 'SCREENS_LEN';
             $baseName = SpecTiledTool::GetPrefix().'Screen';
         } else {
+            $defineName = SpecTiledTool::GetPrefix().'_SCREENS_LEN';
             $baseName = 'screen';
         }
 
         // add to first screen
         if( $screenNum == 0 ) {
-            $str .= '#define '.strtoupper(SpecTiledTool::GetPrefix()).'_SCREENS_LEN '.sizeof(self::$screens).CR.CR;
+            $str .= '#define '.$defineName.' '.sizeof(self::$screens).CR.CR;
         }
         
         // tile numbers
