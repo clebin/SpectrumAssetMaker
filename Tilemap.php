@@ -14,6 +14,10 @@ class Tilemap {
     private static $screens_enemies = [];
     private static $screen_colours = [];
 
+    private static $save_objects = false;
+    private static $save_enemies = false;
+    private static $save_colours = false;
+
     // allowed properties on enemies, objects, etc.
     private static $object_allowed_properties = [
         'collectable',
@@ -86,8 +90,19 @@ class Tilemap {
                     break;
 
                     case 'enemies':
-                        self::$screens_objects[] = self::ReadObjectLayer($layer);
+                        self::$screens_enemies[] = self::ReadObjectLayer($layer);
+                        self::$save_enemies = true;
                     break;
+
+                    // case 'objects':
+                    //     self::$screens_objects[] = self::ReadObjectLayer($layer);
+                    //     self::$save_objects = true;
+                    // break;
+
+                    // case 'colours':
+                    //     self::$screens_colours[] = self::ReadObjectLayer($layer);
+                    //     self::$save_colours = true;
+                    // break;
                 }
             }
         }
@@ -233,23 +248,87 @@ class Tilemap {
             10
         ).CR;
 
+        // enemies
+        $str .= self::GetObjectsC('enemies', self::$screens_enemies[$screenNum]);
+        
         // last screen - set up an array of pointers to the screens
         if( $screenNum == sizeof(self::$screens)-1 ) {
-            
-            $str .= '// array of pointers to all screens'.CR;
 
-            // tile number arrays
-            $str .= 'const unsigned char *'.$baseName.'sTiles['.sizeof(self::$screens).'] = {';
-            for($i=0;$i<sizeof(self::$screens);$i++) {
-                if($i>0) {
-                    $str .= ', ';
-                }
-                $str .= $baseName.'Tiles'.$i;
-            }
-            $str .= '};'.CR;
+            $str .= self::GetScreenArrayPointersC($screenNum);
         }
         
         return $str;
+    }
+
+    /**
+     * Get arrays of pointers to tilemaps, enemies, objects and colours
+     */
+    public static function GetScreenArrayPointersC($screenNum)
+    {
+        $str = self::GetPointerArrayC($baseName.'sTiles', $baseName.'Tiles', sizeof(self::$screens));
+
+        // pointers to enemies
+        if( self::$save_enemies === true ) {
+            $str .= self::GetPointerArrayC($baseName.'sEnemies', $baseName.'Enemies', sizeof(self::$screens));
+        }
+
+        // pointers to objects 
+        if( self::$save_objects === true ) {
+            $str .= self::GetPointerArrayC($baseName.'sObjects', $baseName.'Objects', sizeof(self::$screens));
+        }
+
+        // pointers to custom colours
+        if( self::$save_colours === true ) {
+            $str .= self::GetPointerArrayC($baseName.'sColours', $baseName.'Colours', sizeof(self::$screens));
+        }
+
+        return $str;
+    }
+
+    /**
+     * Get C code for an array of pointers
+     */
+    public static function GetPointerArrayC($arrayName, $itemsBaseName, $size = 0)
+    {
+        $str = '';
+
+        // tile number arrays
+        $str .= 'const unsigned char *'.$arrayName.'['.$size.'] = {';
+        
+        for($i=0;$i<$size;$i++) {
+            if($i>0) {
+                $str .= ', ';
+            }
+            $str .= $itemsBaseName.$i;
+        }
+        $str .= '};'.CR;
+    
+        return $str;
+    }
+
+    /**
+     * Get C code for eneemies
+     */
+    public static function GetEnemiesC()
+    {
+        $name = $baseName.'Enemies'.$screenNum;
+        
+    }
+
+    /**
+     * Get C code for objects
+     */
+    public static function GetObjectsC()
+    {
+        $name = $baseName.'Objects'.$screenNum;
+    }
+
+    /**
+     * Get C codde for custom colours
+     */
+    public static function GetColoursC()
+    {
+        $name = $baseName.'Colours'.$screenNum;
     }
 
     /**
