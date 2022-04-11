@@ -49,6 +49,9 @@ class Tilemap {
         }
     }
 
+    /**
+     * Read a simple file with only tilemap layers and no groups
+     */
     public static function ReadFileSimple($data)
     {
         // each layer counts as one screen
@@ -59,6 +62,16 @@ class Tilemap {
         return true;
     }
 
+    /**
+     * Read a file with object layers and tilemap layers in groups
+     * 
+     * Correct layer names:
+     * - tilemap
+     * - enemies
+     * - objects
+     * - colours
+     * 
+     */
     public static function ReadFileWithObjects($data)
     {
         // loop through groups
@@ -80,6 +93,9 @@ class Tilemap {
         }
     }
 
+    /**
+     * Read a Tiled tilemap layer
+     */
     public static function ReadTilemapLayer($layer)
     {
         $screen = [];
@@ -99,15 +115,23 @@ class Tilemap {
         return $screen;
     }
 
+    /**
+     * Read an Tiled object layer (can be enemies, objects or colours)
+     */
     public static function ReadObjectLayer($data)
     {
         $objects = [];
         foreach($layer['objects'] as $json_object) {
 
-            $obj = [];
+            // create new object
+            $obj = [
+                'type' => $json_object['type']
+            ];
 
-            // type
-            $obj['type'] = $json_object['type'];
+            // name (optional)
+            if( $json_object['name'] != '' ) {
+                $obj['name'] = $json_object['name'];
+            }
 
             // custom properties
             foreach($json_object['properties'] as $prop) {
