@@ -50,7 +50,7 @@
                          "gid":40,
                          "height":8,
                          "id":1,
-                         "name":"circle",
+                         "name":"",
                          "properties":[
                                 {
                                  "name":"deltax",
@@ -63,12 +63,7 @@
                                  "value":0
                                 }, 
                                 {
-                                 "name":"endx",
-                                 "type":"int",
-                                 "value":0
-                                }, 
-                                {
-                                 "name":"endy",
+                                 "name":"endval",
                                  "type":"int",
                                  "value":0
                                 }, 
@@ -79,26 +74,30 @@
                                 }, 
                                 {
                                  "name":"movement",
-                                 "propertytype":"movement",
                                  "type":"string",
                                  "value":"horizontal"
                                 }, 
                                 {
-                                 "name":"numkill",
+                                 "name":"numhits",
                                  "type":"int",
                                  "value":2
                                 }, 
                                 {
                                  "name":"speed",
                                  "type":"int",
-                                 "value":0
+                                 "value":1
+                                }, 
+                                {
+                                 "name":"transient",
+                                 "type":"bool",
+                                 "value":false
                                 }],
                          "rotation":0,
-                         "type":"circle",
+                         "type":"flying_saucer",
                          "visible":true,
                          "width":8,
                          "x":8,
-                         "y":32
+                         "y":24
                         }],
                  "opacity":1,
                  "type":"objectgroup",
@@ -243,7 +242,7 @@
                     8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
                  "height":24,
                  "id":4,
-                 "name":"Screen 3",
+                 "name":"Tilemap",
                  "opacity":1,
                  "type":"tilelayer",
                  "visible":false,

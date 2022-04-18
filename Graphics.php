@@ -53,6 +53,8 @@ class Graphics
                 self::$data[] = self::GetPixelData($col, $row);
             }
         }
+        
+        return true;
     }
 
     /**

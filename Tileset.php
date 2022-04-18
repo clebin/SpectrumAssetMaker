@@ -101,7 +101,7 @@ class Tileset
             $colours[] = $tile->GetColoursByte();
             $properties[] = $tile->GetPropertiesByte();
         }
-
+        
         // colours
         $str .= SpecTiledTool::GetCArray(
             $baseName.'Colours', 

@@ -43,13 +43,13 @@ class Tilemap {
         $json = file_get_contents($filename);
         $data = json_decode($json, true);
 
-        // read with object layers
-        if( isset($data['layers']['layers']) ) {
-            self::ReadFileWithObjects($data);
-        }
         // read simple
-        else {
+        if( isset($data['layers'][0]['data']) ) {
             self::ReadFileSimple($data);
+        }
+        // read with object layers
+        else {
+            self::ReadFileWithObjects($data);
         }
     }
 
@@ -61,7 +61,7 @@ class Tilemap {
         // each layer counts as one screen
         foreach($data['layers'] as $layer) {
 
-            self::$screens[] = self::GetLayerTiles($layer);
+            self::$screens[] = self::ReadTilemapLayer($layer);
         }
         return true;
     }
@@ -79,32 +79,40 @@ class Tilemap {
     public static function ReadFileWithObjects($data)
     {
         // loop through groups
+        $count = 0;
         foreach($data['layers'] as $group) {
             
-            foreach($group as $layer) {
+            foreach($group['layers'] as $layer) {
 
                 // get tilemap and object layers
                 switch( strtolower($layer['name']) ) {
                     case 'tilemap':
-                        self::$screens[] = self::ReadTilemapLayer($layer);
+                        self::$screens[$count] = self::ReadTilemapLayer($layer);
                     break;
 
                     case 'enemies':
-                        self::$screens_enemies[] = self::ReadObjectLayer($layer);
-                        self::$save_enemies = true;
+                        if( $layer['visible'] == true ) {
+                            self::$screens_enemies[$count] = self::ReadObjectLayer($layer);
+                            self::$save_enemies = true;
+                        }
                     break;
 
-                    // case 'objects':
-                    //     self::$screens_objects[] = self::ReadObjectLayer($layer);
-                    //     self::$save_objects = true;
-                    // break;
-
+                    case 'objects':
+                        if( $layer['visible'] == true ) {
+                            self::$screens_objects[$count] = self::ReadObjectLayer($layer);
+                            self::$save_objects = true;
+                        }
+                    break;
+                    
                     // case 'colours':
-                    //     self::$screens_colours[] = self::ReadObjectLayer($layer);
+                    //     if( $layer['visible'] == true ) {
+                    //     self::$screens_colours[$count] = self::ReadObjectLayer($layer);
                     //     self::$save_colours = true;
+                    //     }
                     // break;
                 }
             }
+            $count++;
         }
     }
 
@@ -133,8 +141,9 @@ class Tilemap {
     /**
      * Read an Tiled object layer (can be enemies, objects or colours)
      */
-    public static function ReadObjectLayer($data)
+    public static function ReadObjectLayer($layer)
     {
+        return;
         $objects = [];
         foreach($layer['objects'] as $json_object) {
 
@@ -222,13 +231,53 @@ class Tilemap {
     }
     
     /**
+     * 
+     */
+    public static function GetStructsC()
+    {
+        $str = '';
+
+        // enemies
+        if( self::$save_enemies === true ) {
+            $str .= '
+typedef struct Enemy {
+    char[8] type;
+    char[8] movement;
+    uint8_t x;
+    uint8_t y;
+    uint8_t lethal; // boolean
+    uint8_t transient; // boolean
+    uint8_t endval;
+    uint8_t numhits;
+    uint8_t speed;
+};'.CR.CR;
+        }
+
+        // objects
+        if( self::$save_objects === true ) {
+            $str .= '
+typedef struct GameObject {
+    char[12] name;
+    char[8] type;
+    uint8_t row;
+    uint8_t col;
+    uint8_t lethal; // boolean
+    uint8_t collectable; // boolean
+    uint8_t numhits;
+};'.CR.CR;
+        }
+
+        return $str;
+    }
+
+    /**
      * Get screen represented in C
      */
     public static function GetScreenC($screenNum)
     {
         $str = '';
 
-        if( SpecTiledTool::GetPrefix() !== false ) {
+        if( SpecTiledTool::GetPrefix() === false ) {
             $defineName = 'SCREENS_LEN';
             $baseName = SpecTiledTool::GetPrefix().'Screen';
         } else {
@@ -239,6 +288,8 @@ class Tilemap {
         // add to first screen
         if( $screenNum == 0 ) {
             $str .= '#define '.$defineName.' '.sizeof(self::$screens).CR.CR;
+
+            //$str .= self::GetStructsC();
         }
         
         // tile numbers
@@ -249,12 +300,24 @@ class Tilemap {
         ).CR;
 
         // enemies
-        $str .= self::GetObjectsC('enemies', self::$screens_enemies[$screenNum]);
+        if( self::$save_enemies === true && isset(self::$screens_enemies[$screenNum]) ) {
+            $str .= self::GetObjectsC('Enemies', self::$screens_enemies[$screenNum]);
+        }
+
+        // objects
+        if( self::$save_objects === true && isset(self::$screens_objects[$screenNum]) ) {
+            $str .= self::GetObjectsC('GameObjects', self::$screens_objects[$screenNum]);
+        }
+
+        // colours
+        if( self::$save_colours === true && isset(self::$screens_colours[$screenNum]) ) {
+            $str .= self::GetObjectsC('Colours', self::$screens_colours[$screenNum]);
+        }
         
         // last screen - set up an array of pointers to the screens
         if( $screenNum == sizeof(self::$screens)-1 ) {
 
-            $str .= self::GetScreenArrayPointersC($screenNum);
+            $str .= self::GetScreenArrayPointersC($baseName);
         }
         
         return $str;
@@ -263,7 +326,7 @@ class Tilemap {
     /**
      * Get arrays of pointers to tilemaps, enemies, objects and colours
      */
-    public static function GetScreenArrayPointersC($screenNum)
+    public static function GetScreenArrayPointersC($baseName)
     {
         $str = self::GetPointerArrayC($baseName.'sTiles', $baseName.'Tiles', sizeof(self::$screens));
 
@@ -311,7 +374,7 @@ class Tilemap {
      */
     public static function GetEnemiesC()
     {
-        $name = $baseName.'Enemies'.$screenNum;
+        // $name = $baseName.'Enemies'.$screenNum;
         
     }
 
@@ -320,7 +383,7 @@ class Tilemap {
      */
     public static function GetObjectsC()
     {
-        $name = $baseName.'Objects'.$screenNum;
+        // $name = $baseName.'Objects'.$screenNum;
     }
 
     /**
@@ -328,7 +391,7 @@ class Tilemap {
      */
     public static function GetColoursC()
     {
-        $name = $baseName.'Colours'.$screenNum;
+        // $name = $baseName.'Colours'.$screenNum;
     }
 
     /**
