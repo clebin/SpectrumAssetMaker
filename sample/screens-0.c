@@ -1,30 +1,6 @@
 #define SCREENS_LEN 3
 
-
-typedef struct Enemy {
-    char[8] type;
-    char[8] movement;
-    uint8_t x;
-    uint8_t y;
-    uint8_t lethal; // boolean
-    uint8_t transient; // boolean
-    uint8_t endval;
-    uint8_t numhits;
-    uint8_t speed;
-};
-
-
-typedef struct GameObject {
-    char[12] name;
-    char[8] type;
-    uint8_t row;
-    uint8_t col;
-    uint8_t lethal; // boolean
-    uint8_t collectable; // boolean
-    uint8_t numhits;
-};
-
-const unsigned char ScreenTiles0[768] = {
+const uint8_t ScreenTiles0[768] = {
 0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x31,
 0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
 0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,

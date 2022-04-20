@@ -13,11 +13,18 @@ class Sprite
     public static $height = 0;
     public static $numColumns = 0;
 
+    public static $baseName = 'sprite';
+    public static $section = 'rodata_user';
+
     /**
      * Read a black & white PNG or GIF file
      */
     public static function ReadFiles($spriteFile, $maskFile = false)
     {
+        if( SpecTiledTool::GetPrefix() !== false ) {
+            self::$baseName = SpecTiledTool::GetPrefix().'_sprite';
+        }
+
         self::$spriteImage = self::GetImage($spriteFile);
 
         if( $maskFile !== false ) {
@@ -153,24 +160,15 @@ class Sprite
      */
     public static function GetAsm()
     {
-        $str = '';
-        
-        if( SpecTiledTool::GetPrefix() !== false ) {
-            $baseName = SpecTiledTool::GetPrefix().'_sprite';
-        } else {
-            $baseName = 'sprite';
-        }
-        
-        $str .= 'SECTION rodata_user'.CR.CR;
+        $str = 'SECTION '.self::$section.CR.CR;
 
-        
         if(self::$numColumns > 1) {
             for($i=1;$i<=self::$numColumns;$i++) {
-                $str .= 'PUBLIC _'.$baseName.$i.CR;
+                $str .= 'PUBLIC _'.self::$baseName.$i.CR;
             }
         }
         else {
-            $str .= 'PUBLIC _'.$baseName.CR;
+            $str .= 'PUBLIC _'.self::$baseName.CR;
         }
         $str .= CR;
 
@@ -182,9 +180,9 @@ class Sprite
         for($col=0;$col<self::$numColumns;$col++) {
 
             if( self::$numColumns > 1 ) {
-                $str .= CR.'._'.$baseName.($col+1).CR;
+                $str .= CR.'._'.self::$baseName.($col+1).CR;
             } else {
-                $str .= CR.'._'.$baseName.CR;
+                $str .= CR.'._'.self::$baseName.CR;
             }
             
             // loop through data

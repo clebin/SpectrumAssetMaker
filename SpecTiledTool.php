@@ -32,7 +32,6 @@ class SpecTiledTool
     
     // naming
     public static $prefix = false;
-
     
     // filenames
     private static $spriteFilename = false;
@@ -44,10 +43,13 @@ class SpecTiledTool
     private static $graphicsFilename = false;
     private static $spriteWidth = false;
 
+    // assembly section
+    public static $section = 'rodata_user';
+    
     // save game properties
     public static $saveSolidData = false;
     public static $saveLethalData = false;
-
+    
     // add custom game properties to tiles
     public static $customProperties = [];
     
@@ -146,7 +148,7 @@ class SpecTiledTool
         } else {
             $outputBaseFilename .= 'tileset';
         }
-        
+
         // read tileset graphics
         if( self::$graphicsFilename !== false ) {
 
@@ -171,6 +173,13 @@ class SpecTiledTool
 
         // write data to file
         if( $file_output != '' ) {
+
+
+            // set memory section
+            if( self::$format == 'asm') {
+                $file_output = 'SECTION '.self::$section.CR.CR.$file_output;
+            }
+            
             file_put_contents($outputBaseFilename.'.'.self::GetOutputFileExtension(), $file_output);
         }
     }
@@ -277,7 +286,11 @@ class SpecTiledTool
      */
     public static function GetCArray($name, $values, $numbase = 10)
     {
-        $str = 'const unsigned char '.$name.'['.sizeof($values).'] = {'.CR;
+        if( Tileset::$large_tileset === true ) {
+            $str = 'const uint16_t '.$name.'['.sizeof($values).'] = {'.CR;
+        } else {
+            $str = 'const uint8_t '.$name.'['.sizeof($values).'] = {'.CR;
+        }
         
         // tile numbers
         $count = 0;
@@ -319,10 +332,16 @@ class SpecTiledTool
     /**
      * Return an array as a string in assembly format
      */
-    public static function GetAsmArray($name, $values, $numbase = 10, $length = false)
+    public static function GetAsmArray($name, $values, $numbase = 10, $length = false, $public = true)
     {
+        $str = '';
+
+        if( $public === true ) {
+            $str .= CR.'PUBLIC _'.$name.CR;
+        }
+
         // output paper/ink/bright/flash
-        $str = CR.'._'.$name;
+        $str .= CR.'._'.$name;
         
         $count = 0;
         foreach($values as $val) {

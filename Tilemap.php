@@ -18,6 +18,9 @@ class Tilemap {
     private static $save_enemies = false;
     private static $save_colours = false;
 
+    private static $defineName = 'SCREENS_LEN';
+    private static $baseName = 'Screen';
+
     // allowed properties on enemies, objects, etc.
     private static $object_allowed_properties = [
         'collectable',
@@ -39,7 +42,12 @@ class Tilemap {
         if(!file_exists($filename)) {
             return false;
         }
-        
+
+        if( SpecTiledTool::GetPrefix() !== false ) {
+            self::$defineName = SpecTiledTool::GetPrefix().'_'.self::$defineName;
+            self::$baseName = SpecTiledTool::GetPrefix().self::$baseName;
+        }
+
         $json = file_get_contents($filename);
         $data = json_decode($json, true);
 
@@ -277,24 +285,16 @@ typedef struct GameObject {
     {
         $str = '';
 
-        if( SpecTiledTool::GetPrefix() === false ) {
-            $defineName = 'SCREENS_LEN';
-            $baseName = SpecTiledTool::GetPrefix().'Screen';
-        } else {
-            $defineName = SpecTiledTool::GetPrefix().'_SCREENS_LEN';
-            $baseName = 'screen';
-        }
-
         // add to first screen
         if( $screenNum == 0 ) {
-            $str .= '#define '.$defineName.' '.sizeof(self::$screens).CR.CR;
+            $str .= '#define '.self::$defineName.' '.sizeof(self::$screens).CR.CR;
 
             //$str .= self::GetStructsC();
         }
         
         // tile numbers
         $str .= SpecTiledTool::GetCArray(
-            $baseName.'Tiles'.$screenNum, 
+            self::$baseName.'Tiles'.$screenNum, 
             self::$screens[$screenNum], 
             10
         ).CR;
@@ -317,7 +317,7 @@ typedef struct GameObject {
         // last screen - set up an array of pointers to the screens
         if( $screenNum == sizeof(self::$screens)-1 ) {
 
-            $str .= self::GetScreenArrayPointersC($baseName);
+            $str .= self::GetScreenArrayPointersC(ucfirst(self::$baseName));
         }
         
         return $str;
@@ -399,8 +399,10 @@ typedef struct GameObject {
      */
     public static function GetScreenAsm($screenNum)
     {
-        $str = SpecTiledTool::GetAsmArray(
-            SpecTiledTool::GetPrefix().'_screen_'.$screenNum.'_attribute_tiles', 
+        $str = 'SECTION '.SpecTiledTool::$section.CR;
+    
+        $str .= SpecTiledTool::GetAsmArray(
+            self::$baseName.'Tiles'.$screenNum, 
             self::$screens[$screenNum], 
             10, 
             8

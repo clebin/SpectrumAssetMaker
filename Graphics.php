@@ -10,11 +10,17 @@ class Graphics
     public static $numRows = 0;
     public static $numTiles = 0;
     
+    public static $baseName = 'tilesetGraphics';
+
     /**
      * Read a black & white PNG or GIF file
      */
     public static function ReadFile($filename)
     {
+        if( SpecTiledTool::GetPrefix() !== false ) {
+            self::$baseName = SpecTiledTool::GetPrefix().'TilesetGraphics';
+        }
+
         if(!file_exists($filename)) {
             SpecTiledTool::AddError('Graphics file not found');
             return false;
@@ -137,15 +143,9 @@ class Graphics
     public static function GetC()
     {
         $str = '';
-        
-        if( SpecTiledTool::GetPrefix() !== false ) {
-            $baseName = SpecTiledTool::GetPrefix().'TilesetGraphics';
-        } else {
-            $baseName = 'tilesetGraphics';
-        }
 
-        $str .= '#define '.strtoupper($baseName).'_LEN '.sizeof(self::$data).CR.CR;
-        $str .= 'const unsigned char '.$baseName.'['.sizeof(self::$data).'][8] = {'.CR;
+        $str .= '#define '.strtoupper(self::$baseName).'_LEN '.sizeof(self::$data).CR.CR;
+        $str .= 'const unsigned char '.self::$baseName.'['.sizeof(self::$data).'][8] = {'.CR;
         
         // loop through individual graphics
         $attrcount = 0;
@@ -184,17 +184,26 @@ class Graphics
     public static function GetAsm()
     {
         $str = '';
-        $count = 0;
-        foreach(self::$data as $attribute) {
-            $str .= '._'.SpecTiledTool::GetPrefix().'_graphics_'.$count.CR;
+        $str .= 'PUBLIC _'.self::$baseName.CR.CR;
 
+        $str .= '._'.self::$baseName.CR;
+
+
+        foreach(self::$data as $attribute) {
+            
+            $str .= 'defb ';
+            $count = 0;
             // loop through rows
             foreach($attribute as $datarow) {
-                $str .= 'defb @'.implode('', $datarow).CR;
+
+                if( $count > 0 ) {
+                    $str .= ', ';
+                }
+
+                $str .= '@'.implode('', $datarow);
+                $count++;
             }
             $str .= CR;
-
-            $count++;
         }
         
         return $str;

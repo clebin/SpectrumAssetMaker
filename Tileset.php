@@ -8,12 +8,20 @@ class Tileset
 {
     // static array of tiles
     private static $tiles = [];
+    public static $large_tileset = false;
+
+    public static $baseName = 'tileset';
 
     /**
      * Read the tileset JSON file
      */
     public static function ReadFile($filename)
     {
+
+        if( SpecTiledTool::GetPrefix() !== false ) {
+            self::$baseName = SpecTiledTool::GetPrefix().'Tileset';
+        }
+
         if(!file_exists($filename)) {
             return false;
         }
@@ -32,6 +40,11 @@ class Tileset
             $count++;
         }
         echo CR;
+
+        // need to represent tile numbers with 16 bits
+        if( sizeof(self::$tiles) > 256 ) {
+            self::$large_tileset = true;
+        }
 
         echo 'Added '.$count.' tiles.'.CR;
         return true;
@@ -72,9 +85,36 @@ class Tileset
     /**
      * Return tilset in Assembly format
      */
+    /**
+     * Return tileset in assembly format
+     */
     public static function GetAsm()
     {
-        $str = 'Error: Assembly tileset export is not supported.';
+        $str = '';
+        
+        $str .= CR;
+        // tile info
+        $colours = [];
+        $properties = [];
+
+        foreach(self::$tiles as $tile) {
+            $colours[] = $tile->GetColoursByte();
+            $properties[] = $tile->GetPropertiesByte();
+        }
+        
+        // colours
+        $str .= SpecTiledTool::GetAsmArray(
+            self::$baseName.'Colours', 
+            $colours, 
+            2
+        ).CR;
+
+        // properties
+        $str .= SpecTiledTool::GetAsmArray(
+            self::$baseName.'Properties', 
+            $properties, 
+            2
+        ).CR;
 
         return $str;
     }
@@ -86,13 +126,7 @@ class Tileset
     {
         $str = '';
 
-        if( SpecTiledTool::GetPrefix() !== false ) {
-            $baseName = SpecTiledTool::GetPrefix().'Tileset';
-        } else {
-            $baseName = 'tileset';
-        }
-
-        $str .= '#define '.strtoupper($baseName).'_LEN '.sizeof(self::$tiles).CR.CR;
+        $str .= '#define '.strtoupper(self::$baseName).'_LEN '.sizeof(self::$tiles).CR.CR;
 
         // tile info
         $colours = [];
@@ -104,14 +138,14 @@ class Tileset
         
         // colours
         $str .= SpecTiledTool::GetCArray(
-            $baseName.'Colours', 
+            self::$baseName.'Colours', 
             $colours, 
             2
         ).CR;
 
         // properties
         $str .= SpecTiledTool::GetCArray(
-            $baseName.'Properties', 
+            self::$baseName.'Properties', 
             $properties, 
             2
         ).CR;
