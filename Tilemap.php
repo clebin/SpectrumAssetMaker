@@ -19,7 +19,7 @@ class Tilemap {
     private static $save_colours = false;
 
     private static $defineName = 'SCREENS_LEN';
-    private static $baseName = 'Screen';
+    private static $baseName = 'screen';
 
     // allowed properties on enemies, objects, etc.
     private static $object_allowed_properties = [
@@ -317,7 +317,7 @@ typedef struct GameObject {
         // last screen - set up an array of pointers to the screens
         if( $screenNum == sizeof(self::$screens)-1 ) {
 
-            $str .= self::GetScreenArrayPointersC(ucfirst(self::$baseName));
+            $str .= self::GetScreenArrayPointersC(self::$baseName);
         }
         
         return $str;

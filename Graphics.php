@@ -191,16 +191,15 @@ class Graphics
 
         foreach(self::$data as $attribute) {
             
-            $str .= 'defb ';
             $count = 0;
             // loop through rows
             foreach($attribute as $datarow) {
 
-                if( $count > 0 ) {
-                    $str .= ', ';
-                }
+                // if( $count > 0 ) {
+                //     $str .= ', ';
+                // }
 
-                $str .= '@'.implode('', $datarow);
+                $str .= 'defb @'.implode('', $datarow).CR;
                 $count++;
             }
             $str .= CR;
