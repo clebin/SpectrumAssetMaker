@@ -1,7 +1,7 @@
 <?php
 namespace ClebinGames\SpecTiledTool;
 
-class Graphics
+class TilesetGraphics
 {
     private static $image = false;
     private static $data = [];

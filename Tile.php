@@ -66,9 +66,6 @@ class Tile
                     break;
             }
         }
-
-        // set graphics
-        //self::$graphics = Graphics::GetTileData($tile['num']);
     }
 
     /**

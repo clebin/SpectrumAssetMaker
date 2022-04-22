@@ -8,7 +8,7 @@ require("Attribute.php");
 require("Tile.php");
 require("Tileset.php");
 require("Tilemap.php");
-require("Graphics.php");
+require("TilesetGraphics.php");
 require("Sprite.php");
 
 /**
@@ -28,11 +28,15 @@ class SpecTiledTool
     const FORMAT_C = 'c';
     
     // current output format
+    public static $formats_supported = ['asm','c'];
     public static $format = self::FORMAT_C;
     
     // naming
     public static $prefix = false;
     
+    // compression
+    private static $compression = false;
+
     // filenames
     private static $spriteFilename = false;
     private static $maskFilename = false;
@@ -71,70 +75,113 @@ class SpecTiledTool
 
         // no options set - ask questions
         if( sizeof($options) == 0 ) {
-            
-            self::$prefix = CliTools::GetAnswer('Naming prefix', 'tiles');
-            self::$mapFilename = CliTools::GetAnswer('Map filename', 'map.tmj');
-            self::$tilesetFilename = CliTools::GetAnswer('Tileset filename', 'tileset.tsj');
-            self::$graphicsFilename = CliTools::GetAnswer('Tile graphics filename', 'tiles.gif');
-            self::$outputFolder = CliTools::GetAnswer('Output folder?', './');
-            self::$format = CliTools::GetAnswer('Which format?', 'c', ['c','asm']);
-            self::$spriteWidth = intval(CliTools::GetAnswer('Sprite width in columns', 1));
+            self::SetupWithUserPrompts();
         }
         // get options from command line arguments
         else {
-
-            // prefix
-            if( isset($options['prefix'])) {
-                self::$prefix = $options['prefix'];
-            }
-
-            // tilemaps
-            if( isset($options['map'])) {
-                self::$mapFilename = $options['map'];
-            }
-
-            // tileset
-            if( isset($options['tileset'])) {
-                self::$tilesetFilename = $options['tileset'];
-            }
-
-            // graphics
-            if( isset($options['graphics'])) {
-                self::$graphicsFilename = $options['graphics'];
-            }
-
-            // format
-            if( isset($options['format'])) {
-                self::$format = $options['format'];
-            }
-
-            if( isset($options['outputfolder'])) {
-                self::$outputFolder = $options['outputfolder'];
-            }
-
-            // sprite file
-            if( isset($options['sprite'])) {
-                self::$spriteFilename = $options['sprite'];
-
-                if( isset($options['mask'])) {
-                    self::$maskFilename = $options['mask'];
-                }
-            }
-
-            // graphics
-            if( isset($options['sprite-width'])) {
-                self::$spriteWidth = intval($options['sprite-width']);
-            }
-
+            self::SetupWithArgs();
         }
 
+        // is format supported?
+        if( !in_array(self::$format, self::$formats_supported) ) {
+            echo 'Errors: Format not supported.'.CR;
+            return false;
+        }
+        
+        // set output folder
         self::$outputFolder = rtrim(self::$outputFolder, '/').'/';
 
-        // read files
+        // process files
         self::ProcessTileset();
         self::ProcessScreens();
         self::ProcessSprite();
     }
+
+    private static function SetupWithUserPrompts()
+    {
+        self::$prefix = CliTools::GetAnswer('Naming prefix', 'tiles');
+
+        $mode = CliTools::GetAnswer('Which mode?', 'map', ['map','sprite']);
+        
+        // tilemap
+        if( $mode == 'map' ) {
+            self::$mapFilename = CliTools::GetAnswer('Map filename', 'map.tmj');
+            self::$tilesetFilename = CliTools::GetAnswer('Tileset filename', 'tileset.tsj');
+            self::$graphicsFilename = CliTools::GetAnswer('Tile graphics filename', 'tiles.gif');
+        }
+        // sprite
+        else {
+            self::$spriteFilename = CliTools::GetAnswer('Sprite filename', '');
+            self::$maskFilename = CliTools::GetAnswer('Mask filename', str_replace('.gif', '-mask.gif', self::$spriteFilename));
+            self::$spriteWidth = CliTools::GetAnswer('Sprite width in columns', 2);   
+        }
+
+        // output foloder
+        self::$outputFolder = CliTools::GetAnswer('Output folder?', './');
+
+        // format
+        self::$format = CliTools::GetAnswer('Which format?', 'c', self::$formats_supported);
+
+        if(self::$format == 'asm') {
+            self::$section = CliTools::GetAnswer('Asssembly section?', 'rodata_user');
+        }
+    }
+
+    private static function SetupWithArgs()
+    {
+        // prefix
+        if( isset($options['prefix'])) {
+            self::$prefix = $options['prefix'];
+        }
+
+        // tilemaps
+        if( isset($options['map'])) {
+            self::$mapFilename = $options['map'];
+        }
+
+        // tileset
+        if( isset($options['tileset'])) {
+            self::$tilesetFilename = $options['tileset'];
+        }
+
+        // graphics
+        if( isset($options['graphics'])) {
+            self::$graphicsFilename = $options['graphics'];
+        }
+
+        // format
+        if( isset($options['format'])) {
+            self::$format = $options['format'];
+        }
+
+        if( isset($options['outputfolder'])) {
+            self::$outputFolder = $options['outputfolder'];
+        }
+
+        // sprite file
+        if( isset($options['sprite'])) {
+            self::$spriteFilename = $options['sprite'];
+
+            if( isset($options['mask'])) {
+                self::$maskFilename = $options['mask'];
+            }
+            
+            if( isset($options['sprite-width'])) {
+                self::$spriteWidth = intval($options['sprite-width']);
+            }
+        }
+
+        // section
+        if( isset($options['section'])) {
+            self::$section = intval($options['section']);
+        }
+
+        // compression
+        if( isset($options['compression'])) {
+            self::$compression = true;
+        }
+    }
+
 
     private static function ProcessTileset()
     {
@@ -152,11 +199,11 @@ class SpecTiledTool
         // read tileset graphics
         if( self::$graphicsFilename !== false ) {
 
-            $success = Graphics::ReadFile(self::$graphicsFilename);
+            $success = TilesetGraphics::ReadFile(self::$graphicsFilename);
             
             if( $success === true ) {
                 // write graphics to file
-                $file_output .= Graphics::GetCode();
+                $file_output .= TilesetGraphics::GetCode();
             }
         }
 
@@ -421,6 +468,8 @@ $options = getopt('', [
     'format::', 
     'sprite::', 
     'mask::', 
+    'section::', 
+    'compression::',
     'outputfolder::'
 ]);
 
