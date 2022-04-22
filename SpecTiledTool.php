@@ -99,8 +99,10 @@ class SpecTiledTool
 
     private static function SetupWithUserPrompts()
     {
+        // naming prefix
         self::$prefix = CliTools::GetAnswer('Naming prefix', 'tiles');
 
+        // mode - map or sprite
         $mode = CliTools::GetAnswer('Which mode?', 'map', ['map','sprite']);
         
         // tilemap
@@ -276,8 +278,6 @@ class SpecTiledTool
                 } else {
                     $outputBaseFilename .= 'sprite';
                 }
-
-                echo $outputBaseFilename;
 
                 file_put_contents($outputBaseFilename.'.'.self::GetOutputFileExtension(), Sprite::GetCode());
             }
