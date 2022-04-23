@@ -286,17 +286,24 @@ typedef struct GameObject {
     {
         $str = '';
 
+        $name = self::$baseName.'Tiles'.$screenNum;
+
         // add to first screen
         if( $screenNum == 0 ) {
             $str .= '#define '.self::$defineName.' '.sizeof(self::$screens).CR.CR;
+        }
 
-            //$str .= self::GetStructsC();
+        // compression
+        if(SpecTiledTool::$compression === 'rle' ) {
+            $screenArray = SpecTiledTool::CompressArrayRLE(self::$screens[$screenNum], false, $name);
+        } else {
+            $screenArray = elf::$screens[$screenNum];
         }
         
         // tile numbers
         $str .= SpecTiledTool::GetCArray(
-            self::$baseName.'Tiles'.$screenNum, 
-            self::$screens[$screenNum], 
+            $name, 
+            $screenArray, 
             10
         ).CR;
 
