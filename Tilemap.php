@@ -414,7 +414,7 @@ typedef struct GameObject {
         if(SpecTiledTool::$compression === 'rle' ) {
             $screenArray = SpecTiledTool::CompressArrayRLE(self::$screens[$screenNum], true, $name);
         } else {
-            $screenArray = elf::$screens[$screenNum];
+            $screenArray = self::$screens[$screenNum];
         }
 
         $str .= SpecTiledTool::GetAsmArray(
