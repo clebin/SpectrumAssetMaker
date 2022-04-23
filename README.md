@@ -14,9 +14,13 @@ Chris Owen 2022
 
 > php SpecTiledTool.php
 
+Running the script without parameters will prompt for each setting.
+
 ***Parameters:***
 
 --prefix=<prefix for naming variables>
+
+--outputfolder=<folder path to place generated files>
 
 --map=<tilemap filename>
 
@@ -24,6 +28,21 @@ Chris Owen 2022
 
 --graphics=<tileset graphics filename (black & white png or gif)>
 
+--sprite=<sprite filename>
+
+--mask=<sprite mask filename>
+
+--sprite-width=<sprite width in 8 pixel columns>
+
 --format=<c|asm, default: asm>
 
-Running the script without parameters will prompt for each setting.
+--section=<assembly section to place code into, default: rodata_user>
+
+--compression <use RLE compression on tilemaps.>
+
+***RLE Compression Format***
+
+1 byte for tilenum, 1 byte for run-length.
+
+First two bytes contain the array length in bytes (hi/lo).
+
