@@ -73,7 +73,7 @@ The tool will create a separate screen for each tilemap layer.
 
 **Work-in-progress:** Tilemap layers can be organised into groups to import extra screen data. In this case, each group should contain a Tilemap layer called 'tilemap', and may include Object Layers called 'colours', 'enemies' and 'properties'. Objects in these layers will be imported into their own arrays.
 
-The purpose of the 'colours' and 'properites' array is to override the default colours and properties set on the tileset to add more variety to your screens.
+The purpose of the 'colours' and 'properties' array is to override the default colours and properties set on the tileset to add more variety to your screens.
 
 ### RLE Compression Format
 
