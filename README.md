@@ -25,27 +25,27 @@ Running the script without parameters will prompt for each setting.
 
 ### Parameters:
 
-**--prefix**=<prefix for naming variables>
+**--prefix**=[prefix for naming variables]
 
-**--outputfolder**=<folder path to place generated files>
+**--outputfolder**=[folder path to place generated files]
 
-**--map**=<tilemap filename)>
+**--map**=[tilemap filename]
 
-**--tileset**=<tileset filename>
+**--tileset**=[tileset filename]
 
-**--graphics**=<tileset graphics filename>
+**--graphics**=[tileset graphics filename]
 
-**--sprite**=<sprite filename>
+**--sprite**=[sprite filename]
 
-**--mask**=<sprite mask filename>
+**--mask**=[sprite mask filename]
 
-**--sprite-width**=<sprite width in 8 pixel columns>
+**--sprite-width**=[sprite width in 8 pixel columns]
 
-**--format**=<'c' or 'asm', default: asm>
+**--format**=['c' or 'asm', default: asm]
 
-**--section**=<assembly section to place code into, default: rodata_user>
+**--section**=[assembly section to place code into, default: rodata_user]
 
-**--compression** <enable RLE compression on tilemaps>
+**--compression**=rle [enable RLE compression on tilemaps]
 
 ### RLE Compression Format
 
