@@ -1,8 +1,22 @@
-Utility to read  tilesets and tilemaps from tiled along with a black & white gif and create Spectrum code.
+Utility to to create z88dk/Sp1 compatible screens, tilesets and sprites. 
 
 Chris Owen 2022
 
-** Known Issues: **
+
+**Input formats required:**
+
+**Tilemap** - Tiled JSON tilemap (.tmj)
+
+**Tileset** - Tiled JSON tileset (.tsj)
+
+**Tileset graphics** - Black and white GIF
+
+**Sprite** - Black and white GIF
+
+**Sprite Mask** - Black and white GIF
+
+
+**Known Issues:**
 
 * Currently tilesets and tilemaps must be exported as JSON (.tsj and .tmj files)
 
@@ -10,27 +24,29 @@ Chris Owen 2022
 
 * This tool is work-in-progress.
 
+
 **Usage:**
 
 > php SpecTiledTool.php
 
 Running the script without parameters will prompt for each setting.
 
-***Parameters:***
+
+**Parameters:**
 
 --prefix=<prefix for naming variables>
 
 --outputfolder=<folder path to place generated files>
 
---map=<tilemap filename (.tmj)>
+--map=<tilemap filename)>
 
---tileset=<tileset filename (.tsj)>
+--tileset=<tileset filename>
 
---graphics=<tileset graphics filename (black & white png or gif)>
+--graphics=<tileset graphics filename>
 
---sprite=<sprite filename (.png or .gif)>
+--sprite=<sprite filename>
 
---mask=<sprite mask filename (.png or .gif)>
+--mask=<sprite mask filename>
 
 --sprite-width=<sprite width in 8 pixel columns>
 
