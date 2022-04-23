@@ -47,6 +47,34 @@ Running the script without parameters will prompt for each setting.
 
 **--compression**=rle [enable RLE compression on tilemaps]
 
+### Tileset format ###
+
+Each tile in your tileset should have the following custom properties set:
+
+* flash (boolean)
+
+* bright (boolean)
+
+* paper (number 0-7)
+
+* ink (number 0-7)
+
+* solid (boolean)
+
+* lethal (boolean)
+
+* platform (boolean)
+
+
+
+### Tilemap format ###
+
+The tool will create a separate screen for each tilemap layer.
+
+**Work-in-progress:** Tilemap layers can be organised into groups to import extra screen data. In this case, each group should contain a tilemap layer called 'tilemap', and may include object layers called 'colours', 'enemies' and 'properties'. Object in these layers will be imported into their own arrays.
+
+The purpose of the 'colours' and 'properites' array is to override the default colours and properties set on the tileset to add more variety to your screens.
+
 ### RLE Compression Format
 
 1 byte for tilenum, 1 byte for run-length.
