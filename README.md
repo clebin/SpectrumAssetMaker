@@ -1,7 +1,7 @@
 # Spectrum Tiled Tool
 ## Chris Owen 2022
 
-Utility to to create z88dk/Sp1 compatible screens, tilesets and sprites. 
+Utility to to create z88dk/Sp1 compatible screens, tilesets and sprites in assembly or C format from GIFs and Tiled source files.
 
 ## Input formats required:
 
