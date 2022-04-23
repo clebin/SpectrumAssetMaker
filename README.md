@@ -25,27 +25,56 @@ Running the script without parameters will prompt for each setting.
 
 ### Parameters:
 
-**--prefix**=<prefix for naming variables>
+**--prefix**=[prefix for naming variables]
 
-**--outputfolder**=<folder path to place generated files>
+**--outputfolder**=[folder path to place generated files]
 
-**--map**=<tilemap filename)>
+**--map**=[tilemap filename]
 
-**--tileset**=<tileset filename>
+**--tileset**=[tileset filename]
 
-**--graphics**=<tileset graphics filename>
+**--graphics**=[tileset graphics filename]
 
-**--sprite**=<sprite filename>
+**--sprite**=[sprite filename]
 
-**--mask**=<sprite mask filename>
+**--mask**=[sprite mask filename]
 
-**--sprite-width**=<sprite width in 8 pixel columns>
+**--sprite-width**=[sprite width in 8 pixel columns]
 
-**--format**=<'c' or 'asm', default: asm>
+**--format**=['c' or 'asm', default: asm]
 
-**--section**=<assembly section to place code into, default: rodata_user>
+**--section**=[assembly section to place code into, default: rodata_user]
 
-**--compression** <enable RLE compression on tilemaps>
+**--compression**=rle [enable RLE compression on tilemaps]
+
+### Tileset format ###
+
+Each tile in your tileset should have the following custom properties set:
+
+* flash (boolean)
+
+* bright (boolean)
+
+* paper (number 0-7)
+
+* ink (number 0-7)
+
+* solid (boolean)
+
+* lethal (boolean)
+
+* platform (boolean)
+
+
+
+### Tilemap format ###
+
+The tool will create a separate screen for each tilemap layer. The tool will ignore any layers that are not set to 'visible'.
+
+**Work-in-progress:** Tilemap layers can be organised into groups to import extra screen data. In this case, each group should contain a Tilemap layer called 'tilemap', and may optionally include Object Layers called 'colours', 'enemies' and 'properties'. Objects in these layers will be imported into their own arrays.
+
+The purpose of the 'colours' and 'properties' layers is to override the default colours and properties set on the tileset to add more variety to your screens.
+
 
 ### RLE Compression Format
 
