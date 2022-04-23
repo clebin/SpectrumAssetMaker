@@ -54,7 +54,7 @@ Running the script without parameters will prompt for each setting.
 
 --section=<assembly section to place code into, default: rodata_user>
 
---compression <use RLE compression on tilemaps.>
+--compression <enable RLE compression on tilemaps>
 
 ***RLE Compression Format***
 
