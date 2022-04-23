@@ -39,14 +39,13 @@ class Tileset
 
             $count++;
         }
-        echo CR;
 
         // need to represent tile numbers with 16 bits
         if( sizeof(self::$tiles) > 256 ) {
             self::$large_tileset = true;
         }
 
-        echo 'Added '.$count.' tiles.'.CR;
+        echo 'Tileset: added '.$count.' tiles.'.CR;
         return true;
     }
     

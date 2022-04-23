@@ -131,6 +131,7 @@ class Tilemap {
     {
         $screen = [];
 
+        echo 'Reading tilemap.'.CR;
         foreach($layer['data'] as $tileNum) {
 
             $tileNum = intval($tileNum)-1;
@@ -139,7 +140,7 @@ class Tilemap {
                 $screen[] = $tileNum;
             } else {
                 $screen[] = 0;
-                echo 'Warning: '.$tileNum.' not found. '.CR;
+                echo 'Warning: tile '.$tileNum.' not found. '.CR;
             }
         }
 
@@ -403,9 +404,15 @@ typedef struct GameObject {
 
         $str = 'SECTION '.SpecTiledTool::$section.CR;
         
+        if(SpecTiledTool::$compression === 'rle' ) {
+            $screenArray = SpecTiledTool::CompressArrayRLE(self::$screens[$screenNum], true, $name);
+        } else {
+            $screenArray = elf::$screens[$screenNum];
+        }
+
         $str .= SpecTiledTool::GetAsmArray(
             $name, 
-            (SpecTiledTool::$compression === true ? SpecTiledTool::ConvertArrayToRLE(self::$screens[$screenNum], true, $name) : self::$screens[$screenNum]), 
+            $screenArray, 
             10, 
             8
         ).CR;

@@ -23,6 +23,8 @@ require("Sprite.php");
  */
 class SpecTiledTool
 {
+    const VERSION = '0.4';
+
     // constants
     const FORMAT_ASM = 'asm';
     const FORMAT_C = 'c';
@@ -35,6 +37,7 @@ class SpecTiledTool
     public static $prefix = false;
     
     // compression
+    public static $compression_supported = ['rle'];
     public static $compression = false;
 
     // filenames
@@ -84,7 +87,12 @@ class SpecTiledTool
 
         // is format supported?
         if( !in_array(self::$format, self::$formats_supported) ) {
-            echo 'Errors: Format not supported.'.CR;
+            echo 'Error: Format not supported.'.CR;
+            return false;
+        }
+
+        if( self::$compression !== false && !in_array(self::$compression, self::$compression_supported)) {
+            echo 'Error: Compression type not supported.'.CR;
             return false;
         }
         
@@ -120,6 +128,12 @@ class SpecTiledTool
 
         // output foloder
         self::$outputFolder = CliTools::GetAnswer('Output folder?', './');
+
+        // compression
+        self::$compression = CliTools::GetAnswer('Use compression', 'none', array_merge(['none'], self::$compression_supported));
+        if( self::$compression == 'none' ) {
+            self::$compression = false;
+        }
 
         // format
         self::$format = CliTools::GetAnswer('Which format?', 'c', self::$formats_supported);
@@ -179,8 +193,8 @@ class SpecTiledTool
         }
 
         // compression
-        if( isset($options['compression'])) {
-            self::$compression = true;
+        if( isset($options['compression']) ) {
+            self::$compression = $options['compression'];
         }
     }
 
@@ -428,7 +442,7 @@ class SpecTiledTool
         return $str;
     }
 
-    public static function ConvertArrayToRLE($input, $add_length = true, $name = false)
+    public static function CompressArrayRLE($input, $add_length = true, $name = false)
     {
         $output = [];
 
@@ -483,12 +497,9 @@ class SpecTiledTool
      */
     public static function OutputIntro()
     {
-        echo '****************************'.CR;
-        echo '* Spectrum Screen Tool     *'.CR;
-        echo '* Chris Owen 2022          *'.CR;
-        echo '****************************'.CR;
+        echo '** Spectrum Tiled Tool v'.self::VERSION.' - Chris Owen 2022 **'.CR.CR;
     }
-
+    
     /**
      * Add to errors list
      */

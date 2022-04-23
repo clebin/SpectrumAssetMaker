@@ -45,12 +45,11 @@ class TilesetGraphics
         self::$numRows = $dimensions[1]/8;
         self::$numTiles = self::$numColumns * self::$numRows;
 
-        echo 'Reading '.$extension.' image: '.
+        echo 'Tileset graphics ('.$extension.'): '.
             self::$numColumns.' x '.self::$numRows.
             ' attributes ('.$dimensions[0].' x '.$dimensions[1].'px) = '.
             self::$numTiles.' attributes. '.CR;
 
-        
         // loop through rows of atttributes
         for($row=0;$row<self::$numRows;$row++) {
 
