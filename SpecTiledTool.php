@@ -35,7 +35,7 @@ class SpecTiledTool
     public static $prefix = false;
     
     // compression
-    private static $compression = false;
+    public static $compression = false;
 
     // filenames
     private static $spriteFilename = false;
@@ -79,7 +79,7 @@ class SpecTiledTool
         }
         // get options from command line arguments
         else {
-            self::SetupWithArgs();
+            self::SetupWithArgs($options);
         }
 
         // is format supported?
@@ -129,7 +129,7 @@ class SpecTiledTool
         }
     }
 
-    private static function SetupWithArgs()
+    private static function SetupWithArgs($options)
     {
         // prefix
         if( isset($options['prefix'])) {
@@ -222,7 +222,6 @@ class SpecTiledTool
 
         // write data to file
         if( $file_output != '' ) {
-
 
             // set memory section
             if( self::$format == 'asm') {
@@ -428,6 +427,56 @@ class SpecTiledTool
         }
         return $str;
     }
+
+    public static function ConvertArrayToRLE($input, $add_length = true, $name = false)
+    {
+        $output = [];
+
+        // add array data
+        for($i=0;$i<sizeof($input);$i++) {
+
+            $count = 1;
+            while($i<sizeof($input)-1 && $input[$i] == $input[$i+1] && $count < 256) {
+                $count++;
+                $i++;
+            }
+            $output[] = $input[$i];
+            $output[] = $count;
+        }
+
+        $inputSize = sizeof($input);
+        $outputSize = sizeof($output);
+
+        // record array length
+        if( $add_length === true ) {
+            $bin = str_pad( decbin($outputSize), 16, '0', STR_PAD_LEFT );
+
+            array_unshift($output, bindec(substr($bin, -8)));
+            array_unshift($output, bindec(substr($bin, 0, 8)));
+        }
+        
+        echo 'Compressed '.($name !== false ? $name : 'array').': '.$inputSize.'b -> '.$outputSize.'b, saved '.round( (($inputSize-$outputSize)/$inputSize)*100, 1).'%'.CR;
+
+        return $output;
+    }
+
+    // void Encode(std::string& inputstring, std::string& outputstring)
+    // {
+    //     for (unsigned int i = 0; i < inputstring.length(); i++) {
+    //         int count = 1;
+    //         while (inputstring[i] == inputstring[i + 1]) {
+    //             count++;
+    //             i++;
+    //         }
+    //         if (count <= 1) {
+    //             outputstring += inputstring[i];
+    //         }
+    //         else {
+    //             outputstring += std::to_string(count);
+    //             outputstring += inputstring[i];
+    //         }
+    //     }
+    // }
 
     /**
      * Output intro text on command line

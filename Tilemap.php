@@ -399,11 +399,13 @@ typedef struct GameObject {
      */
     public static function GetScreenAsm($screenNum)
     {
+        $name = self::$baseName.'Tiles'.$screenNum;
+
         $str = 'SECTION '.SpecTiledTool::$section.CR;
-    
+        
         $str .= SpecTiledTool::GetAsmArray(
-            self::$baseName.'Tiles'.$screenNum, 
-            self::$screens[$screenNum], 
+            $name, 
+            (SpecTiledTool::$compression === true ? SpecTiledTool::ConvertArrayToRLE(self::$screens[$screenNum], true, $name) : self::$screens[$screenNum]), 
             10, 
             8
         ).CR;
