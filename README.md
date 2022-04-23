@@ -22,19 +22,19 @@ Running the script without parameters will prompt for each setting.
 
 --outputfolder=<folder path to place generated files>
 
---map=<tilemap filename>
+--map=<tilemap filename (.tmj)>
 
---tileset=<tileset filename>
+--tileset=<tileset filename (.tsj)>
 
 --graphics=<tileset graphics filename (black & white png or gif)>
 
---sprite=<sprite filename>
+--sprite=<sprite filename (.png or .gif)>
 
---mask=<sprite mask filename>
+--mask=<sprite mask filename (.png or .gif)>
 
 --sprite-width=<sprite width in 8 pixel columns>
 
---format=<c|asm, default: asm>
+--format=<'c' or 'asm', default: asm>
 
 --section=<assembly section to place code into, default: rodata_user>
 
