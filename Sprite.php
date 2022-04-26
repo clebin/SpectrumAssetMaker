@@ -162,29 +162,17 @@ class Sprite
     {
         $str = 'SECTION '.self::$section.CR.CR;
 
-        if(self::$numColumns > 1) {
-            for($i=1;$i<=self::$numColumns;$i++) {
-                $str .= 'PUBLIC _'.self::$baseName.$i.CR;
-            }
-        }
-        else {
-            $str .= 'PUBLIC _'.self::$baseName.CR;
-        }
-        $str .= CR;
+        $str .= 'PUBLIC _'.self::$baseName.CR.CR;
 
         // front padding
         for($line=0;$line<7;$line++) {
             $str .= 'defb @11111111, @00000000'.CR;
         }
 
+        $str .= CR.'._'.self::$baseName.CR;
+        
         for($col=0;$col<self::$numColumns;$col++) {
 
-            if( self::$numColumns > 1 ) {
-                $str .= CR.'._'.self::$baseName.($col+1).CR;
-            } else {
-                $str .= CR.'._'.self::$baseName.CR;
-            }
-            
             // loop through data
             for($line=0;$line<sizeof(self::$spriteData[$col]);$line++) {
 
@@ -204,6 +192,7 @@ class Sprite
             }
 
             $str .= CR;
+            // footer padding
             for($line=0;$line<8;$line++) {
                 $str .= 'defb @11111111, @00000000'.CR;
             }
