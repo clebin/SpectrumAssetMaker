@@ -17,7 +17,6 @@ class Tileset
      */
     public static function ReadFile($filename)
     {
-
         if( SpecTiledTool::GetPrefix() !== false ) {
             self::$baseName = SpecTiledTool::GetPrefix().'Tileset';
         }
@@ -64,6 +63,32 @@ class Tileset
         return isset(self::$tiles[$id]);
     }
 
+    public static function GetOutputFilepath()
+    {
+        return SpecTiledTool::GetOutputFolder().self::GetOutputFilename();
+
+    }
+
+    public static function GetOutputFilename()
+    {
+        return self::GetOutputBaseFilename().'.'.SpecTiledTool::GetOutputFileExtension();
+    }
+
+    public static function GetOutputBaseFilename()
+    {
+        // output filename
+        if( SpecTiledTool::$prefix !== false ) {
+            return SpecTiledTool::$prefix.'-tileset';
+        } else {
+            return 'tileset';
+        }
+    }
+
+    public static function GetBinariesLst()
+    {
+        return self::GetOutputBaseFilename();
+    }
+
     /**
      * Get tile graphics code in currently set format/language
      */
@@ -81,9 +106,6 @@ class Tileset
         }
     }
 
-    /**
-     * Return tilset in Assembly format
-     */
     /**
      * Return tileset in assembly format
      */
@@ -116,6 +138,11 @@ class Tileset
         ).CR;
 
         return $str;
+    }
+
+    public static function GetOutputName()
+    {
+
     }
 
     /**

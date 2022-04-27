@@ -4,22 +4,24 @@ namespace ClebinGames\SpecTiledTool;
 /**
  * Class representing a tilemap with functions for reading and exporting
  */
-class Tilemap {
-
+class Tilemaps {
+    
     // data arrays
-    private static $screens = [];
+    public static $screens = [];
 
     // object layers
-    private static $screens_objects = [];
-    private static $screens_enemies = [];
-    private static $screen_colours = [];
+    public static $screens_objects = [];
+    public static $screens_enemies = [];
+    public static $screen_colours = [];
 
-    private static $save_objects = false;
-    private static $save_enemies = false;
-    private static $save_colours = false;
+    public static $save_objects = false;
+    public static $save_enemies = false;
+    public static $save_colours = false;
 
-    private static $defineName = 'SCREENS_LEN';
-    private static $baseName = 'screen';
+    public static $defineName = 'SCREENS_LEN';
+    public static $baseName = 'screen';
+
+    private static $screenNames = [];
 
     // allowed properties on enemies, objects, etc.
     private static $object_allowed_properties = [
@@ -67,9 +69,26 @@ class Tilemap {
     public static function ReadFileSimple($data)
     {
         // each layer counts as one screen
+        $count = 0;
+
         foreach($data['layers'] as $layer) {
 
-            self::$screens[] = self::ReadTilemapLayer($layer);
+            $screen = new Screen($count);
+            
+            // read the Tiled data
+            $data = self::ReadTilemapLayer($layer);
+
+            // set data
+            $screen->SetData($data);
+            
+            // set name
+            $screen->SetName($layer['name']);
+
+            // add to arrays
+            self::$screenNames[] = $screen->GetName();
+            self::$screens[] = $screen;
+
+            $count++;
         }
         return true;
     }
@@ -88,16 +107,25 @@ class Tilemap {
     {
         // loop through groups
         $count = 0;
+
         foreach($data['layers'] as $group) {
-            
+
+            $screen = new Screen($count);
+
+            // set name?
+            if( SpecTiledTool::UseLayerNames() === true ) {
+                $screen->SetName($group['name']);
+            }
+
             foreach($group['layers'] as $layer) {
 
                 // get tilemap and object layers
                 switch( strtolower($layer['name']) ) {
-                    case 'tilemap':
-                        self::$screens[$count] = self::ReadTilemapLayer($layer);
-                    break;
 
+                    case 'tilemap':
+                        $screen->SetData(self::ReadTilemapLayer($layer));
+                    break;
+                    
                     case 'enemies':
                         if( $layer['visible'] == true ) {
                             self::$screens_enemies[$count] = self::ReadObjectLayer($layer);
@@ -120,6 +148,9 @@ class Tilemap {
                     break;
                 }
             }
+            self::$screenNames[] = $screen->GetName();
+            self::$screens[] = $screen;
+
             $count++;
         }
     }
@@ -143,11 +174,20 @@ class Tilemap {
                 echo 'Warning: tile '.$tileNum.' not found. '.CR;
             }
         }
+        
+        // check if screeName property is set
+        $name = false;
 
-        return [
-            'name' => $layer['name'], 
-            'data' => $data
-        ];
+        if( SpecTiledTool::$useLayerNames === true && isset($layer['properties'])) {
+            foreach( $layer['properties'] as $prop ) {
+                if( $prop['name'] == 'screenName' && strlen($prop['value']) > 0 ) {
+                    $name = SpecTiledTool::GetConvertedCodeName($prop['value']);        
+                }
+            }
+        }
+
+        // return a Screen object
+        return $data;
     }
 
     /**
@@ -198,7 +238,6 @@ class Tilemap {
     public static function GetCode()
     {
         $str = '';
-        $screenNum = 0;
 
         for($i=0;$i<sizeof(self::$screens);$i++) {
 
@@ -215,131 +254,14 @@ class Tilemap {
     }
 
     /**
-     * Get code for specified screen in current set language
+     * Get binaries.lst file with list of screen files
      */
-    public static function GetScreenCode($screenNum)
-    {
-        switch( SpecTiledTool::GetFormat() ) {
-            case 'c':
-                return self::GetScreenC($screenNum);
-                break;
-            default:
-                return self::GetScreenAsm($screenNum);
-            break;
-        }
-    }
-
-    /**
-     * Get array of tile numbers for specified screen
-     */
-    public static function GetTileNumsFromScreen($num) {
-
-        $screen = self::$screens[$num];
-        $tileNums = [];
-        foreach($screen as $attr) {
-            $tileNums[] = $attr->tileNum;
-        }
-        return $tileNums;
-    }
-    
-    /**
-     * 
-     */
-    public static function GetStructsC()
+    public static function GetBinariesLst()
     {
         $str = '';
-
-        // enemies
-        if( self::$save_enemies === true ) {
-            $str .= '
-typedef struct Enemy {
-    char[8] type;
-    char[8] movement;
-    uint8_t x;
-    uint8_t y;
-    uint8_t lethal; // boolean
-    uint8_t transient; // boolean
-    uint8_t endval;
-    uint8_t numhits;
-    uint8_t speed;
-};'.CR.CR;
+        foreach(self::$screens as $screen) {
+            $str .= $screen->GetCodeName().CR;
         }
-
-        // objects
-        if( self::$save_objects === true ) {
-            $str .= '
-typedef struct GameObject {
-    char[12] name;
-    char[8] type;
-    uint8_t row;
-    uint8_t col;
-    uint8_t lethal; // boolean
-    uint8_t collectable; // boolean
-    uint8_t numhits;
-};'.CR.CR;
-        }
-
-        return $str;
-    }
-
-    /**
-     * Get screen represented in C
-     */
-    public static function GetScreenC($screenNum)
-    {
-        $screen = self::$screens[$screenNum];
-        
-        $str = '';
-        
-        // use layer name for variables
-        if( SpecTiledTool::$useLayerNames === true && $screen['name'] !== false && strlen($screen['name']) > 0) {
-            $name = SpecTiledTool::GetConvertedVariableName($screen['name']);
-        }
-        // use standard naming
-        else {
-            $name = self::$baseName.'Tiles'.$screenNum;
-        }
-
-        // add to first screen
-        if( $screenNum == 0 ) {
-            $str .= '#define '.self::$defineName.' '.sizeof(self::$screens).CR.CR;
-        }
-
-        // compression
-        if(SpecTiledTool::$compression === 'rle' ) {
-            $screenArray = SpecTiledTool::CompressArrayRLE($screen, false, $name);
-        } else {
-            $screenArray = self::$screen;
-        }
-        
-        // tile numbers
-        $str .= SpecTiledTool::GetCArray(
-            $name, 
-            $screenArray, 
-            10
-        ).CR;
-
-        // enemies
-        if( self::$save_enemies === true && isset(self::$screens_enemies[$screenNum]) ) {
-            $str .= self::GetObjectsC('Enemies', self::$screens_enemies[$screenNum]);
-        }
-
-        // objects
-        if( self::$save_objects === true && isset(self::$screens_objects[$screenNum]) ) {
-            $str .= self::GetObjectsC('GameObjects', self::$screens_objects[$screenNum]);
-        }
-
-        // colours
-        if( self::$save_colours === true && isset(self::$screens_colours[$screenNum]) ) {
-            $str .= self::GetObjectsC('Colours', self::$screens_colours[$screenNum]);
-        }
-        
-        // last screen - set up an array of pointers to the screens
-        if( $screenNum == sizeof(self::$screens)-1 ) {
-
-            $str .= self::GetScreenArrayPointersC(self::$baseName);
-        }
-        
         return $str;
     }
 
@@ -348,45 +270,29 @@ typedef struct GameObject {
      */
     public static function GetScreenArrayPointersC($baseName)
     {
-        $str = self::GetPointerArrayC($baseName.'sTiles', $baseName.'Tiles', sizeof(self::$screens));
+        $str = SpecTiledTool::GetPointerArrayC($baseName.'sTiles', $baseName.'Tiles', sizeof(self::$screens));
 
         // pointers to enemies
         if( self::$save_enemies === true ) {
-            $str .= self::GetPointerArrayC($baseName.'sEnemies', $baseName.'Enemies', sizeof(self::$screens));
+            $str .= SpecTiledTool::GetPointerArrayC($baseName.'sEnemies', $baseName.'Enemies', sizeof(self::$screens));
         }
 
         // pointers to objects 
         if( self::$save_objects === true ) {
-            $str .= self::GetPointerArrayC($baseName.'sObjects', $baseName.'Objects', sizeof(self::$screens));
+            $str .= SpecTiledTool::GetPointerArrayC($baseName.'sObjects', $baseName.'Objects', sizeof(self::$screens));
         }
 
         // pointers to custom colours
         if( self::$save_colours === true ) {
-            $str .= self::GetPointerArrayC($baseName.'sColours', $baseName.'Colours', sizeof(self::$screens));
+            $str .= SpecTiledTool::GetPointerArrayC($baseName.'sColours', $baseName.'Colours', sizeof(self::$screens));
         }
 
         return $str;
     }
 
-    /**
-     * Get C code for an array of pointers
-     */
-    public static function GetPointerArrayC($arrayName, $itemsBaseName, $size = 0)
+    public static function GetBaseName()
     {
-        $str = '';
-
-        // tile number arrays
-        $str .= 'const unsigned char *'.$arrayName.'['.$size.'] = {';
-        
-        for($i=0;$i<$size;$i++) {
-            if($i>0) {
-                $str .= ', ';
-            }
-            $str .= $itemsBaseName.$i;
-        }
-        $str .= '};'.CR;
-    
-        return $str;
+        return self::$baseName;
     }
 
     /**
@@ -412,39 +318,5 @@ typedef struct GameObject {
     public static function GetColoursC()
     {
         // $name = $baseName.'Colours'.$screenNum;
-    }
-
-    /**
-     * Get assembly code for this tilemap
-     */
-    public static function GetScreenAsm($screenNum)
-    {
-        $screen = self::$screens[$screenNum];
-
-        // use layer names
-        if( SpecTiledTool::$useLayerNames === true && $screen['name'] !== false && strlen($screen['name']) > 0) {
-            $name = SpecTiledTool::GetConvertedVariableName($screen['name']);
-        }
-        // use standard naming
-        else {
-            $name = self::$baseName.'Tiles'.$screenNum;
-        }
-
-        $str = 'SECTION '.SpecTiledTool::$section.CR;
-        
-        if(SpecTiledTool::$compression === 'rle' ) {
-            $screenArray = SpecTiledTool::CompressArrayRLE($screen, true, $name);
-        } else {
-            $screenArray = $screen;
-        }
-
-        $str .= SpecTiledTool::GetAsmArray(
-            $name, 
-            $screenArray, 
-            10, 
-            8
-        ).CR;
-
-        return $str;
     }
 }

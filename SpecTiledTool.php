@@ -6,8 +6,9 @@ define('CR', "\n");
 require("CliTools.php");
 require("Attribute.php");
 require("Tile.php");
+require("Screen.php");
 require("Tileset.php");
-require("Tilemap.php");
+require("Tilemaps.php");
 require("TilesetGraphics.php");
 require("Sprite.php");
 
@@ -50,6 +51,7 @@ class SpecTiledTool
     private static $outputFilename = false;
     private static $graphicsFilename = false;
     private static $spriteWidth = false;
+    private static $createBinariesLst = false;
 
     // assembly section
     public static $section = 'rodata_user';
@@ -63,7 +65,6 @@ class SpecTiledTool
     
     // output
     private static $output = '';
-    public static $saveScreensInOwnFile = true;
     public static $saveGameProperties = false;
 
     // errors
@@ -106,6 +107,9 @@ class SpecTiledTool
         self::ProcessSprite();
     }
 
+    /**
+     * Set up the tool by prompting the user to answer questions
+     */
     private static function SetupWithUserPrompts()
     {
         // naming prefix
@@ -144,6 +148,9 @@ class SpecTiledTool
         }
     }
 
+    /**
+     * Set up the tool using parameters passed on the command line
+     */
     private static function SetupWithArgs($options)
     {
         // prefix
@@ -154,6 +161,11 @@ class SpecTiledTool
         if( isset($options['use-layer-names'])) {
             self::$useLayerNames = true;
         }
+
+        if( isset($options['create-binaries-lst'])) {
+            self::$createBinariesLst = true;
+        }
+
         // tilemaps
         if( isset($options['map'])) {
             self::$mapFilename = $options['map'];
@@ -202,20 +214,13 @@ class SpecTiledTool
         }
     }
 
-
+    /**
+     * Process and save tileset data
+     */
     private static function ProcessTileset()
     {
         $file_output = '';
         
-        $outputBaseFilename = self::$outputFolder;
-
-        // output filename
-        if( self::$prefix !== false ) {
-            $outputBaseFilename .= self::$prefix.'-tileset';
-        } else {
-            $outputBaseFilename .= 'tileset';
-        }
-
         // read tileset graphics
         if( self::$graphicsFilename !== false ) {
 
@@ -241,44 +246,56 @@ class SpecTiledTool
         // write data to file
         if( $file_output != '' ) {
 
-            // set memory section
+            // prepend memory section
             if( self::$format == 'asm') {
                 $file_output = 'SECTION '.self::$section.CR.CR.$file_output;
             }
-            
-            file_put_contents($outputBaseFilename.'.'.self::GetOutputFileExtension(), $file_output);
+
+            file_put_contents(Tileset::GetOutputFilepath(), $file_output);
         }
     }
 
+    /**
+     * Process and save tilemap data
+     */
     private static function ProcessScreens()
     {
         // read map and tilset
-        Tilemap::ReadFile(self::$mapFilename);
+        Tilemaps::ReadFile(self::$mapFilename);
     
         if( self::$error === false ) {
 
-            $outputBaseFilename = self::$outputFolder;
-
-            // output filename
-            if( self::$prefix !== false ) {
-                $outputBaseFilename .= self::$prefix.'-screens';
-            } else {
-                $outputBaseFilename .= 'screens';
+            // write tilemaps to files
+            $count = 0;
+            foreach(Tilemaps::$screens as $screen) {
+                file_put_contents($screen->GetOutputFilepath(), $screen->GetCode());
+                $count++;
             }
 
-            // write graphics to file
-            if( self::$saveScreensInOwnFile ===  true ) {
-
-                for($i=0;$i<Tilemap::GetNumScreens();$i++) {
-                    file_put_contents($outputBaseFilename.'-'.$i.'.'.self::GetOutputFileExtension(), Tilemap::GetScreenCode($i));
-                }
-            }
-            else {
-                file_put_contents($outputBaseFilename.'.'.self::GetOutputFileExtension(), Tilemap::GetCode());
+            // save binaries.lst
+            if( self::$createBinariesLst === true ) {
+                self::ProcessBinariesLst();
             }
         }
     }
 
+    /**
+     * Process and save binaries.lst file (only for screens data)
+     */
+    private static function ProcessBinariesLst()
+    {
+        $strBinaries = '';
+        if( self::$tilesetFilename !== false ) { 
+            $strBinaries = Tileset::GetBinariesLst().CR;
+        }
+        $strBinaries .= Tilemaps::GetBinariesLst();
+
+        file_put_contents(self::$outputFolder.'binaries.lst', $strBinaries);
+    }
+
+    /**
+     * Process sprite file and mask
+     */
     private static function ProcessSprite()
     {
         // read sprite
@@ -307,6 +324,14 @@ class SpecTiledTool
     }
 
     /**
+     * Returns the output folder
+     */
+    public static function GetOutputFolder()
+    {
+        return self::$outputFolder;
+    }
+
+    /**
      * Get output file extension for the current format/language
      */
     public static function GetOutputFileExtension()
@@ -330,11 +355,24 @@ class SpecTiledTool
     }
 
     /**
+     * Return the code section to put data into
+     */
+    public static function GetCodeSection()
+    {
+        return self::$section;
+    }
+
+    /**
      * Get naming prefix
      */
     public static function GetPrefix()
     {
         return self::$prefix;
+    }
+
+    public static function UseLayerNames()
+    {
+        return self::$useLayerNames;
     }
 
     /**
@@ -446,6 +484,9 @@ class SpecTiledTool
         return $str;
     }
 
+    /**
+     * Compress data array using run-length encoding
+     */
     public static function CompressArrayRLE($input, $add_length = true, $name = false)
     {
         $output = [];
@@ -478,25 +519,31 @@ class SpecTiledTool
         return $output;
     }
 
-    // void Encode(std::string& inputstring, std::string& outputstring)
-    // {
-    //     for (unsigned int i = 0; i < inputstring.length(); i++) {
-    //         int count = 1;
-    //         while (inputstring[i] == inputstring[i + 1]) {
-    //             count++;
-    //             i++;
-    //         }
-    //         if (count <= 1) {
-    //             outputstring += inputstring[i];
-    //         }
-    //         else {
-    //             outputstring += std::to_string(count);
-    //             outputstring += inputstring[i];
-    //         }
-    //     }
-    // }
+    /**
+     * Get C code for an array of pointers
+     */
+    public static function GetPointerArrayC($arrayName, $itemsBaseName, $size = 0)
+    {
+        $str = '';
 
-    public static function GetConvertedVariableName($source_name)
+        // tile number arrays
+        $str .= 'const unsigned char *'.$arrayName.'['.$size.'] = {';
+        
+        for($i=0;$i<$size;$i++) {
+            if($i>0) {
+                $str .= ', ';
+            }
+            $str .= $itemsBaseName.$i;
+        }
+        $str .= '};'.CR;
+    
+        return $str;
+    }
+
+    /**
+     * Convert a regular name into a camel-case variable name to be used in code
+     */
+    public static function GetConvertedCodeName($source_name)
     {
         return lcfirst( implode('', array_map('ucfirst', explode(' ',$source_name) ) ));
     }
@@ -541,7 +588,7 @@ $options = getopt('', [
     'compression::',
     'output-folder::',
     'use-layer-names::',
-    'create-binary-lst::'
+    'create-binaries-lst::'
 ]);
 
 // run
