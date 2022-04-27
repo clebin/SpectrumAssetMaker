@@ -23,11 +23,18 @@ Utility to to create z88dk/Sp1 compatible screens, tilesets and sprites in assem
 Running the script without parameters will prompt for each setting.
 
 
-### Parameters:
+### General Parameters:
 
 **--prefix**=[prefix for naming variables]
 
 **--output-folder**=[folder path to place generated files]
+
+**--format**=['c' or 'asm', default: asm]
+
+**--section**=[assembly section to place code into, default: rodata_user]
+
+
+### Parameters for Tilemap/Tileset Processing:
 
 **--use-layer-names** (use tilemap layer or layer group name as file and variable names)
 
@@ -41,17 +48,17 @@ Running the script without parameters will prompt for each setting.
 
 **--graphics**=[tileset graphics filename]
 
+**--compression**=rle [enable RLE compression on tilemaps]
+
+
+## Parameters for Sprite Processing:
+
 **--sprite**=[sprite filename]
 
 **--mask**=[sprite mask filename]
 
 **--sprite-width**=[sprite width in 8 pixel columns]
 
-**--format**=['c' or 'asm', default: asm]
-
-**--section**=[assembly section to place code into, default: rodata_user]
-
-**--compression**=rle [enable RLE compression on tilemaps]
 
 ### Tileset format ###
 
