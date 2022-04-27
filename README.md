@@ -82,11 +82,15 @@ Each tile in your tileset should have the following custom properties set:
 
 ### Tilemap format ###
 
+## Simple layer format
+
 The tool will create a separate screen for each tilemap layer. The tool will ignore any layers that are not set to 'visible'.
 
-**Work-in-progress:** Tilemap layers can be organised into groups to import extra screen data. In this case, each group should contain a Tilemap layer called 'tilemap', and may optionally include Object Layers called 'colours', 'enemies' and 'properties'. Objects in these layers will be imported into their own arrays.
+## Group layer format
 
-The purpose of the 'colours' and 'properties' layers is to override the default colours and properties set on the tileset to add more variety to your screens.
+**Work-in-progress:** Tilemap layers can be organised into groups to import extra screen data. In this case, each group should contain a Tilemap layer called 'tilemap', and may optionally include Object Layers called 'colours', 'enemies' and 'properties'. Objects in these layers will be imported into their own arrays. When --use-layer-names is set, the Group name is used since the tilemap layer must be named 'tilemap'
+
+The purpose of the 'colours' and 'properties' object layers is to override the default colours and properties set on the tileset to add more variety to your screens.
 
 
 ### RLE Compression Format
