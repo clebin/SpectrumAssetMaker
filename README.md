@@ -29,6 +29,10 @@ Running the script without parameters will prompt for each setting.
 
 **--output-folder**=[folder path to place generated files]
 
+**--use-layer-names** (use tilemap layer or layer group name as file and variable names)
+
+**--create-binaries-lst** (create a binaries.lst file all screens and tileset files included - ignored for sprite output)
+
 **--map**=[tilemap filename]
 
 **--tileset**=[tileset filename]
