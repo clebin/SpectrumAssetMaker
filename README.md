@@ -31,6 +31,8 @@ Running the script without parameters will prompt for each setting.
 
 **--use-layer-names** (use tilemap layer or layer group name as file and variable names)
 
+**--replace-flash-with-solid (use the bit normally used for flash to denote a solid block)
+
 **--create-binaries-lst** (create a binaries.lst file all screens and tileset files included - ignored for sprite output)
 
 **--map**=[tilemap filename]

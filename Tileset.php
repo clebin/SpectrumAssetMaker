@@ -169,12 +169,14 @@ class Tileset
             2
         ).CR;
 
-        // properties
-        $str .= SpecTiledTool::GetCArray(
-            self::$baseName.'Properties', 
-            $properties, 
-            2
-        ).CR;
+        // properties array
+        if( SpecTiledTool::ReplaceFlashWithSolid() === false ) {
+            $str .= SpecTiledTool::GetCArray(
+                self::$baseName.'Properties', 
+                $properties, 
+                2
+            ).CR;
+        }
 
         return $str;
     }

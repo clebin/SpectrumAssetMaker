@@ -37,6 +37,7 @@ class SpecTiledTool
     // naming
     public static $prefix = false;
     public static $useLayerNames = false;
+    public static $replaceFlashWithSolid = false;
 
     // compression
     public static $compression_supported = ['rle'];
@@ -174,6 +175,11 @@ class SpecTiledTool
         // tileset
         if( isset($options['tileset'])) {
             self::$tilesetFilename = $options['tileset'];
+        }
+
+        // replace flash bit with solid
+        if( isset($options['replace-flash-with-solid']) ) {
+            self::$replaceFlashWithSolid = true;
         }
 
         // graphics
@@ -370,9 +376,20 @@ class SpecTiledTool
         return self::$prefix;
     }
 
+    /**
+     * Are we using layer names for code naming?
+     */
     public static function UseLayerNames()
     {
         return self::$useLayerNames;
+    }
+
+    /**
+     * Are we replacing the flash bit with solid bit?
+     */
+    public static function ReplaceFlashWithSolid()
+    {
+        return self::$replaceFlashWithSolid;
     }
 
     /**
@@ -588,7 +605,8 @@ $options = getopt('', [
     'compression::',
     'output-folder::',
     'use-layer-names::',
-    'create-binaries-lst::'
+    'create-binaries-lst::', 
+    'replace-flash-with-solid::'
 ]);
 
 // run

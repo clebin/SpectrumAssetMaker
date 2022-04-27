@@ -137,8 +137,15 @@ class Tile
      */
     public function GetColoursByte()
     {
-        return 
-        ( $this->flash == true ? '1' : '0'). // flash
+        $str = '';
+
+        if( SpecTiledTool::ReplaceFlashWithSolid() === true ) {
+            $str .=  ( $this->solid == true ? '1' : '0');
+        } else {
+            $str .=  ( $this->flash == true ? '1' : '0');
+        }
+
+        return $str.
         ( $this->bright == true ? '1' : '0'). // bright
         str_pad(decbin($this->paper), 3, '0', STR_PAD_LEFT ).
         str_pad(decbin($this->ink), 3, '0', STR_PAD_LEFT );
