@@ -27,7 +27,7 @@ Running the script without parameters will prompt for each setting.
 
 **--prefix**=[prefix for naming variables]
 
-**--outputfolder**=[folder path to place generated files]
+**--output-folder**=[folder path to place generated files]
 
 **--map**=[tilemap filename]
 

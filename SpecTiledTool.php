@@ -35,7 +35,8 @@ class SpecTiledTool
     
     // naming
     public static $prefix = false;
-    
+    public static $useLayerNames = false;
+
     // compression
     public static $compression_supported = ['rle'];
     public static $compression = false;
@@ -150,6 +151,9 @@ class SpecTiledTool
             self::$prefix = $options['prefix'];
         }
 
+        if( isset($options['use-layer-names'])) {
+            self::$useLayerNames = true;
+        }
         // tilemaps
         if( isset($options['map'])) {
             self::$mapFilename = $options['map'];
@@ -170,8 +174,8 @@ class SpecTiledTool
             self::$format = $options['format'];
         }
 
-        if( isset($options['outputfolder'])) {
-            self::$outputFolder = $options['outputfolder'];
+        if( isset($options['output-folder'])) {
+            self::$outputFolder = $options['output-folder'];
         }
 
         // sprite file
@@ -492,6 +496,11 @@ class SpecTiledTool
     //     }
     // }
 
+    public static function GetConvertedVariableName($source_name)
+    {
+        return lcfirst( implode('', array_map('ucfirst', explode(' ',$source_name) ) ));
+    }
+
     /**
      * Output intro text on command line
      */
@@ -530,7 +539,9 @@ $options = getopt('', [
     'mask::', 
     'section::', 
     'compression::',
-    'outputfolder::'
+    'output-folder::',
+    'use-layer-names::',
+    'create-binary-lst::'
 ]);
 
 // run
