@@ -131,11 +131,13 @@ class Tileset
         ).CR;
 
         // properties
-        $str .= SpecTiledTool::GetAsmArray(
-            self::$baseName.'Properties', 
-            $properties, 
-            2
-        ).CR;
+        if( SpecTiledTool::ReplaceFlashWithSolid() === false ) {
+            $str .= SpecTiledTool::GetAsmArray(
+                self::$baseName.'Properties', 
+                $properties, 
+                2
+            ).CR;
+        }
 
         return $str;
     }

@@ -140,9 +140,9 @@ class Tile
         $str = '';
 
         if( SpecTiledTool::ReplaceFlashWithSolid() === true ) {
-            $str .=  ( $this->solid == true ? '1' : '0');
+            $str .= ($this->solid == true ? '1' : '0');
         } else {
-            $str .=  ( $this->flash == true ? '1' : '0');
+            $str .= ($this->flash == true ? '1' : '0');
         }
 
         return $str.
