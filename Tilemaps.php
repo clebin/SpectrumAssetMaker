@@ -19,7 +19,7 @@ class Tilemaps {
     public static $save_colours = false;
 
     public static $defineName = 'SCREENS_LEN';
-    public static $baseName = 'screen';
+    public static $baseName = 'tilemap';
 
     private static $screenNames = [];
 
@@ -46,8 +46,8 @@ class Tilemaps {
         }
 
         if( SpecTiledTool::GetPrefix() !== false ) {
-            self::$defineName = SpecTiledTool::GetPrefix().'_'.self::$defineName;
-            self::$baseName = SpecTiledTool::GetPrefix().self::$baseName;
+            self::$defineName = strtoupper(SpecTiledTool::GetPrefix()).'_'.self::$defineName;
+            self::$baseName = SpecTiledTool::GetPrefix().ucfirst(self::$baseName);
         }
 
         $json = file_get_contents($filename);
@@ -82,7 +82,9 @@ class Tilemaps {
             $screen->SetData($data);
             
             // set name
-            $screen->SetName($layer['name']);
+            if( SpecTiledTool::UseLayerNames() === true ) {
+                $screen->SetName($layer['name']);
+            }
 
             // add to arrays
             self::$screenNames[] = $screen->GetName();
@@ -90,6 +92,12 @@ class Tilemaps {
 
             $count++;
         }
+
+        // only one tilemap
+        if( $count == 1 ) {
+            self::$screens[0]->SetNum(false);
+        }
+        
         return true;
     }
 
@@ -126,32 +134,37 @@ class Tilemaps {
                         $screen->SetData(self::ReadTilemapLayer($layer));
                     break;
                     
-                    case 'enemies':
-                        if( $layer['visible'] == true ) {
-                            self::$screens_enemies[$count] = self::ReadObjectLayer($layer);
-                            self::$save_enemies = true;
-                        }
-                    break;
+                    // case 'enemies':
+                    //     if( $layer['visible'] == true ) {
+                    //         self::$screens_enemies[$count] = self::ReadObjectLayer($layer);
+                    //         self::$save_enemies = true;
+                    //     }
+                    // break;
 
-                    case 'objects':
-                        if( $layer['visible'] == true ) {
-                            self::$screens_objects[$count] = self::ReadObjectLayer($layer);
-                            self::$save_objects = true;
-                        }
-                    break;
+                    // case 'objects':
+                    //     if( $layer['visible'] == true ) {
+                    //         self::$screens_objects[$count] = self::ReadObjectLayer($layer);
+                    //         self::$save_objects = true;
+                    //     }
+                    // break;
                     
-                    case 'colours':
-                        if( $layer['visible'] == true ) {
-                        self::$screens_colours[$count] = self::ReadObjectLayer($layer);
-                        self::$save_colours = true;
-                        }
-                    break;
+                    // case 'colours':
+                    //     if( $layer['visible'] == true ) {
+                    //     self::$screens_colours[$count] = self::ReadObjectLayer($layer);
+                    //     self::$save_colours = true;
+                    //     }
+                    // break;
                 }
             }
             self::$screenNames[] = $screen->GetName();
             self::$screens[] = $screen;
 
             $count++;
+        }
+
+        // only one tilemap
+        if( $count == 1 ) {
+            self::$screens[0]->SetNum(false);
         }
     }
 
@@ -167,12 +180,10 @@ class Tilemaps {
 
             $tileNum = intval($tileNum)-1;
 
-            if( Tileset::TileExists($tileNum) === true ) {
-                $data[] = $tileNum;
-            } else {
-                $data[] = 0;
+            if( Tileset::TilesetIsSet() === true && Tileset::TileExists($tileNum) !== true ) {
                 echo 'Warning: tile '.$tileNum.' not found. '.CR;
             }
+            $data[] = $tileNum;
         }
         
         // check if screeName property is set
@@ -270,7 +281,7 @@ class Tilemaps {
      */
     public static function GetScreenArrayPointersC($baseName)
     {
-        $str = SpecTiledTool::GetPointerArrayC($baseName.'sTiles', $baseName.'Tiles', sizeof(self::$screens));
+        $str = SpecTiledTool::GetPointerArrayC($baseName.'s', $baseName, sizeof(self::$screens));
 
         // pointers to enemies
         if( self::$save_enemies === true ) {

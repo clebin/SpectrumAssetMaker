@@ -13,9 +13,7 @@ class Screen {
 
     public function __construct($num)
     {
-        $this->num = $num;
-        $this->name = Tilemaps::GetBaseName().'Tiles'.$num;
-        $this->codeName = $this->name;
+        $this->SetNum($num);
     }
 
     public function SetData($data)
@@ -26,6 +24,8 @@ class Screen {
     public function SetNum($num)
     {
         $this->num = $num;
+        $this->name = Tilemaps::GetBaseName().($num !== false ? $num : '');
+        $this->codeName = $this->name;
     }
 
     public function SetName($name)
@@ -95,7 +95,7 @@ class Screen {
         $str = '';
 
         // add to first screen
-        if( $this->num == 0 ) {
+        if( $this->num == 0 && Tilemaps::GetNumScreens() > 1) {
             $str .= '#define '.Tilemaps::$defineName.' '.Tilemaps::GetNumScreens().CR.CR;
         }
 
@@ -103,18 +103,18 @@ class Screen {
         if(SpecTiledTool::$compression === 'rle' ) {
             
             $data = SpecTiledTool::CompressArrayRLE(
+                $this->codeName, 
                 $this->data, 
                 false, 
-                $this->name
             );
         } else {
-            $data = $screen->GetData();
+            $data = $this->data;
         }
         
         // tile numbers
         $str .= SpecTiledTool::GetCArray(
-            $this->name, 
-            $this->data, 
+            $this->codeName, 
+            $data, 
             10
         ).CR;
 
@@ -134,9 +134,10 @@ class Screen {
         // }
         
         // last screen - set up an array of pointers to the screens
-        if( $this->num == Tilemaps::GetNumScreens()-1 ) {
+        if( Tilemaps::GetNumScreens() > 1 && 
+            $this->num == Tilemaps::GetNumScreens()-1 ) {
 
-            $str .= self::GetScreenArrayPointersC(Tilemaps::GetBaseName());
+            $str .= TileMaps::GetScreenArrayPointersC(Tilemaps::GetBaseName());
         }
         
         return $str;
@@ -150,18 +151,18 @@ class Screen {
         $str = 'SECTION '.SpecTiledTool::GetCodeSection().CR;
         
         if(SpecTiledTool::$compression === 'rle' ) {
-            $screenArray = SpecTiledTool::CompressArrayRLE(
-                $this->GetData(), 
-                true, 
-                $this->GetCodeName()
+            $data = SpecTiledTool::CompressArrayRLE(
+                $this->codeName,
+                $this->data, 
+                true
             );
         } else {
-            $screenArray = $screen->GetData();
+            $data = $this->GetData();
         }
 
         $str .= SpecTiledTool::GetAsmArray(
-            $this->GetCodeName(), 
-            $screenArray, 
+            $this->codeName, 
+            $data, 
             10, 
             8
         ).CR;

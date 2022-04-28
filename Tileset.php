@@ -6,10 +6,11 @@ namespace ClebinGames\SpecTiledTool;
  */
 class Tileset
 {
+    private static $tilesetIsSet = false;
+
     // static array of tiles
     private static $tiles = [];
     public static $large_tileset = false;
-
     public static $baseName = 'tileset';
 
     /**
@@ -45,7 +46,14 @@ class Tileset
         }
 
         echo 'Tileset: added '.$count.' tiles.'.CR;
+
+        self::$tilesetIsSet = true;
         return true;
+    }
+
+    public static function TilesetIsSet()
+    {
+        return self::$tilesetIsSet;
     }
     
     /**

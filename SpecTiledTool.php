@@ -504,7 +504,7 @@ class SpecTiledTool
     /**
      * Compress data array using run-length encoding
      */
-    public static function CompressArrayRLE($input, $add_length = true, $name = false)
+    public static function CompressArrayRLE($name, $input, $add_length = true)
     {
         $output = [];
 
