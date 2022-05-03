@@ -166,7 +166,12 @@ class Sprite
 
         // front padding
         for($line=0;$line<7;$line++) {
-            $str .= 'defb @11111111, @00000000'.CR;
+
+            if( self::$maskImage !== false ) {
+                $str .= 'defb @11111111, @00000000'.CR;
+            } else {
+                $str .= 'defb @00000000'.CR;
+            }
         }
 
         $str .= CR.'._'.self::$baseName.CR;
@@ -177,11 +182,13 @@ class Sprite
             for($line=0;$line<sizeof(self::$spriteData[$col]);$line++) {
 
                 // mask
-                if( isset(self::$maskData[$col][$line])) {
-                    $val = implode('', self::$maskData[$col][$line]);
-                    $str .= 'defb @'.$val;
-                } else {
-                    $str .= 'defb @00000000';
+                if( self::$maskImage !== false ) {
+                    if( isset(self::$maskData[$col][$line])) {
+                        $val = implode('', self::$maskData[$col][$line]);
+                        $str .= 'defb @'.$val;
+                    } else {
+                        $str .= 'defb @00000000';
+                    }
                 }
                 
                 // sprite
@@ -194,7 +201,11 @@ class Sprite
             $str .= CR;
             // footer padding
             for($line=0;$line<8;$line++) {
-                $str .= 'defb @11111111, @00000000'.CR;
+                if( self::$maskImage !== false ) {
+                    $str .= 'defb @11111111, @00000000'.CR;
+                } else {
+                    $str .= 'defb @00000000'.CR;
+                }
             }
         }
 
