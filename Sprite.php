@@ -166,7 +166,6 @@ class Sprite
 
         // front padding
         for($line=0;$line<7;$line++) {
-
             if( self::$maskImage !== false ) {
                 $str .= 'defb @11111111, @00000000'.CR;
             } else {
@@ -189,13 +188,18 @@ class Sprite
                     } else {
                         $str .= 'defb @00000000';
                     }
-                }
-                
-                // sprite
-                $val = implode('', self::$spriteData[$col][$line]);
-                $str .= ', @'.$val;
 
-                $str .= CR;
+                    // sprite
+                    $val = implode('', self::$spriteData[$col][$line]);
+                    $str .= ', @'.$val;
+
+                    $str .= CR;
+                }
+                // unmasked
+                else {
+                    $val = implode('', self::$spriteData[$col][$line]);
+                    $str .= 'defb @'.$val.CR;
+                }
             }
 
             $str .= CR;
