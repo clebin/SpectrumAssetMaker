@@ -144,7 +144,7 @@ class Sprite
                 break;
         }
     }
-
+    
     /**
      * Return sprite graphics in C format
      */

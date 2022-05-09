@@ -10,17 +10,20 @@ class Tilemaps {
     public static $screens = [];
 
     // object layers
-    public static $screens_objects = [];
-    public static $screens_enemies = [];
-    public static $screen_colours = [];
+    public static $screenObjects = [];
+    public static $screenEnemies = [];
+    public static $screenColours = [];
 
-    public static $save_objects = false;
-    public static $save_enemies = false;
-    public static $save_colours = false;
+    public static $saveObjects = false;
+    public static $saveEnemies = false;
+    public static $saveColours = false;
 
     public static $defineName = 'SCREENS_LEN';
     public static $baseName = '';
     public static $baseFilename = '';
+
+    public static $width = false;
+    public static $height = false;
 
     private static $screenNames = [];
 
@@ -81,14 +84,18 @@ class Tilemaps {
 
         foreach($data['layers'] as $layer) {
 
-            $screen = new Screen($count);
-            
             // read the Tiled data
             $data = self::ReadTilemapLayer($layer);
-
+            
+            // create screen
+            $screen = new Screen($count);
+            
             // set data
             $screen->SetData($data);
             
+            // set dimensions
+            $screen->SetDimensions(self::$width, self::$height);
+
             // set name
             if( SpecTiledTool::UseLayerNames() === true ) {
                 $screen->SetName($layer['name']);
@@ -140,26 +147,30 @@ class Tilemaps {
 
                     case 'tilemap':
                         $screen->SetData(self::ReadTilemapLayer($layer));
+
+                        // dimensions
+                        $screen->SetDimensions(self::$width, self::$height);
+            
                     break;
                     
                     // case 'enemies':
                     //     if( $layer['visible'] == true ) {
-                    //         self::$screens_enemies[$count] = self::ReadObjectLayer($layer);
-                    //         self::$save_enemies = true;
+                    //         self::$screensEnemies[$count] = self::ReadObjectLayer($layer);
+                    //         self::$saveEnemies = true;
                     //     }
                     // break;
 
                     // case 'objects':
                     //     if( $layer['visible'] == true ) {
-                    //         self::$screens_objects[$count] = self::ReadObjectLayer($layer);
-                    //         self::$save_objects = true;
+                    //         self::$screensObjects[$count] = self::ReadObjectLayer($layer);
+                    //         self::$saveObjects = true;
                     //     }
                     // break;
                     
                     // case 'colours':
                     //     if( $layer['visible'] == true ) {
-                    //     self::$screens_colours[$count] = self::ReadObjectLayer($layer);
-                    //     self::$save_colours = true;
+                    //     self::$screensColours[$count] = self::ReadObjectLayer($layer);
+                    //     self::$saveColours = true;
                     //     }
                     // break;
                 }
@@ -204,6 +215,10 @@ class Tilemaps {
                 }
             }
         }
+
+        // dimensions
+        self::$width = $layer['width'];
+        self::$height = $layer['height'];
 
         // return a Screen object
         return $data;
@@ -266,7 +281,7 @@ class Tilemaps {
                     break;
                 default:
                     $str .= self::GetScreenAsm($i);
-                break;
+                    break;
             }
         }
         return $str;
@@ -295,21 +310,21 @@ class Tilemaps {
         $str = SpecTiledTool::GetPointerArrayC($arrayName, $pointersBaseName, sizeof(self::$screens));
         
         // pointers to enemies
-        if( self::$save_enemies === true ) {
+        if( self::$saveEnemies === true ) {
             $arrayName = SpecTiledTool::GetConvertedCodeName($baseName.'-enemies');
             $pointersBaseName = SpecTiledTool::GetConvertedCodeName($baseName.'-enemy');
             $str .= SpecTiledTool::GetPointerArrayC($arrayName, $pointersBaseName, sizeof(self::$screens));
         }
 
         // pointers to objects 
-        if( self::$save_objects === true ) {
+        if( self::$saveObjects === true ) {
             $arrayName = SpecTiledTool::GetConvertedCodeName($baseName.'-objects');
             $pointersBaseName = SpecTiledTool::GetConvertedCodeName($baseName.'-object');
             $str .= SpecTiledTool::GetPointerArrayC($arrayName, $pointersBaseName, sizeof(self::$screens));
         }
 
         // pointers to custom colours
-        if( self::$save_colours === true ) {
+        if( self::$saveColours === true ) {
             $arrayName = SpecTiledTool::GetConvertedCodeName($baseName.'-colours');
             $pointersBaseName = SpecTiledTool::GetConvertedCodeName($baseName.'-colour');
             $str .= SpecTiledTool::GetPointerArrayC($arrayName, $pointersBaseName, sizeof(self::$screens));

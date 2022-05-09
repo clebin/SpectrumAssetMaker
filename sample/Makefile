@@ -17,7 +17,8 @@ tilemap-asm:
 		--map=laundrette.tmj \
 		--output-folder=./output/asm \
 		--format=asm \
-		--naming=underscores
+		--naming=underscores \
+		--add-dimensions
 
 tileset-asm:
 	php $(toolpath) \
@@ -25,7 +26,7 @@ tileset-asm:
 		--graphics=./font.gif \
 		--output-folder=./output/asm \
 		--format=asm \
-		--naming=underscores
+		--naming=underscores \
 
 screens-asm:
 	php $(toolpath) \
@@ -64,7 +65,8 @@ tilemap-c:
 		--prefix=laundrette \
 		--map=laundrette.tmj \
 		--output-folder=./output/c \
-		--format=c
+		--format=c \
+		--add-dimensions
 
 tileset-c:
 	php $(toolpath) \

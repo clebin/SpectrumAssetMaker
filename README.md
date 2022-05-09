@@ -48,6 +48,8 @@ Running the script without parameters will prompt for each setting.
 
 **--graphics**=[tileset graphics filename]
 
+**--add-dimensions** (add width & height as the first two elements in the tilemap data array)
+
 **--compression**=rle [enable RLE compression on tilemaps]
 
 

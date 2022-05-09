@@ -10,6 +10,8 @@ class Screen {
     public $name = false;
     public $filename = false;
     public $data = [];
+    public $width = false;
+    public $height = false;
 
     public function __construct($num)
     {
@@ -19,6 +21,12 @@ class Screen {
     public function SetData($data)
     {
         $this->data = $data;
+    }
+
+    public function SetDimensions($width, $height)
+    {
+        $this->width = $width;
+        $this->height = $height;
     }
 
     public function SetNum($num = false)
@@ -83,17 +91,10 @@ class Screen {
     }
 
     /**
-     * Get screen represented in C
+     * Get data
      */
-    public function GetC()
+    public function GetDataArray()
     {
-        $str = '';
-
-        // add to first screen
-        if( $this->num == 0 && Tilemaps::GetNumScreens() > 1) {
-            $str .= '#define '.Tilemaps::$defineName.' '.Tilemaps::GetNumScreens().CR.CR;
-        }
-
         // compression
         if(SpecTiledTool::$compression === 'rle' ) {
             
@@ -105,27 +106,47 @@ class Screen {
         } else {
             $data = $this->data;
         }
+
+        // dimensions
+        if( SpecTiledTool::GetAddDimensions() === true ) {
+            array_unshift($data, $this->width, $this->height);
+        }
         
+        return $data;
+    }
+
+    /**
+     * Get screen represented in C
+     */
+    public function GetC()
+    {
+        $str = '';
+
+        // add to first screen
+        if( $this->num == 0 && Tilemaps::GetNumScreens() > 1) {
+            $str .= '#define '.Tilemaps::$defineName.' '.Tilemaps::GetNumScreens().CR.CR;
+        }
+
         // tile numbers
         $str .= SpecTiledTool::GetCArray(
             $this->name, 
-            $data, 
+            $this->GetDataArray(), 
             10
         ).CR;
 
         // // enemies
-        // if( Tilemaps::$save_enemies === true && isset(self::$screens_enemies[$screen['num']]) ) {
+        // if( Tilemaps::$saveEnemies === true && isset(self::$screensEnemies[$screen['num']]) ) {
         //     $str .= self::GetObjectsC('Enemies', self::$screens_enemies[$screen['num']]);
         // }
 
         // // objects
-        // if( Tilemaps::$save_objects === true && isset(self::$screens_objects[$screen['num']]) ) {
-        //     $str .= self::GetObjectsC('GameObjects', self::$screens_objects[$screen['num']]);
+        // if( Tilemaps::$saveObjects === true && isset(self::$screensObjects[$screen['num']]) ) {
+        //     $str .= self::GetObjectsC('GameObjects', self::$screensObjects[$screen['num']]);
         // }
 
         // // colours
-        // if( self::$save_colours === true && isset(self::$screens_colours[$screen['num']]) ) {
-        //     $str .= self::GetObjectsC('Colours', self::$screens_colours[$screen['num']]);
+        // if( self::$saveColours === true && isset(self::$screensColours[$screen['num']]) ) {
+        //     $str .= self::GetObjectsC('Colours', self::$screensColours[$screen['num']]);
         // }
         
         // last screen - set up an array of pointers to the screens
@@ -145,19 +166,9 @@ class Screen {
     {
         $str = 'SECTION '.SpecTiledTool::GetCodeSection().CR;
         
-        if(SpecTiledTool::$compression === 'rle' ) {
-            $data = SpecTiledTool::CompressArrayRLE(
-                $this->name,
-                $this->data, 
-                true
-            );
-        } else {
-            $data = $this->GetData();
-        }
-
         $str .= SpecTiledTool::GetAsmArray(
             $this->name, 
-            $data, 
+            $this->GetDataArray(), 
             10, 
             8
         ).CR;

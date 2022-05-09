@@ -53,6 +53,7 @@ class SpecTiledTool
     private static $maskFilename = false;
     private static $mapFilename = false;
     private static $tilesetFilename = false;
+    private static $addDimensions = false;
     private static $outputFolder = '.';
     private static $outputFilename = false;
     private static $graphicsFilename = false;
@@ -129,6 +130,7 @@ class SpecTiledTool
             self::$mapFilename = CliTools::GetAnswer('Map filename', 'map.tmj');
             self::$tilesetFilename = CliTools::GetAnswer('Tileset filename', 'tileset.tsj');
             self::$graphicsFilename = CliTools::GetAnswer('Tile graphics filename', 'tiles.gif');
+            self::$addDimensions = CliTools::GetAnswerBoolean('Add tilemap dimensions?');
         }
         // sprite
         else {
@@ -177,6 +179,11 @@ class SpecTiledTool
         // tilemaps
         if( isset($options['map'])) {
             self::$mapFilename = $options['map'];
+        }
+
+        // add dimension
+        if( isset($options['add-dimensions'])) {
+            self::$addDimensions = true;
         }
 
         // tileset
@@ -638,6 +645,14 @@ class SpecTiledTool
     }
 
     /**
+     * Adding dimensions?
+     */
+    public static function GetAddDimensions()
+    {
+        return self::$addDimensions;
+    }
+
+    /**
      * Did an error occur?
      */
     public static function DidErrorOccur()
@@ -662,7 +677,8 @@ $options = getopt('', [
     'use-layer-names::',
     'create-binaries-lst::', 
     'replace-flash-with-solid::',
-    'naming::'
+    'naming::', 
+    'add-dimensions::'
 ]);
 
 // run
