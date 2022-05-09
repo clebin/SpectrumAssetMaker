@@ -36,7 +36,7 @@ class SpecTiledTool
     public static $formatsSupported = ['asm','c'];
     public static $format = self::FORMAT_C;
 
-    public static $namingConventionsSupported = ['camelcase','underscores'];
+    public static $namingConventionsSupported = ['camelcase','underscores','titlecase'];
     public static $namingConvention = self::NAMING_CAMELCASE;
     
     // naming
@@ -576,10 +576,15 @@ class SpecTiledTool
      */
     public static function GetConvertedCodeName($source_name)
     {
-        if( self::$namingConvention == 'underscores' ) {
-           return self::GetConvertedCodeNameUnderscores($source_name);
-        } else {
-            return self::GetConvertedCodeNameCamelcase($source_name);
+        switch( self::$namingConvention ) {
+            case 'underscores':
+                return self::GetConvertedCodeNameUnderscores($source_name);
+                break;
+            case 'titlecase';
+                return self::GetConvertedCodeNameTitleCase($source_name);
+            default:
+                return self::GetConvertedCodeNameCamelCase($source_name);
+                break;
         }
     }
 
@@ -594,11 +599,19 @@ class SpecTiledTool
     /**
      * Convert a regular name to camel-case
      */
-    public static function GetConvertedCodeNameCamelcase($source_name)
+    public static function GetConvertedCodeNameCamelCase($source_name)
     {
         return lcfirst( implode('', array_map('ucfirst', explode(' ',str_replace('-', ' ',$source_name)))));
     }
 
+    /**
+     * Convert a regular name to title-case
+     */
+    public static function GetConvertedCodeNameTitleCase($source_name)
+    {
+        return implode('', array_map('ucfirst', explode(' ',str_replace('-', ' ',$source_name))));
+    }
+    
     /**
      * Convert regular name to a filename format
      */
