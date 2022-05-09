@@ -8,7 +8,7 @@ class Screen {
 
     public $num = 0;
     public $name = false;
-    public $codeName = false;
+    public $filename = false;
     public $data = [];
 
     public function __construct($num)
@@ -21,17 +21,17 @@ class Screen {
         $this->data = $data;
     }
 
-    public function SetNum($num)
+    public function SetNum($num = false)
     {
         $this->num = $num;
-        $this->name = Tilemaps::GetBaseName().($num !== false ? $num : '');
-        $this->codeName = $this->name;
+        $this->name = Tilemaps::$baseName.($num !== false ? $num : '');
+        $this->filename = Tilemaps::$baseFilename.($num !== false ? '-'.$num : '');
     }
 
     public function SetName($name)
     {
-        $this->name = $name;
-        $this->codeName = SpecTiledTool::GetConvertedCodeName($this->name);
+        $this->name = SpecTiledTool::GetConvertedCodeName($name.'-tilemap');
+        $this->filename = SpecTiledTool::GetConvertedFilename($name.'-tilemap');
     }
 
     public function GetData()
@@ -44,14 +44,9 @@ class Screen {
         return $this->name;
     }
 
-    public function GetCodeName()
-    {
-        return $this->codeName;
-    }
-
     public function GetOutputFilename()
     {
-        return $this->codeName.'.'.SpecTiledTool::GetOutputFileExtension();
+        return $this->filename.'.'.SpecTiledTool::GetOutputFileExtension();
     }
 
     public function GetOutputFilepath()
@@ -103,7 +98,7 @@ class Screen {
         if(SpecTiledTool::$compression === 'rle' ) {
             
             $data = SpecTiledTool::CompressArrayRLE(
-                $this->codeName, 
+                $this->name, 
                 $this->data, 
                 false, 
             );
@@ -113,7 +108,7 @@ class Screen {
         
         // tile numbers
         $str .= SpecTiledTool::GetCArray(
-            $this->codeName, 
+            $this->name, 
             $data, 
             10
         ).CR;
@@ -152,7 +147,7 @@ class Screen {
         
         if(SpecTiledTool::$compression === 'rle' ) {
             $data = SpecTiledTool::CompressArrayRLE(
-                $this->codeName,
+                $this->name,
                 $this->data, 
                 true
             );
@@ -161,7 +156,7 @@ class Screen {
         }
 
         $str .= SpecTiledTool::GetAsmArray(
-            $this->codeName, 
+            $this->name, 
             $data, 
             10, 
             8

@@ -13,7 +13,7 @@ class Sprite
     public static $height = 0;
     public static $numColumns = 0;
 
-    public static $baseName = 'sprite';
+    public static $codeName = 'sprite';
     public static $section = 'rodata_user';
 
     /**
@@ -22,7 +22,7 @@ class Sprite
     public static function ReadFiles($spriteFile, $maskFile = false)
     {
         if( SpecTiledTool::GetPrefix() !== false ) {
-            self::$baseName = SpecTiledTool::GetPrefix().'_sprite';
+            self::$codeName = SpecTiledTool::GetConvertedCodeName(SpecTiledTool::GetPrefix().'-sprite');
         }
 
         self::$spriteImage = self::GetImage($spriteFile);
@@ -162,7 +162,7 @@ class Sprite
     {
         $str = 'SECTION '.self::$section.CR.CR;
 
-        $str .= 'PUBLIC _'.self::$baseName.CR.CR;
+        $str .= 'PUBLIC _'.self::$codeName.CR.CR;
 
         // front padding
         for($line=0;$line<7;$line++) {
@@ -173,7 +173,7 @@ class Sprite
             }
         }
 
-        $str .= CR.'._'.self::$baseName.CR;
+        $str .= CR.'._'.self::$codeName.CR;
         
         for($col=0;$col<self::$numColumns;$col++) {
 

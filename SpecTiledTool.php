@@ -29,10 +29,15 @@ class SpecTiledTool
     // constants
     const FORMAT_ASM = 'asm';
     const FORMAT_C = 'c';
+    const NAMING_CAMELCASE = 'camelcase';
+    const NAMING_UNDERSCORES = 'underscores';
     
     // current output format
-    public static $formats_supported = ['asm','c'];
+    public static $formatsSupported = ['asm','c'];
     public static $format = self::FORMAT_C;
+
+    public static $namingConventionsSupported = ['camelcase','underscores'];
+    public static $namingConvention = self::NAMING_CAMELCASE;
     
     // naming
     public static $prefix = false;
@@ -40,7 +45,7 @@ class SpecTiledTool
     public static $replaceFlashWithSolid = false;
 
     // compression
-    public static $compression_supported = ['rle'];
+    public static $compressionSupported = ['rle'];
     public static $compression = false;
 
     // filenames
@@ -89,12 +94,12 @@ class SpecTiledTool
         }
 
         // is format supported?
-        if( !in_array(self::$format, self::$formats_supported) ) {
+        if( !in_array(self::$format, self::$formatsSupported) ) {
             echo 'Error: Format not supported.'.CR;
             return false;
         }
 
-        if( self::$compression !== false && !in_array(self::$compression, self::$compression_supported)) {
+        if( self::$compression !== false && !in_array(self::$compression, self::$compressionSupported)) {
             echo 'Error: Compression type not supported.'.CR;
             return false;
         }
@@ -136,17 +141,19 @@ class SpecTiledTool
         self::$outputFolder = CliTools::GetAnswer('Output folder?', './');
 
         // compression
-        self::$compression = CliTools::GetAnswer('Use compression', 'none', array_merge(['none'], self::$compression_supported));
+        self::$compression = CliTools::GetAnswer('Use compression', 'none', array_merge(['none'], self::$compressionSupported));
         if( self::$compression == 'none' ) {
             self::$compression = false;
         }
 
         // format
-        self::$format = CliTools::GetAnswer('Which format?', 'c', self::$formats_supported);
-
+        self::$format = CliTools::GetAnswer('Output format', 'c', self::$formatsSupported);
         if(self::$format == 'asm') {
-            self::$section = CliTools::GetAnswer('Asssembly section?', 'rodata_user');
+            self::$section = CliTools::GetAnswer('Asssembly section', 'rodata_user');
         }
+
+        // naming
+        self::$namingConvention = CliTools::GetAnswer('Naming convention', 'camelcase', self::$namingConventionsSupported);
     }
 
     /**
@@ -192,8 +199,14 @@ class SpecTiledTool
             self::$format = $options['format'];
         }
 
+        // output folder
         if( isset($options['output-folder'])) {
             self::$outputFolder = $options['output-folder'];
+        }
+
+        // naming
+        if( isset($options['naming'])) {
+            self::$namingConvention = $options['naming'];
         }
 
         // sprite file
@@ -310,16 +323,17 @@ class SpecTiledTool
         
             if( self::$error === false ) {
 
-                $outputBaseFilename = self::$outputFolder;
+                $outputFilename = self::$outputFolder;
 
                 // output filename
                 if( self::$prefix !== false ) {
-                    $outputBaseFilename .= self::$prefix.'-sprite';
+                    $outputFilename .= SpecTiledTool::GetConvertedFilename(self::$prefix).'-sprite';
                 } else {
-                    $outputBaseFilename .= 'sprite';
+                    $outputFilename .= 'sprite';
                 }
+                $outputFilename .= '.'.self::GetOutputFileExtension();
 
-                file_put_contents($outputBaseFilename.'.'.self::GetOutputFileExtension(), Sprite::GetCode());
+                file_put_contents($outputFilename, Sprite::GetCode());
             }
         }
 
@@ -562,7 +576,35 @@ class SpecTiledTool
      */
     public static function GetConvertedCodeName($source_name)
     {
-        return lcfirst( implode('', array_map('ucfirst', explode(' ',$source_name) ) ));
+        if( self::$namingConvention == 'underscores' ) {
+           return self::GetConvertedCodeNameUnderscores($source_name);
+        } else {
+            return self::GetConvertedCodeNameCamelcase($source_name);
+        }
+    }
+
+    /** 
+     * Convert a regular name to use underscores 
+     */
+    public static function GetConvertedCodeNameUnderscores($source_name)
+    {
+        return strtolower(str_replace(['-', ' '], '_', $source_name));
+    }
+
+    /**
+     * Convert a regular name to camel-case
+     */
+    public static function GetConvertedCodeNameCamelcase($source_name)
+    {
+        return lcfirst( implode('', array_map('ucfirst', explode(' ',str_replace('-', ' ',$source_name)))));
+    }
+
+    /**
+     * Convert regular name to a filename format
+     */
+    public static function GetConvertedFilename($source_name)
+    {
+        return strtolower(str_replace(' ', '-', $source_name));
     }
 
     /**
@@ -606,7 +648,8 @@ $options = getopt('', [
     'output-folder::',
     'use-layer-names::',
     'create-binaries-lst::', 
-    'replace-flash-with-solid::'
+    'replace-flash-with-solid::',
+    'naming::'
 ]);
 
 // run

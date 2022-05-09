@@ -19,7 +19,8 @@ class Tilemaps {
     public static $save_colours = false;
 
     public static $defineName = 'SCREENS_LEN';
-    public static $baseName = 'tilemap';
+    public static $baseName = '';
+    public static $baseFilename = '';
 
     private static $screenNames = [];
 
@@ -46,8 +47,15 @@ class Tilemaps {
         }
 
         if( SpecTiledTool::GetPrefix() !== false ) {
+
+            // set name for #define screens length
             self::$defineName = strtoupper(SpecTiledTool::GetPrefix()).'_'.self::$defineName;
-            self::$baseName = SpecTiledTool::GetPrefix().ucfirst(self::$baseName);
+
+            // set base name for code
+            self::$baseName = SpecTiledTool::GetConvertedCodeName(SpecTiledTool::GetPrefix().'-tilemap');
+            
+            // set base name for file output
+            self::$baseFilename = SpecTiledTool::GetConvertedFilename(SpecTiledTool::GetPrefix().'-tilemap');
         }
 
         $json = file_get_contents($filename);
@@ -85,7 +93,7 @@ class Tilemaps {
             if( SpecTiledTool::UseLayerNames() === true ) {
                 $screen->SetName($layer['name']);
             }
-
+            
             // add to arrays
             self::$screenNames[] = $screen->GetName();
             self::$screens[] = $screen;
@@ -299,11 +307,6 @@ class Tilemaps {
         }
 
         return $str;
-    }
-
-    public static function GetBaseName()
-    {
-        return self::$baseName;
     }
 
     /**
