@@ -289,21 +289,30 @@ class Tilemaps {
      */
     public static function GetScreenArrayPointersC($baseName)
     {
-        $str = SpecTiledTool::GetPointerArrayC($baseName.'s', $baseName, sizeof(self::$screens));
-
+        // screens
+        $arrayName = SpecTiledTool::GetConvertedCodeName($baseName.'s');
+        $pointersBaseName = SpecTiledTool::GetConvertedCodeName($baseName);
+        $str = SpecTiledTool::GetPointerArrayC($arrayName, $pointersBaseName, sizeof(self::$screens));
+        
         // pointers to enemies
         if( self::$save_enemies === true ) {
-            $str .= SpecTiledTool::GetPointerArrayC($baseName.'sEnemies', $baseName.'Enemies', sizeof(self::$screens));
+            $arrayName = SpecTiledTool::GetConvertedCodeName($baseName.'-enemies');
+            $pointersBaseName = SpecTiledTool::GetConvertedCodeName($baseName.'-enemy');
+            $str .= SpecTiledTool::GetPointerArrayC($arrayName, $pointersBaseName, sizeof(self::$screens));
         }
 
         // pointers to objects 
         if( self::$save_objects === true ) {
-            $str .= SpecTiledTool::GetPointerArrayC($baseName.'sObjects', $baseName.'Objects', sizeof(self::$screens));
+            $arrayName = SpecTiledTool::GetConvertedCodeName($baseName.'-objects');
+            $pointersBaseName = SpecTiledTool::GetConvertedCodeName($baseName.'-object');
+            $str .= SpecTiledTool::GetPointerArrayC($arrayName, $pointersBaseName, sizeof(self::$screens));
         }
 
         // pointers to custom colours
         if( self::$save_colours === true ) {
-            $str .= SpecTiledTool::GetPointerArrayC($baseName.'sColours', $baseName.'Colours', sizeof(self::$screens));
+            $arrayName = SpecTiledTool::GetConvertedCodeName($baseName.'-colours');
+            $pointersBaseName = SpecTiledTool::GetConvertedCodeName($baseName.'-colour');
+            $str .= SpecTiledTool::GetPointerArrayC($arrayName, $pointersBaseName, sizeof(self::$screens));
         }
 
         return $str;

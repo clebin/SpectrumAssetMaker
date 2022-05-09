@@ -132,7 +132,7 @@ class Screen {
         if( Tilemaps::GetNumScreens() > 1 && 
             $this->num == Tilemaps::GetNumScreens()-1 ) {
 
-            $str .= TileMaps::GetScreenArrayPointersC(Tilemaps::GetBaseName());
+            $str .= TileMaps::GetScreenArrayPointersC(Tilemaps::$baseName);
         }
         
         return $str;
