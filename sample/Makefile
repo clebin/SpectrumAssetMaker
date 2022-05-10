@@ -3,13 +3,15 @@ toolpath = ../SpecTiledTool.php
 all: asm c
 
 clean:
-	rm ./output/asm/screens/*
+	rm ./output/asm/tilemaps/*
+	rm ./output/asm/object-maps/*
 	rm ./output/asm/*.asm
 	rm ./output/c/*.c
-	rm ./output/c/screens/*.c
+	rm ./output/c/tilemaps/*.c
+	rm ./output/c/object-maps/*.c
 
 # assembly output
-asm: tilemap-asm tileset-asm screens-asm masked-sprite-asm unmasked-sprite-asm
+asm: tilemap-asm tileset-asm screens-asm masked-sprite-asm unmasked-sprite-asm object-map-asm
 
 tilemap-asm:
 	php $(toolpath) \
@@ -33,9 +35,9 @@ screens-asm:
 		--use-layer-names \
 		--replace-flash-with-solid \
 		--tileset=./tileset.tsj \
-		--map=./screens.tmj \
+		--map=./screen-tilemaps.tmj \
 		--graphics=./tiles-bw.gif \
-		--output-folder=./output/asm/screens \
+		--output-folder=./output/asm/tilemaps \
 		--compression=rle \
 		--format=asm \
 		--naming=underscores
@@ -57,8 +59,16 @@ unmasked-sprite-asm:
 		--format=asm \
 		--naming=underscores
 
+object-map-asm:
+		php $(toolpath) \
+		--map=./screen-objects.tmj \
+		--object-types=objecttypes.xml \
+		--output-folder=./output/asm/object-maps \
+		--format=asm \
+		--naming=underscores
+
 # c output
-c: tilemap-c tileset-c screens-c masked-sprite-c unmasked-sprite-c
+c: tilemap-c tileset-c screens-c masked-sprite-c unmasked-sprite-c object-map-c
 
 tilemap-c:
 	php $(toolpath) \
@@ -80,9 +90,9 @@ screens-c:
 		--use-layer-names \
 		--replace-flash-with-solid \
 		--tileset=./tileset.tsj \
-		--map=./screens.tmj \
+		--map=./screen-tilemaps.tmj \
 		--graphics=./tiles-bw.gif \
-		--output-folder=./output/c/screens \
+		--output-folder=./output/c/tilemaps \
 		--compression=rle \
 		--format=c
 
@@ -101,4 +111,11 @@ unmasked-sprite-c:
 		--output-folder=./output/c \
 		--format=c \
 		--naming=titlecase
+
+object-map-c:
+	php $(toolpath) \
+		--map=./screen-objects.tmj \
+		--object-types=objecttypes.xml \
+		--output-folder=./output/c/object-maps \
+		--format=c
 

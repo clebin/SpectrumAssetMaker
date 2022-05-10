@@ -14,7 +14,6 @@ class Sprite
     public static $numColumns = 0;
 
     public static $codeName = 'sprite';
-    public static $section = 'rodata_user';
 
     /**
      * Read a black & white PNG or GIF file
@@ -49,8 +48,10 @@ class Sprite
         if( $maskFile !== false ) {
             self::$maskData = self::GetImageData(self::$maskImage, true);
         }
+        
+        return true;
     }
-    
+
     public static function GetImage($filename)
     {
         if(!file_exists($filename)) {
@@ -160,7 +161,7 @@ class Sprite
      */
     public static function GetAsm()
     {
-        $str = 'SECTION '.self::$section.CR.CR;
+        $str = 'SECTION '.SpecTiledTool::GetCodeSection().CR;
 
         $str .= 'PUBLIC _'.self::$codeName.CR.CR;
 
@@ -214,5 +215,15 @@ class Sprite
         }
 
         return $str;
+    }
+
+    public static function Process($spriteFilename, $maskFilename)
+    {
+        $success = self::ReadFiles($spriteFilename, $maskFilename);
+    
+        if( $success === true ) {
+
+            file_put_contents(SpecTiledTool::GetOutputFilename('sprite'), self::GetCode());
+        }
     }
 }

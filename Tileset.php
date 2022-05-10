@@ -11,16 +11,22 @@ class Tileset
     // static array of tiles
     private static $tiles = [];
     public static $large_tileset = false;
-    public static $baseName = 'tileset';
-
+    public static $codeName = 'tileset';
+    public static $defineName = 'tileset-len';
+    
     /**
      * Read the tileset JSON file
      */
     public static function ReadFile($filename)
     {
         if( SpecTiledTool::GetPrefix() !== false ) {
-            self::$baseName = SpecTiledTool::GetPrefix().'Tileset';
+            self::$codeName = SpecTiledTool::GetPrefix().'-'.self::$codeName;
+            self::$defineName = SpecTiledTool::GetPrefix().'-'.self::$defineName;
         }
+        
+        self::$codeName = SpecTiledTool::GetConvertedCodeName(self::$codeName);
+        self::$defineName = SpecTiledTool::GetConvertedConstantName(self::$defineName);
+
 
         if(!file_exists($filename)) {
             return false;
@@ -48,6 +54,7 @@ class Tileset
         echo 'Tileset: added '.$count.' tiles.'.CR;
 
         self::$tilesetIsSet = true;
+        
         return true;
     }
 
@@ -69,27 +76,6 @@ class Tileset
      */
     public static function TileExists($id){
         return isset(self::$tiles[$id]);
-    }
-
-    public static function GetOutputFilepath()
-    {
-        return SpecTiledTool::GetOutputFolder().self::GetOutputFilename();
-
-    }
-
-    public static function GetOutputFilename()
-    {
-        return self::GetOutputBaseFilename().'.'.SpecTiledTool::GetOutputFileExtension();
-    }
-
-    public static function GetOutputBaseFilename()
-    {
-        // output filename
-        if( SpecTiledTool::$prefix !== false ) {
-            return SpecTiledTool::$prefix.'-tileset';
-        } else {
-            return 'tileset';
-        }
     }
 
     public static function GetBinariesLst()
@@ -119,7 +105,7 @@ class Tileset
      */
     public static function GetAsm()
     {
-        $str = '';
+        $str = 'SECTION '.SpecTiledTool::GetCodeSection().CR;
         
         $str .= CR;
         // tile info
@@ -133,7 +119,7 @@ class Tileset
         
         // colours
         $str .= SpecTiledTool::GetAsmArray(
-            self::$baseName.'Colours', 
+            self::$codeName.'Colours', 
             $colours, 
             2
         ).CR;
@@ -141,18 +127,13 @@ class Tileset
         // properties
         if( SpecTiledTool::ReplaceFlashWithSolid() === false ) {
             $str .= SpecTiledTool::GetAsmArray(
-                self::$baseName.'Properties', 
+                self::$codeName.'Properties', 
                 $properties, 
                 2
             ).CR;
         }
 
         return $str;
-    }
-
-    public static function GetOutputName()
-    {
-
     }
 
     /**
@@ -162,7 +143,7 @@ class Tileset
     {
         $str = '';
 
-        $str .= '#define '.strtoupper(self::$baseName).'_LEN '.sizeof(self::$tiles).CR.CR;
+        $str .= '#define '.strtoupper(self::$defineName).' '.sizeof(self::$tiles).CR.CR;
 
         // tile info
         $colours = [];
@@ -174,7 +155,7 @@ class Tileset
         
         // colours
         $str .= SpecTiledTool::GetCArray(
-            self::$baseName.'Colours', 
+            self::$codeName.'Colours', 
             $colours, 
             2
         ).CR;
@@ -182,12 +163,21 @@ class Tileset
         // properties array
         if( SpecTiledTool::ReplaceFlashWithSolid() === false ) {
             $str .= SpecTiledTool::GetCArray(
-                self::$baseName.'Properties', 
+                self::$codeName.'Properties', 
                 $properties, 
                 2
             ).CR;
         }
 
         return $str;
+    }
+
+    public static function Process($filename)
+    {
+        $success = self::ReadFile($filename);
+
+        if( $success === true ) {        
+            file_put_contents(SpecTiledTool::GetOutputFilename('tileset'), self::GetCode());
+        }
     }
 }

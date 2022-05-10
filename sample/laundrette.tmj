@@ -17,7 +17,7 @@
             25, 154, 155, 156, 157, 158, 154, 155, 156, 22],
          "height":12,
          "id":1,
-         "name":"Tile Layer 1",
+         "name":"laundrette",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
@@ -34,7 +34,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"tileset.tsx"
+         "source":"..\/tileset\/tileset.tsx"
         }],
  "tilewidth":8,
  "type":"map",

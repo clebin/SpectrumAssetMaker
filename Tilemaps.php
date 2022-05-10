@@ -7,25 +7,14 @@ namespace ClebinGames\SpecTiledTool;
 class Tilemaps {
     
     // data arrays
-    public static $screens = [];
+    public static $maps = [];
 
-    // object layers
-    public static $screenObjects = [];
-    public static $screenEnemies = [];
-    public static $screenColours = [];
+    public static $numTilemaps = 0;
+    public static $numObjectMaps = 0;
 
-    public static $saveObjects = false;
-    public static $saveEnemies = false;
-    public static $saveColours = false;
-
-    public static $defineName = 'SCREENS_LEN';
-    public static $baseName = '';
-    public static $baseFilename = '';
-
+    public static $defineName = 'TILEMAPS_LEN';
     public static $width = false;
     public static $height = false;
-
-    private static $screenNames = [];
 
     // allowed properties on enemies, objects, etc.
     private static $object_allowed_properties = [
@@ -49,29 +38,24 @@ class Tilemaps {
             return false;
         }
 
-        if( SpecTiledTool::GetPrefix() !== false ) {
-
-            // set name for #define screens length
-            self::$defineName = strtoupper(SpecTiledTool::GetPrefix()).'_'.self::$defineName;
-
-            // set base name for code
-            self::$baseName = SpecTiledTool::GetConvertedCodeName(SpecTiledTool::GetPrefix().'-tilemap');
-            
-            // set base name for file output
-            self::$baseFilename = SpecTiledTool::GetConvertedFilename(SpecTiledTool::GetPrefix().'-tilemap');
-        }
-
         $json = file_get_contents($filename);
         $data = json_decode($json, true);
 
+        // set name for #define screens length
+        if( SpecTiledTool::GetPrefix() !== false ) {
+            self::$defineName = strtoupper(SpecTiledTool::GetPrefix()).'_'.self::$defineName;
+        }
+
         // read simple
-        if( isset($data['layers'][0]['data']) ) {
-            self::ReadFileSimple($data);
+        if( isset($data['layers'][0]['layers']) ) {
+            $success = self::ReadFileWithGroups($data);
         }
         // read with object layers
         else {
-            self::ReadFileWithObjects($data);
+            $success = self::ReadFileSimple($data);
         }
+
+        return $success;
     }
 
     /**
@@ -79,193 +63,74 @@ class Tilemaps {
      */
     public static function ReadFileSimple($data)
     {
-        // each layer counts as one screen
-        $count = 0;
+        return self::ReadLayerGroup($data['layers']);
+    }
 
-        foreach($data['layers'] as $layer) {
+    public static function ReadFileWithGroups($data)
+    {
+        // loop through groups
+        self::$numTilemaps = 0;
+        self::$numObjectMaps = 0;
 
-            // read the Tiled data
-            $data = self::ReadTilemapLayer($layer);
-            
-            // create screen
-            $screen = new Screen($count);
-            
-            // set data
-            $screen->SetData($data);
-            
-            // set dimensions
-            $screen->SetDimensions(self::$width, self::$height);
-
-            // set name
-            if( SpecTiledTool::UseLayerNames() === true ) {
-                $screen->SetName($layer['name']);
-            }
-            
-            // add to arrays
-            self::$screenNames[] = $screen->GetName();
-            self::$screens[] = $screen;
-
-            $count++;
+        foreach($data['layers'] as $group) {
+            self::ReadLayerGroup($group['layers'], $group['name']);
         }
 
-        // only one tilemap
-        if( $count == 1 ) {
-            self::$screens[0]->SetNum(false);
-        }
-        
         return true;
     }
 
-    /**
-     * Read a file with object layers and tilemap layers in groups
-     * 
-     * Correct layer names:
-     * - tilemap
-     * - enemies
-     * - objects
-     * - colours
-     * 
-     */
-    public static function ReadFileWithObjects($data)
+    public static function ReadLayerGroup($group, $name = false)
     {
-        // loop through groups
-        $count = 0;
+        foreach($group as $layer) {
 
-        foreach($data['layers'] as $group) {
-
-            $screen = new Screen($count);
-
-            // set name?
-            if( SpecTiledTool::UseLayerNames() === true ) {
-                $screen->SetName($group['name']);
+            // tilemap
+            if( $layer['type'] == 'tilelayer' ) {
+                $map = new Tilemap(self::$numTilemaps, $layer);
+                self::$numTilemaps++;
+            }
+            // objects
+            else if( $layer['type'] == 'objectgroup' ) {
+                $map = new ObjectMap(self::$numObjectMaps, $layer);
+                self::$numObjectMaps++;
+            }
+            else {
+                $map = false;
             }
 
-            foreach($group['layers'] as $layer) {
+            if($map !== false) {
 
-                // get tilemap and object layers
-                switch( strtolower($layer['name']) ) {
+                $map->SetDimensions(self::$width, self::$height);
 
-                    case 'tilemap':
-                        $screen->SetData(self::ReadTilemapLayer($layer));
-
-                        // dimensions
-                        $screen->SetDimensions(self::$width, self::$height);
-            
-                    break;
-                    
-                    // case 'enemies':
-                    //     if( $layer['visible'] == true ) {
-                    //         self::$screensEnemies[$count] = self::ReadObjectLayer($layer);
-                    //         self::$saveEnemies = true;
-                    //     }
-                    // break;
-
-                    // case 'objects':
-                    //     if( $layer['visible'] == true ) {
-                    //         self::$screensObjects[$count] = self::ReadObjectLayer($layer);
-                    //         self::$saveObjects = true;
-                    //     }
-                    // break;
-                    
-                    // case 'colours':
-                    //     if( $layer['visible'] == true ) {
-                    //     self::$screensColours[$count] = self::ReadObjectLayer($layer);
-                    //     self::$saveColours = true;
-                    //     }
-                    // break;
+                // set name
+                if( $name !== false ) {
+                    $map->SetName($name);
+                } else {
+                    $map->SetName($layer['name']);
                 }
-            }
-            self::$screenNames[] = $screen->GetName();
-            self::$screens[] = $screen;
 
-            $count++;
-        }
-
-        // only one tilemap
-        if( $count == 1 ) {
-            self::$screens[0]->SetNum(false);
-        }
-    }
-
-    /**
-     * Read a Tiled tilemap layer
-     */
-    public static function ReadTilemapLayer($layer)
-    {
-        $data = [];
-
-        echo 'Reading tilemap.'.CR;
-        foreach($layer['data'] as $tileNum) {
-
-            $tileNum = intval($tileNum)-1;
-
-            if( Tileset::TilesetIsSet() === true && Tileset::TileExists($tileNum) !== true ) {
-                echo 'Warning: tile '.$tileNum.' not found. '.CR;
-            }
-            $data[] = $tileNum;
-        }
-        
-        // check if screeName property is set
-        $name = false;
-
-        if( SpecTiledTool::$useLayerNames === true && isset($layer['properties'])) {
-            foreach( $layer['properties'] as $prop ) {
-                if( $prop['name'] == 'screenName' && strlen($prop['value']) > 0 ) {
-                    $name = SpecTiledTool::GetConvertedCodeName($prop['value']);        
-                }
+                self::$maps[] = $map;
             }
         }
 
-        // dimensions
-        self::$width = $layer['width'];
-        self::$height = $layer['height'];
-
-        // return a Screen object
-        return $data;
-    }
-
-    /**
-     * Read an Tiled object layer (can be enemies, objects or colours)
-     */
-    public static function ReadObjectLayer($layer)
-    {
-        return;
-        $objects = [];
-        foreach($layer['objects'] as $json_object) {
-
-            // create new object
-            $obj = [
-                'type' => $json_object['type']
-            ];
-
-            // name (optional)
-            if( $json_object['name'] != '' ) {
-                $obj['name'] = $json_object['name'];
-            }
-
-            // custom properties
-            foreach($json_object['properties'] as $prop) {
-                $obj[$prop['name']] = $prop['value'];
-            }
-
-            // x and y positions
-            $obj['x'] = intval($json_obj['x']);
-            $obj['y'] = intval($json_obj['y']);
-
-            // add to array
-            $objects[] = $obj;
-        }
-        return $objects;
+        return true;
     }
     
     /**
      * Return the number of screens
      */
-    public static function GetNumScreens()
+    public static function GetNumTilemaps()
     {
-        return sizeof(self::$screens);
+        return self::$numTilemaps;
     }
     
+    /**
+     * Return the number of screens
+     */
+    public static function GetNumObjectMaps()
+    {
+        return self::$numObjectMaps;
+    }
+
     /**
      * Get code for all screens in currently set language
      */
@@ -273,14 +138,14 @@ class Tilemaps {
     {
         $str = '';
 
-        for($i=0;$i<sizeof(self::$screens);$i++) {
+        for($i=0;$i<sizeof(self::$maps);$i++) {
 
             switch( SpecTiledTool::GetFormat() ) {
                 case 'c':
-                    $str .= self::GetScreenC($i);
+                    $str .= self::GetCodeC($i);
                     break;
                 default:
-                    $str .= self::GetScreenAsm($i);
+                    $str .= self::GetCodeAsm($i);
                     break;
             }
         }
@@ -293,68 +158,25 @@ class Tilemaps {
     public static function GetBinariesLst()
     {
         $str = '';
-        foreach(self::$screens as $screen) {
-            $str .= $screen->GetCodeName().CR;
+        foreach(self::$maps as $map) {
+            $str .= $map->GetCodeName().CR;
         }
         return $str;
     }
 
-    /**
-     * Get arrays of pointers to tilemaps, enemies, objects and colours
-     */
-    public static function GetScreenArrayPointersC($baseName)
+    public static function Process($filename)
     {
-        // screens
-        $arrayName = SpecTiledTool::GetConvertedCodeName($baseName.'s');
-        $pointersBaseName = SpecTiledTool::GetConvertedCodeName($baseName);
-        $str = SpecTiledTool::GetPointerArrayC($arrayName, $pointersBaseName, sizeof(self::$screens));
+        // read map and tilset
+        $success = self::ReadFile($filename);
         
-        // pointers to enemies
-        if( self::$saveEnemies === true ) {
-            $arrayName = SpecTiledTool::GetConvertedCodeName($baseName.'-enemies');
-            $pointersBaseName = SpecTiledTool::GetConvertedCodeName($baseName.'-enemy');
-            $str .= SpecTiledTool::GetPointerArrayC($arrayName, $pointersBaseName, sizeof(self::$screens));
+        if( $success === true ) {
+
+            // write tilemaps to files
+            $count = 0;
+            foreach(self::$maps as $map) {
+                file_put_contents($map->GetOutputFilename(), $map->GetCode());
+                $count++;
+            }
         }
-
-        // pointers to objects 
-        if( self::$saveObjects === true ) {
-            $arrayName = SpecTiledTool::GetConvertedCodeName($baseName.'-objects');
-            $pointersBaseName = SpecTiledTool::GetConvertedCodeName($baseName.'-object');
-            $str .= SpecTiledTool::GetPointerArrayC($arrayName, $pointersBaseName, sizeof(self::$screens));
-        }
-
-        // pointers to custom colours
-        if( self::$saveColours === true ) {
-            $arrayName = SpecTiledTool::GetConvertedCodeName($baseName.'-colours');
-            $pointersBaseName = SpecTiledTool::GetConvertedCodeName($baseName.'-colour');
-            $str .= SpecTiledTool::GetPointerArrayC($arrayName, $pointersBaseName, sizeof(self::$screens));
-        }
-
-        return $str;
-    }
-
-    /**
-     * Get C code for eneemies
-     */
-    public static function GetEnemiesC()
-    {
-        // $name = $baseName.'Enemies'.$screenNum;
-        
-    }
-
-    /**
-     * Get C code for objects
-     */
-    public static function GetObjectsC()
-    {
-        // $name = $baseName.'Objects'.$screenNum;
-    }
-
-    /**
-     * Get C codde for custom colours
-     */
-    public static function GetColoursC()
-    {
-        // $name = $baseName.'Colours'.$screenNum;
     }
 }

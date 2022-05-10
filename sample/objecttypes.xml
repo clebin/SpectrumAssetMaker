@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objecttypes>
+ <objecttype name="barrier" color="#a0a0a4">
+  <property name="index" type="int" default="0"/>
+ </objecttype>
+ <objecttype name="brick-house" color="#a0a0a4">
+  <property name="index" type="int" default="1"/>
+ </objecttype>
+ <objecttype name="buck-house" color="#a0a0a4">
+  <property name="index" type="int" default="2"/>
+ </objecttype>
+ <objecttype name="bush-1" color="#a0a0a4">
+  <property name="index" type="int" default="3"/>
+ </objecttype>
+ <objecttype name="bush-2" color="#a0a0a4">
+  <property name="index" type="int" default="4"/>
+ </objecttype>
+ <objecttype name="bush-3" color="#a0a0a4">
+  <property name="index" type="int" default="5"/>
+ </objecttype>
+ <objecttype name="castle" color="#a0a0a4">
+  <property name="index" type="int" default="6"/>
+ </objecttype>
+ <objecttype name="factory" color="#a0a0a4">
+  <property name="index" type="int" default="7"/>
+ </objecttype>
+ <objecttype name="laundrette" color="#a0a0a4">
+  <property name="index" type="int" default="8"/>
+ </objecttype>
+ <objecttype name="phone-box" color="#a0a0a4">
+  <property name="index" type="int" default="9"/>
+ </objecttype>
+ <objecttype name="posh-house" color="#a0a0a4">
+  <property name="index" type="int" default="10"/>
+ </objecttype>
+ <objecttype name="road" color="#a0a0a4">
+  <property name="index" type="int" default="11"/>
+ </objecttype>
+ <objecttype name="rundown-house-1" color="#a0a0a4">
+  <property name="index" type="int" default="12"/>
+ </objecttype>
+ <objecttype name="rundown-house-2" color="#a0a0a4">
+  <property name="index" type="int" default="13"/>
+ </objecttype>
+ <objecttype name="rural-house-1" color="#a0a0a4">
+  <property name="index" type="int" default="14"/>
+ </objecttype>
+ <objecttype name="streetlamp" color="#a0a0a4">
+  <property name="index" type="int" default="15"/>
+ </objecttype>
+ <objecttype name="tree-1" color="#a0a0a4">
+  <property name="index" type="int" default="16"/>
+ </objecttype>
+ <objecttype name="victorian-house" color="#a0a0a4">
+  <property name="index" type="int" default="17"/>
+ </objecttype>
+</objecttypes>

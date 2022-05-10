@@ -1,5 +1,4 @@
 SECTION rodata_user
-
 PUBLIC _bubble_sprite
 
 defb @11111111, @00000000

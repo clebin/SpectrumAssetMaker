@@ -1,5 +1,4 @@
 SECTION rodata_user
-
 PUBLIC _face_sprite
 
 defb @00000000

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="32" height="24" tilewidth="8" tileheight="8" infinite="0" nextlayerid="14" nextobjectid="37">
+ <editorsettings>
+  <export target="screen-objects.tmj" format="json"/>
+ </editorsettings>
+ <objectgroup id="12" name="Laundrette" visible="0">
+  <object id="36" name="laundrette" type="laundrette" x="80" y="40" width="80" height="96"/>
+ </objectgroup>
+ <objectgroup id="2" name="Brick Houses" visible="0">
+  <object id="1" name="brick-house" type="brick-house" x="8" y="48" width="72" height="96">
+   <properties>
+    <property name="z-order" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="6" name="brick-house" type="brick-house" x="168" y="48" width="72" height="96">
+   <properties>
+    <property name="z-order" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="7" name="tree-1" type="tree-1" x="128" y="64" width="40" height="64">
+   <properties>
+    <property name="z-order" type="int" value="1"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="6" name="Victorian Houses" visible="0">
+  <object id="9" name="victorian-house" type="victorian-house" x="0" y="48" width="88" height="88">
+   <properties>
+    <property name="z-order" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="12" name="phone-box" type="phone-box" x="136" y="104" width="16" height="32"/>
+  <object id="13" name="victorian-house" type="victorian-house" x="160" y="48" width="88" height="88">
+   <properties>
+    <property name="z-order" type="int" value="2"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="7" name="Rural Houses" visible="0">
+  <object id="14" name="rural-house-1" type="rural-house-1" x="0" y="56" width="80" height="96">
+   <properties>
+    <property name="z-order" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="17" name="rural-house-1" type="rural-house-1" x="160" y="56" width="80" height="96">
+   <properties>
+    <property name="z-order" type="int" value="2"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="8" name="Factory" visible="0">
+  <object id="20" name="factory" type="factory" x="0" y="48" width="104" height="96">
+   <properties>
+    <property name="z-order" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="21" name="factory" type="factory" x="152" y="48" width="104" height="96">
+   <properties>
+    <property name="z-order" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="22" name="streetlamp" type="factory" x="104" y="40" width="8" height="104"/>
+ </objectgroup>
+ <objectgroup id="10" name="Castle" visible="0">
+  <object id="28" name="castle" type="castle" x="16" y="32" width="200" height="112"/>
+ </objectgroup>
+ <objectgroup id="9" name="Posh Houses" visible="0">
+  <object id="26" name="posh-house" type="posh-house" x="0" y="40" width="88" height="104">
+   <properties>
+    <property name="z-order" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="27" name="posh-house" type="posh-house" x="152" y="40" width="88" height="104">
+   <properties>
+    <property name="z-order" type="int" value="2"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="11" name="Rundown Houses" visible="0">
+  <object id="30" name="rundown-house-1" type="rundown-house-1" x="0" y="48" width="88" height="88"/>
+  <object id="31" name="rundown-house-2" type="rundown-house-2" x="144" y="48" width="112" height="88"/>
+ </objectgroup>
+ <objectgroup id="13" name="Buck House">
+  <object id="33" name="buck-house" type="buck-house" x="40" y="32" width="176" height="112"/>
+ </objectgroup>
+</map>

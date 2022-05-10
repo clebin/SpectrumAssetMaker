@@ -6,11 +6,13 @@ define('CR', "\n");
 require("CliTools.php");
 require("Attribute.php");
 require("Tile.php");
-require("Screen.php");
+require("Tilemap.php");
 require("Tileset.php");
 require("Tilemaps.php");
 require("TilesetGraphics.php");
 require("Sprite.php");
+require("ObjectTypes.php");
+require("ObjectMap.php");
 
 /**
  * Spectrum Screen Tool
@@ -48,15 +50,21 @@ class SpecTiledTool
     public static $compressionSupported = ['rle'];
     public static $compression = false;
 
-    // filenames
+    // input filenames
     private static $spriteFilename = false;
     private static $maskFilename = false;
     private static $mapFilename = false;
     private static $tilesetFilename = false;
-    private static $addDimensions = false;
-    private static $outputFolder = '.';
-    private static $outputFilename = false;
     private static $graphicsFilename = false;
+
+    // object maps
+    private static $objectMapsFilename = false;
+    private static $objectTypesFilename = false;
+
+    // more settings
+    private static $outputFolder = '.';
+    private static $addDimensions = false;
+    private static $outputFilename = false;
     private static $spriteWidth = false;
     private static $createBinariesLst = false;
 
@@ -108,10 +116,45 @@ class SpecTiledTool
         // set output folder
         self::$outputFolder = rtrim(self::$outputFolder, '/').'/';
 
-        // process files
-        self::ProcessTileset();
-        self::ProcessScreens();
-        self::ProcessSprite();
+        // tileset colours and properties
+        if( self::$tilesetFilename !== false ) {
+            Tileset::Process(self::$tilesetFilename);
+        }
+
+        // process tileset graphics
+        if( self::$graphicsFilename !== false ) {
+            TilesetGraphics::Process(self::$graphicsFilename);
+        }
+
+        // process object maps
+        if( self::$objectMapsFilename !== false && self::$objectTypesFilename !== false ) {
+
+            ObjectTypes::Process(self::$objectTypesFilename);
+            ObjectMaps::Process(self:$objectMapsFilename);
+        }
+
+        // process tilemaps
+        if( self::$mapFilename !== false ) {
+
+            // process tilemaps
+            Tilemaps::Process(self::$mapFilename);
+        
+            // save binaries.lst
+            if( SpecTiledTool::$createBinariesLst === true ) {
+                SpecTiledTool::ProcessBinariesLst();
+            }
+        }
+
+        // process sprite
+        if( self::$spriteFilename !== false ) {
+            Sprite::Process(self::$spriteFilename, self::$maskFilename);
+        }
+
+        // display errors
+        if( self::$error === true ) {
+            echo 'Errors ('.sizeof(self::$errorDetails).'): '.implode('. ', self::$errorDetails);
+            return false;
+        }
     }
 
     /**
@@ -201,6 +244,16 @@ class SpecTiledTool
             self::$graphicsFilename = $options['graphics'];
         }
 
+        // object map
+        if( isset($options['object-map'])) {
+            self::$objectMapsFilename = $options['object-map'];
+        }
+        
+        // object types
+        if( isset($options['object-types'])) {
+            self::$objectTypesFilename = $options['object-types'];
+        }
+        
         // format
         if( isset($options['format'])) {
             self::$format = $options['format'];
@@ -241,71 +294,6 @@ class SpecTiledTool
     }
 
     /**
-     * Process and save tileset data
-     */
-    private static function ProcessTileset()
-    {
-        $file_output = '';
-        
-        // read tileset graphics
-        if( self::$graphicsFilename !== false ) {
-
-            $success = TilesetGraphics::ReadFile(self::$graphicsFilename);
-            
-            if( $success === true ) {
-                // write graphics to file
-                $file_output .= TilesetGraphics::GetCode();
-            }
-        }
-
-        // tileset colours and properties
-        if( self::$tilesetFilename !== false ) {
-
-            $success = Tileset::ReadFile(self::$tilesetFilename);
-
-            if( $success === true ) {        
-                // write graphics to file
-                $file_output .= Tileset::GetCode();
-            }
-        }
-
-        // write data to file
-        if( $file_output != '' ) {
-
-            // prepend memory section
-            if( self::$format == 'asm') {
-                $file_output = 'SECTION '.self::$section.CR.CR.$file_output;
-            }
-
-            file_put_contents(Tileset::GetOutputFilepath(), $file_output);
-        }
-    }
-
-    /**
-     * Process and save tilemap data
-     */
-    private static function ProcessScreens()
-    {
-        // read map and tilset
-        Tilemaps::ReadFile(self::$mapFilename);
-    
-        if( self::$error === false ) {
-
-            // write tilemaps to files
-            $count = 0;
-            foreach(Tilemaps::$screens as $screen) {
-                file_put_contents($screen->GetOutputFilepath(), $screen->GetCode());
-                $count++;
-            }
-
-            // save binaries.lst
-            if( self::$createBinariesLst === true ) {
-                self::ProcessBinariesLst();
-            }
-        }
-    }
-
-    /**
      * Process and save binaries.lst file (only for screens data)
      */
     private static function ProcessBinariesLst()
@@ -317,37 +305,6 @@ class SpecTiledTool
         $strBinaries .= Tilemaps::GetBinariesLst();
 
         file_put_contents(self::$outputFolder.'binaries.lst', $strBinaries);
-    }
-
-    /**
-     * Process sprite file and mask
-     */
-    private static function ProcessSprite()
-    {
-        // read sprite
-        if( self::$spriteFilename !== false ) {
-            Sprite::ReadFiles(self::$spriteFilename, self::$maskFilename);
-        
-            if( self::$error === false ) {
-
-                $outputFilename = self::$outputFolder;
-
-                // output filename
-                if( self::$prefix !== false ) {
-                    $outputFilename .= SpecTiledTool::GetConvertedFilename(self::$prefix).'-sprite';
-                } else {
-                    $outputFilename .= 'sprite';
-                }
-                $outputFilename .= '.'.self::GetOutputFileExtension();
-
-                file_put_contents($outputFilename, Sprite::GetCode());
-            }
-        }
-
-        if( self::$error === true ) {
-            echo 'Errors ('.sizeof(self::$errorDetails).'): '.implode('. ', self::$errorDetails);
-            return false;
-        }
     }
 
     /**
@@ -371,6 +328,24 @@ class SpecTiledTool
             default:
                 return 'asm';
         }
+    }
+
+    /**
+     * Get output filename using a suffix
+     */
+    public static function GetOutputFilename($suffix)
+    {
+        $outputFilename = SpecTiledTool::$outputFolder;
+
+        // output filename
+        if( self::$prefix !== false ) {
+            $outputFilename .= SpecTiledTool::GetConvertedFilename(self::$prefix).'-'.$suffix;
+        } else {
+            $outputFilename .= $suffix;
+        }
+        $outputFilename .= '.'.SpecTiledTool::GetOutputFileExtension();
+
+        return $outputFilename;
     }
 
     /**
@@ -506,7 +481,7 @@ class SpecTiledTool
                 break;
 
                 // hex
-                case 15:
+                case 16:
                     $val = decbin(hexdec($val));
             }
 
@@ -595,6 +570,14 @@ class SpecTiledTool
         }
     }
 
+    /**
+     * Convert a regular name to constant
+     */
+    public static function GetConvertedConstantName($source_name)
+    {
+        return strtoupper(self::GetConvertedCodeNameUnderscores($source_name));
+    }
+
     /** 
      * Convert a regular name to use underscores 
      */
@@ -678,7 +661,9 @@ $options = getopt('', [
     'create-binaries-lst::', 
     'replace-flash-with-solid::',
     'naming::', 
-    'add-dimensions::'
+    'add-dimensions::',
+    'object-map::',
+    'object-types::'
 ]);
 
 // run

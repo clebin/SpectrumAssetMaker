@@ -10,16 +10,21 @@ class TilesetGraphics
     public static $numRows = 0;
     public static $numTiles = 0;
     
-    public static $baseName = 'tilesetGraphics';
-
+    public static $codeName = 'tileset-graphics';
+    public static $defineName = 'tileset-graphics-len';
     /**
      * Read a black & white PNG or GIF file
      */
     public static function ReadFile($filename)
     {
         if( SpecTiledTool::GetPrefix() !== false ) {
-            self::$baseName = SpecTiledTool::GetPrefix().'TilesetGraphics';
+
+            self::$codeName = SpecTiledTool::GetPrefix().'-'.self::$codeName;
+            self::$defineName = SpecTiledTool::GetPrefix().'-'.self::$defineName;
         }
+        
+        self::$codeName = SpecTiledTool::GetConvertedCodeName(self::$codeName);
+        self::$defineName = SpecTiledTool::GetConvertedConstantName(self::$defineName);
 
         if(!file_exists($filename)) {
             SpecTiledTool::AddError('Graphics file not found');
@@ -143,8 +148,8 @@ class TilesetGraphics
     {
         $str = '';
 
-        $str .= '#define '.strtoupper(self::$baseName).'_LEN '.sizeof(self::$data).CR.CR;
-        $str .= 'const unsigned char '.self::$baseName.'['.sizeof(self::$data).'][8] = {'.CR;
+        $str .= '#define '.self::$defineName.' '.sizeof(self::$data).CR.CR;
+        $str .= 'const unsigned char '.self::$codeName.'['.sizeof(self::$data).'][8] = {'.CR;
         
         // loop through individual graphics
         $attrcount = 0;
@@ -182,10 +187,11 @@ class TilesetGraphics
      */
     public static function GetAsm()
     {
-        $str = '';
-        $str .= 'PUBLIC _'.self::$baseName.CR.CR;
+        $str = 'SECTION '.SpecTiledTool::GetCodeSection().CR.CR;
 
-        $str .= '._'.self::$baseName.CR;
+        $str .= 'PUBLIC _'.self::$codeName.CR.CR;
+
+        $str .= '._'.self::$codeName.CR;
 
 
         foreach(self::$data as $attribute) {
@@ -205,5 +211,19 @@ class TilesetGraphics
         }
         
         return $str;
+    }
+
+    public static function Process($filename)
+    {
+        // read tileset graphics
+        if( $filename === false ) {
+            return false;
+        }
+
+        $success = TilesetGraphics::ReadFile($filename);
+        
+        if( $success === true ) {
+            file_put_contents(SpecTiledTool::GetOutputFilename('tileset-graphics'), self::GetCode());
+        }
     }
 }
