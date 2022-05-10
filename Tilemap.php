@@ -16,7 +16,8 @@ class Tilemap {
     public function __construct($num, $layer)
     {
         $this->num = $num;
-        $this->data = $layer['data'];
+
+        $this->data = $this->ReadLayer($layer);
     }
 
     public function SetData($data)
@@ -49,12 +50,12 @@ class Tilemap {
     /**
      * Read a Tiled tilemap layer
      */
-    public function ReadLayer()
+    public function ReadLayer($layer)
     {
         $data = [];
-
+        
         echo 'Reading tilemap.'.CR;
-        foreach($this->data as $tileNum) {
+        foreach($layer['data'] as $tileNum) {
 
             $tileNum = intval($tileNum)-1;
 
@@ -65,8 +66,8 @@ class Tilemap {
         }
 
         // dimensions
-        self::$width = $layer['width'];
-        self::$height = $layer['height'];
+        $this->width = $layer['width'];
+        $this->height = $layer['height'];
 
         // return a Screen object
         return $data;
@@ -126,7 +127,7 @@ class Tilemap {
 
         // dimensions
         if( SpecTiledTool::GetAddDimensions() === true ) {
-            array_unshift($data, $this->width, $this->height);
+            array_unshift($data, $this->height, $this->rows);
         }
         
         return $data;

@@ -6,7 +6,7 @@
  <objectgroup id="12" name="Laundrette" visible="0">
   <object id="36" name="laundrette" type="laundrette" x="80" y="40" width="80" height="96"/>
  </objectgroup>
- <objectgroup id="2" name="Brick Houses" visible="0">
+ <objectgroup id="2" name="Brick Houses">
   <object id="1" name="brick-house" type="brick-house" x="8" y="48" width="72" height="96">
    <properties>
     <property name="z-order" type="int" value="2"/>
@@ -80,7 +80,7 @@
   <object id="30" name="rundown-house-1" type="rundown-house-1" x="0" y="48" width="88" height="88"/>
   <object id="31" name="rundown-house-2" type="rundown-house-2" x="144" y="48" width="112" height="88"/>
  </objectgroup>
- <objectgroup id="13" name="Buck House">
+ <objectgroup id="13" name="Buck House" visible="0">
   <object id="33" name="buck-house" type="buck-house" x="40" y="32" width="176" height="112"/>
  </objectgroup>
 </map>

@@ -1,0 +1,5 @@
+const uint8_t buckHouseObjectMap[3] = {
+0x2,0x4,0x5
+};
+
+
