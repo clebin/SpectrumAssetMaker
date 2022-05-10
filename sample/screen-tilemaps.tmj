@@ -45,17 +45,6 @@
                  "width":32,
                  "x":0,
                  "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "id":11,
-                 "name":"Colours",
-                 "objects":[],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":false,
-                 "x":0,
-                 "y":0
                 }],
          "name":"Laundrette",
          "opacity":1,
@@ -142,92 +131,6 @@
                  "type":"tilelayer",
                  "visible":true,
                  "width":32,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "id":5,
-                 "name":"Enemies",
-                 "objects":[
-                        {
-                         "gid":40,
-                         "height":8,
-                         "id":1,
-                         "name":"",
-                         "properties":[
-                                {
-                                 "name":"deltax",
-                                 "type":"int",
-                                 "value":0
-                                }, 
-                                {
-                                 "name":"deltay",
-                                 "type":"int",
-                                 "value":0
-                                }, 
-                                {
-                                 "name":"endval",
-                                 "type":"int",
-                                 "value":0
-                                }, 
-                                {
-                                 "name":"lethal",
-                                 "type":"bool",
-                                 "value":true
-                                }, 
-                                {
-                                 "name":"movement",
-                                 "type":"string",
-                                 "value":"horizontal"
-                                }, 
-                                {
-                                 "name":"numhits",
-                                 "type":"int",
-                                 "value":2
-                                }, 
-                                {
-                                 "name":"speed",
-                                 "type":"int",
-                                 "value":1
-                                }, 
-                                {
-                                 "name":"transient",
-                                 "type":"bool",
-                                 "value":false
-                                }],
-                         "rotation":0,
-                         "type":"flying_saucer",
-                         "visible":true,
-                         "width":8,
-                         "x":8,
-                         "y":24
-                        }],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":false,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "id":6,
-                 "name":"Colours",
-                 "objects":[],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":false,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "id":7,
-                 "name":"Objects",
-                 "objects":[],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":false,
                  "x":0,
                  "y":0
                 }],
@@ -538,17 +441,6 @@
                  "width":32,
                  "x":0,
                  "y":0
-                }, 
-                {
-                 "draworder":"topdown",
-                 "id":39,
-                 "name":"colours",
-                 "objects":[],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
                 }],
          "name":"Buck house",
          "offsetx":-136,
@@ -568,7 +460,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":".\/tileset.tsx"
+         "source":"tileset.tsx"
         }],
  "tilewidth":8,
  "type":"map",

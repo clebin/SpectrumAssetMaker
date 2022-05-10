@@ -13,6 +13,7 @@ require("TilesetGraphics.php");
 require("Sprite.php");
 require("ObjectTypes.php");
 require("ObjectMap.php");
+require("GameObject.php");
 
 /**
  * Spectrum Screen Tool
@@ -127,10 +128,8 @@ class SpecTiledTool
         }
 
         // process object maps
-        if( self::$objectMapsFilename !== false && self::$objectTypesFilename !== false ) {
-
+        if( self::$objectTypesFilename !== false ) {
             ObjectTypes::Process(self::$objectTypesFilename);
-            ObjectMaps::Process(self:$objectMapsFilename);
         }
 
         // process tilemaps

@@ -3,7 +3,7 @@
  <editorsettings>
   <export target="screen-tilemaps.tmj" format="json"/>
  </editorsettings>
- <tileset firstgid="1" source="./tileset.tsx"/>
+ <tileset firstgid="1" source="tileset.tsx"/>
  <group id="18" name="Laundrette">
   <layer id="19" name="tilemap" width="32" height="23">
    <properties>
@@ -35,7 +35,6 @@
 8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8
 </data>
   </layer>
-  <objectgroup id="11" name="Colours" visible="0"/>
  </group>
  <group id="9" name="Park road" visible="0">
   <layer id="3" name="Tilemap" width="32" height="23">
@@ -94,22 +93,6 @@
 8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8
 </data>
   </layer>
-  <objectgroup id="5" name="Enemies" visible="0">
-   <object id="1" type="flying_saucer" gid="40" x="8" y="24" width="8" height="8">
-    <properties>
-     <property name="deltax" type="int" value="0"/>
-     <property name="deltay" type="int" value="0"/>
-     <property name="endval" type="int" value="0"/>
-     <property name="lethal" type="bool" value="true"/>
-     <property name="movement" value="horizontal"/>
-     <property name="numhits" type="int" value="2"/>
-     <property name="speed" type="int" value="1"/>
-     <property name="transient" type="bool" value="false"/>
-    </properties>
-   </object>
-  </objectgroup>
-  <objectgroup id="6" name="Colours" visible="0"/>
-  <objectgroup id="7" name="Objects" visible="0"/>
  </group>
  <group id="13" name="Victorian houses" visible="0">
   <layer id="4" name="Tilemap" width="32" height="23">
@@ -313,6 +296,5 @@
 8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8
 </data>
   </layer>
-  <objectgroup id="39" name="colours"/>
  </group>
 </map>

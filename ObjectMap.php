@@ -6,16 +6,17 @@ namespace ClebinGames\SpecTiledTool;
  */
 class ObjectMap {
 
+    private $num = 0;
     private $data = false;
     private $filename = false;
     private $objects = [];
     private $output = [];
 
-    public function __construct($layer)
+    public function __construct($num, $layer)
     {
-        if( isset($layer['data'])) {
-            $this->data = $layer['data'];
-        }
+        $this->num = 0;
+
+        $this->ReadLayer($layer['objects']);
     }
 
     public function SetData($data)
@@ -48,10 +49,10 @@ class ObjectMap {
      */
     public function ReadLayer($layer)
     {
-        foreach($data as $json_object) {
+        foreach($layer as $json_object) {
 
             // create new object
-            $obj = new GameObject($json_object['type'], $json_obj['y'], $json_obj['x']);
+            $obj = new GameObject($json_object);
 
             // name (optional)
             if( $json_object['name'] != '' ) {
@@ -66,8 +67,6 @@ class ObjectMap {
             $this->output[] = $obj->GetRow();
             $this->output[] = $obj->GetCol();
         }
-
-        return $objects;
     }
 
     /**
@@ -105,7 +104,8 @@ class ObjectMap {
         $str .= SpecTiledTool::GetAsmArray(
             $this->name, 
             $this->output, 
-            2
+            10,
+            8
         ).CR;
         
         return $str;

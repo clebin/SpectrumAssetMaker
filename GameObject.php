@@ -6,18 +6,21 @@ namespace ClebinGames\SpecTiledTool;
  */
 class GameObject {
 
-    public $name = '';
+    public $type = '';
     public $index = 0;
     public $row = 0;
     public $col = 0;
     public $width = 0;
     public $height = 0;
 
-    public function __construct($index, $row, $col)
+    public function __construct($json)
     {
-        $this->index = intval($index);
-        $this->row = intval($row);
-        $this->col = intval($col);
+        $this->type = strval($json['type']);
+        $this->row = intval($json['y']/8);
+        $this->col = intval($json['x']/8);
+
+        // loop up index
+        $this->index = ObjectTypes::GetIndex($this->type);
     }
 
     public function GetIndex()

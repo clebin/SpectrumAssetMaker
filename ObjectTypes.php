@@ -42,20 +42,25 @@ class ObjectTypes {
         // print_r($data);
         foreach($data->objecttype as $type) {
             
-            $name = $type->attributes()->name;
+            $name = strval($type->attributes()->name);
 
             foreach($type->property->attributes() as $key => $val) {
                 
                 if( $key == 'default') {
-                    $index = $val;
+                    $index = intval($val);
                 }
             }
-
+            
             self::$objectMapping[$name] = $index;
         }
     }
 
-    public static function GetObjectIndex($name)
+    public static function Process($filename)
+    {
+        self::ReadFile($filename);
+    }
+
+    public static function GetIndex($name)
     {
         return self::$objectMapping[$name];
     }
