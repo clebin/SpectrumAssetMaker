@@ -129,7 +129,12 @@ class SpecTiledTool
 
         // process object maps
         if( self::$objectTypesFilename !== false ) {
-            ObjectTypes::Process(self::$objectTypesFilename);
+            $success = ObjectTypes::Process(self::$objectTypesFilename);
+
+            // quit before errors
+            if( $success === false ) {
+                return false;
+            }
         }
 
         // process tilemaps
@@ -661,7 +666,6 @@ $options = getopt('', [
     'replace-flash-with-solid::',
     'naming::', 
     'add-dimensions::',
-    'object-map::',
     'object-types::'
 ]);
 

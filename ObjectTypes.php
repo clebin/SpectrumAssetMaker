@@ -14,16 +14,8 @@ class ObjectTypes {
     public static function ReadFile($filename) {
 
         if(!file_exists($filename)) {
+            echo 'Error: Object types file '.$filename.' not found'.CR;
             return false;
-        }
-
-        if( SpecTiledTool::GetPrefix() !== false ) {
-
-            // set name for #define screens length
-            self::$defineName = strtoupper(SpecTiledTool::GetPrefix()).'_'.self::$defineName;
-
-            // set base name for code
-            self::$baseName = SpecTiledTool::GetConvertedCodeName(SpecTiledTool::GetPrefix().'-objects');
         }
 
         $xml = file_get_contents($filename);
@@ -62,6 +54,10 @@ class ObjectTypes {
 
     public static function GetIndex($name)
     {
+        if( !isset(self::$objectMapping[$name])) {
+            echo 'Error: object type '.$name.' not found. Size of objectMapping is '.sizeof(self::$objectMapping).CR;
+            exit();
+        }
         return self::$objectMapping[$name];
     }
 }

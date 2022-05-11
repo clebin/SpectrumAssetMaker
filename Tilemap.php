@@ -134,7 +134,7 @@ class Tilemap {
 
         // dimensions
         if( SpecTiledTool::GetAddDimensions() === true ) {
-            array_unshift($data, $this->height, $this->rows);
+            array_unshift($data, $this->height, $this->width);
         }
         
         return $data;
