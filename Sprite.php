@@ -20,8 +20,8 @@ class Sprite
      */
     public static function ReadFiles($spriteFile, $maskFile = false)
     {
-        if( SpecTiledTool::GetPrefix() !== false ) {
-            self::$codeName = SpecTiledTool::GetConvertedCodeName(SpecTiledTool::GetPrefix().'-sprite');
+        if( SpecTiledTool::GetName() !== false ) {
+            self::$codeName = SpecTiledTool::GetConvertedCodeName(SpecTiledTool::GetName().'-sprite');
         }
 
         self::$spriteImage = self::GetImage($spriteFile);

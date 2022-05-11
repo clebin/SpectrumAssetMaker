@@ -43,7 +43,7 @@ class SpecTiledTool
     public static $namingConvention = self::NAMING_CAMELCASE;
     
     // naming
-    public static $prefix = false;
+    public static $name = false;
     public static $useLayerNames = false;
     public static $replaceFlashWithSolid = false;
 
@@ -167,7 +167,7 @@ class SpecTiledTool
     private static function SetupWithUserPrompts()
     {
         // naming prefix
-        self::$prefix = CliTools::GetAnswer('Naming prefix', 'tiles');
+        self::$name = CliTools::GetAnswer('Name', 'tiles');
 
         // mode - map or sprite
         $mode = CliTools::GetAnswer('Which mode?', 'map', ['map','sprite']);
@@ -212,7 +212,7 @@ class SpecTiledTool
     {
         // prefix
         if( isset($options['prefix'])) {
-            self::$prefix = $options['prefix'];
+            self::$name = $options['prefix'];
         }
 
         if( isset($options['use-layer-names'])) {
@@ -342,8 +342,8 @@ class SpecTiledTool
         $outputFilename = SpecTiledTool::$outputFolder;
 
         // output filename
-        if( self::$prefix !== false ) {
-            $outputFilename .= SpecTiledTool::GetConvertedFilename(self::$prefix).'-'.$suffix;
+        if( self::$name !== false ) {
+            $outputFilename .= SpecTiledTool::GetConvertedFilename(self::$name).'-'.$suffix;
         } else {
             $outputFilename .= $suffix;
         }
@@ -371,9 +371,9 @@ class SpecTiledTool
     /**
      * Get naming prefix
      */
-    public static function GetPrefix()
+    public static function GetName()
     {
-        return self::$prefix;
+        return self::$name;
     }
 
     /**

@@ -9,6 +9,8 @@ Utility to to create z88dk/Sp1 compatible screens, tilesets and sprites in assem
 
 **Tileset** - Tiled JSON tileset (.tsj)
 
+**Object types** - Tiled Object Types XML file (.xml)
+
 **Tileset graphics** - Black and white GIF
 
 **Sprite** - Black and white GIF
@@ -25,7 +27,7 @@ Running the script without parameters will prompt for each setting.
 
 ### General Parameters:
 
-**--prefix**=[prefix for naming variables]
+**--name**=[name for output - this option overrides layer names for tile/object maps]
 
 **--output-folder**=[folder path to place generated files]
 
@@ -34,13 +36,13 @@ Running the script without parameters will prompt for each setting.
 **--section**=[assembly section to place code into, default: rodata_user]
 
 
-### Parameters for Tilemap/Tileset Processing:
-
-**--use-layer-names** (use tilemap layer or layer group name as file and variable names)
+### Parameters for Tilemap/Object Map/Tileset Processing:
 
 **--replace-flash-with-solid** (use the bit normally used for flash to denote a solid block)
 
 **--create-binaries-lst** (create a binaries.lst file all screens and tileset files included - ignored for sprite output)
+
+**--object-types**=[object types XML file] (this is required for processing object maps)
 
 **--map**=[tilemap filename]
 
@@ -48,7 +50,7 @@ Running the script without parameters will prompt for each setting.
 
 **--graphics**=[tileset graphics filename]
 
-**--add-dimensions** (add width & height as the first two elements in the tilemap data array)
+**--add-dimensions** (add rows & columns, as the first two elements in the tilemap data arrays)
 
 **--compression**=rle [enable RLE compression on tilemaps]
 
@@ -84,22 +86,15 @@ Each tile in your tileset should have the following custom properties set:
 
 ### Tilemap format ###
 
-## Simple layer format
-
 The tool will create a separate screen for each tilemap layer. The tool will ignore any layers that are not set to 'visible'.
 
-## Group layer format
-
-**Work-in-progress:** Tilemap layers can be organised into groups to import extra screen data. In this case, each group should contain a Tilemap layer called 'tilemap', and may optionally include Object Layers called 'colours', 'enemies' and 'properties'. Objects in these layers will be imported into their own arrays. When --use-layer-names is set, the Group name is used since the tilemap layer must be named 'tilemap'
-
-The purpose of the 'colours' and 'properties' object layers is to override the default colours and properties set on the tileset to add more variety to your screens.
-
+The layer name will be used for variable and file naming, unless --name is specified.
 
 ### RLE Compression Format
 
 1 byte for tilenum, 1 byte for run-length.
 
-First two bytes contain the array length in bytes (hi/lo).
+The data will be preceded by 2 bytes specifying the array length (hi/lo). This will appear after rows and columns if --add-dimensions is specified.
 
 ### Known Issues:
 
@@ -107,5 +102,4 @@ First two bytes contain the array length in bytes (hi/lo).
 
 * Don't leave gaps in the middle of tilesets as this will cause errors.
 
-* This tool is work-in-progress.
-
+* This tool is work-in-progress and features are currently in flux.

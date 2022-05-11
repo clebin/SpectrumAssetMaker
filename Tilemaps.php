@@ -42,8 +42,8 @@ class Tilemaps {
         $data = json_decode($json, true);
 
         // set name for #define screens length
-        if( SpecTiledTool::GetPrefix() !== false ) {
-            self::$defineName = strtoupper(SpecTiledTool::GetPrefix()).'_'.self::$defineName;
+        if( SpecTiledTool::GetName() !== false ) {
+            self::$defineName = strtoupper(SpecTiledTool::GetName()).'_'.self::$defineName;
         }
 
         // read simple
@@ -104,7 +104,13 @@ class Tilemaps {
                 // set name
                 if( $name !== false ) {
                     $map->SetName($name);
-                } else {
+                }
+                // use prefix
+                else if( SpecTiledTool::GetName() !== false ) {
+                    $map->SetName(SpecTiledTool::GetName());
+                }
+                // use layer name
+                else {
                     $map->SetName($layer['name']);
                 }
 

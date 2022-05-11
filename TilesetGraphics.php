@@ -17,10 +17,10 @@ class TilesetGraphics
      */
     public static function ReadFile($filename)
     {
-        if( SpecTiledTool::GetPrefix() !== false ) {
+        if( SpecTiledTool::GetName() !== false ) {
 
-            self::$codeName = SpecTiledTool::GetPrefix().'-'.self::$codeName;
-            self::$defineName = SpecTiledTool::GetPrefix().'-'.self::$defineName;
+            self::$codeName = SpecTiledTool::GetName().'-'.self::$codeName;
+            self::$defineName = SpecTiledTool::GetName().'-'.self::$defineName;
         }
         
         self::$codeName = SpecTiledTool::GetConvertedCodeName(self::$codeName);

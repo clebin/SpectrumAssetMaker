@@ -15,7 +15,7 @@ asm: tilemap-asm tileset-asm screens-asm masked-sprite-asm unmasked-sprite-asm o
 
 tilemap-asm:
 	php $(toolpath) \
-		--prefix=laundrette \
+		--name=laundrette \
 		--map=laundrette.tmj \
 		--output-folder=./output/asm \
 		--format=asm \
@@ -24,7 +24,7 @@ tilemap-asm:
 
 tileset-asm:
 	php $(toolpath) \
-		--prefix=font \
+		--name=font \
 		--graphics=./font.gif \
 		--output-folder=./output/asm \
 		--format=asm \
@@ -44,7 +44,7 @@ screens-asm:
 
 masked-sprite-asm:
 	php $(toolpath) \
-		--prefix=bubble \
+		--name=bubble \
 		--sprite=./bubble.gif \
 		--mask=./bubble-mask.gif \
 		--output-folder=./output/asm \
@@ -53,7 +53,7 @@ masked-sprite-asm:
 
 unmasked-sprite-asm:
 	php $(toolpath) \
-		--prefix=face \
+		--name=face \
 		--sprite=./face.gif \
 		--output-folder=./output/asm \
 		--format=asm \
@@ -72,7 +72,7 @@ c: tilemap-c tileset-c screens-c masked-sprite-c unmasked-sprite-c object-map-c
 
 tilemap-c:
 	php $(toolpath) \
-		--prefix=laundrette \
+		--name=laundrette \
 		--map=laundrette.tmj \
 		--output-folder=./output/c \
 		--format=c \
@@ -80,7 +80,7 @@ tilemap-c:
 
 tileset-c:
 	php $(toolpath) \
-		--prefix=font \
+		--name=font \
 		--graphics=./font.gif \
 		--output-folder=./output/c \
 		--format=c
@@ -98,7 +98,7 @@ screens-c:
 
 masked-sprite-c:
 	php $(toolpath) \
-		--prefix=bubble \
+		--name=bubble \
 		--sprite=./bubble.gif \
 		--mask=./bubble-mask.gif \
 		--output-folder=./output/c \
@@ -106,7 +106,7 @@ masked-sprite-c:
 
 unmasked-sprite-c:
 	php $(toolpath) \
-		--prefix=face \
+		--name=face \
 		--sprite=./face.gif \
 		--output-folder=./output/c \
 		--format=c \
