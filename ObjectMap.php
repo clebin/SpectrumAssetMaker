@@ -24,12 +24,6 @@ class ObjectMap {
         $this->data = $data;
     }
 
-    public function SetDimensions($width, $height)
-    {
-        $this->width = $width;
-        $this->height = $height;
-    }
-
     public function SetName($name)
     {
         $this->name = SpecTiledTool::GetConvertedCodeName($name.'-object-map');

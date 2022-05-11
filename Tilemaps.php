@@ -99,8 +99,6 @@ class Tilemaps {
 
             if($map !== false) {
 
-                $map->SetDimensions(self::$width, self::$height);
-
                 // set name
                 if( $name !== false ) {
                     $map->SetName($name);
