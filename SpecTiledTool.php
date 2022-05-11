@@ -58,8 +58,12 @@ class SpecTiledTool
     private static $tilesetFilename = false;
     private static $graphicsFilename = false;
 
-    // object maps
-    private static $objectMapsFilename = false;
+    // tilemap layers
+    private static $ignoreHiddenLayers = false;
+    private static $layerType = 'all';
+    private static $layerTypesSupported = ['all','objectgroup','tilelayer'];
+
+    // object types
     private static $objectTypesFilename = false;
 
     // more settings
@@ -233,6 +237,15 @@ class SpecTiledTool
             self::$addDimensions = true;
         }
 
+        // layer type
+        if( isset($options['layer-type']) && in_array($options['layer-type'], self::$layerTypesSupported) ) {
+            self::$layerType = $options['layer-type'];
+        }
+
+        // ignore hidden layers
+        if( isset($options['ignore-hidden-layers'])) {
+            self::$ignoreHiddenLayers = true;
+        }
         // tileset
         if( isset($options['tileset'])) {
             self::$tilesetFilename = $options['tileset'];
@@ -317,6 +330,22 @@ class SpecTiledTool
     public static function GetOutputFolder()
     {
         return self::$outputFolder;
+    }
+
+    /**
+     * Return types of layers being processed
+     */
+    public static function GetLayerType()
+    {
+        return self::$layerType;
+    }
+
+    /**
+     * Are we ignoring hidden layers?
+     */
+    public static function GetIgnoreHiddenLayers()
+    {
+        return self::$ignoreHiddenLayers;
     }
 
     /**
@@ -666,7 +695,9 @@ $options = getopt('', [
     'replace-flash-with-solid::',
     'naming::', 
     'add-dimensions::',
-    'object-types::'
+    'object-types::',
+    'layer-type::',
+    'ignore-hidden-layers::'
 ]);
 
 // run

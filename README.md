@@ -38,6 +38,10 @@ Running the script without parameters will prompt for each setting.
 
 ### Parameters for Tilemap/Object Map/Tileset Processing:
 
+**--ignore-hidden-layers** (don't process hidden layers. Hidden layers are processed by default)
+
+**--layer-type**=['all', 'objectgroup' or 'tilelayer'] (set which type of Tiled layers to process)
+
 **--replace-flash-with-solid** (use the bit normally used for flash to denote a solid block)
 
 **--create-binaries-lst** (create a binaries.lst file all screens and tileset files included - ignored for sprite output)

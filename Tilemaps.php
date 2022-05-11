@@ -84,19 +84,30 @@ class Tilemaps {
         foreach($group as $layer) {
 
             // tilemap
-            if( $layer['type'] == 'tilelayer' ) {
+            if( SpecTiledTool::GetIgnoreHiddenLayers() === true && $layer['hidden'] === true ) {
+                // do nothing
+                $map = false;
+            }
+            // tile layer
+            else if( $layer['type'] == 'tilelayer' && 
+                (SpecTiledTool::GetLayerType() == 'tilelayer' || SpecTiledTool::GetLayerType() == 'all')
+                ) {
                 $map = new Tilemap(self::$numTilemaps, $layer);
                 self::$numTilemaps++;
             }
-            // objects
-            else if( $layer['type'] == 'objectgroup' ) {
+            // object layer
+            else if( $layer['type'] == 'objectgroup' &&
+                (SpecTiledTool::GetLayerType() == 'objectgroup' || SpecTiledTool::GetLayerType() == 'all')) {
+                    
                 $map = new ObjectMap(self::$numObjectMaps, $layer);
                 self::$numObjectMaps++;
             }
+            // another type of layer (unsupported)
             else {
                 $map = false;
             }
 
+            // layer has been processed
             if($map !== false) {
 
                 // set name
