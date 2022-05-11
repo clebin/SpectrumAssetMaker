@@ -15,7 +15,6 @@ class ObjectMap {
     public function __construct($num, $layer)
     {
         $this->num = 0;
-
         $this->ReadLayer($layer['objects']);
     }
 
@@ -39,7 +38,7 @@ class ObjectMap {
     }
 
     /**
-     * Read an Tiled object layer (can be enemies, objects or colours)
+     * Read an Tiled object layer
      */
     public function ReadLayer($layer)
     {
@@ -60,6 +59,8 @@ class ObjectMap {
             $this->output[] = $obj->GetIndex();
             $this->output[] = $obj->GetRow();
             $this->output[] = $obj->GetCol();
+
+            echo 'Reading objectgroup layer "'.$obj->name.'"'.CR;
         }
     }
 

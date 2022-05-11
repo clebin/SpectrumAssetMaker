@@ -45,6 +45,8 @@ class ObjectTypes {
             
             self::$objectMapping[$name] = $index;
         }
+
+        echo 'Read '.sizeof(self::$objectMapping).' object types.'.CR;
     }
 
     public static function Process($filename)
