@@ -119,11 +119,12 @@ class Tilemap {
             $data = SpecTiledTool::CompressArrayRLE(
                 $this->name, 
                 $this->data, 
-                false, 
+                true, 
             );
         } else {
             $data = $this->data;
         }
+        
 
         // dimensions
         if( SpecTiledTool::GetAddDimensions() === true ) {
