@@ -170,8 +170,8 @@ class SpecTiledTool
      */
     private static function SetupWithUserPrompts()
     {
-        // naming prefix
-        self::$name = CliTools::GetAnswer('Name', 'tiles');
+        // naming
+        self::$name = CliTools::GetAnswer('Name for files and variables', '');
 
         // mode - map or sprite
         $mode = CliTools::GetAnswer('Which mode?', 'map', ['map','sprite']);
@@ -215,8 +215,8 @@ class SpecTiledTool
     private static function SetupWithArgs($options)
     {
         // prefix
-        if( isset($options['prefix'])) {
-            self::$name = $options['prefix'];
+        if( isset($options['name'])) {
+            self::$name = $options['name'];
         }
 
         if( isset($options['use-layer-names'])) {
@@ -376,6 +376,7 @@ class SpecTiledTool
         } else {
             $outputFilename .= $suffix;
         }
+
         $outputFilename .= '.'.SpecTiledTool::GetOutputFileExtension();
 
         return $outputFilename;
@@ -398,7 +399,7 @@ class SpecTiledTool
     }
 
     /**
-     * Get naming prefix
+     * Get name
      */
     public static function GetName()
     {
@@ -680,7 +681,7 @@ class SpecTiledTool
 // read filenames from command line arguments
 $options = getopt('', [
     'help::', 
-    'prefix::', 
+    'name::', 
     'map::', 
     'tileset::', 
     'graphics::',
