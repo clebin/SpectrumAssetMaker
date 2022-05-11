@@ -116,7 +116,7 @@ class Tilemap {
         // compression
         if(SpecTiledTool::$compression === 'rle' ) {
             
-            if( SpectTiledTool::GetFormat() == 'asm' ) {
+            if( SpecTiledTool::GetFormat() == 'asm' ) {
                 $add_length = true;
             } else {
                 $add_length = false;
