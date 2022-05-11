@@ -116,10 +116,16 @@ class Tilemap {
         // compression
         if(SpecTiledTool::$compression === 'rle' ) {
             
+            if( SpectTiledTool::GetFormat() == 'asm' ) {
+                $add_length = true;
+            } else {
+                $add_length = false;
+            }
+            
             $data = SpecTiledTool::CompressArrayRLE(
                 $this->name, 
                 $this->data, 
-                true, 
+                $add_length, 
             );
         } else {
             $data = $this->data;
