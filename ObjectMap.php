@@ -42,26 +42,28 @@ class ObjectMap {
      */
     public function ReadLayer($layer)
     {
-        foreach($layer as $json_object) {
+        // loop through objects on layer
+        foreach($layer as $json) {
+
+            echo 'Found object "'.$json['name'].'"'.CR;
 
             // create new object
-            $obj = new GameObject($json_object);
-
-            // name (optional)
-            if( $json_object['name'] != '' ) {
-                $obj->name = $json_object['name'];
-            }
+            $obj = new GameObject($json);
 
             // add to array
             $this->objects[] = $obj;
+        }
 
+        // sort object array by z-order
+        usort($this->objects, fn($a, $b) => $a->zOrder - $b->zOrder );
+
+        foreach($this->objects as $obj) {
             // add to output array
             $this->output[] = $obj->GetIndex();
             $this->output[] = $obj->GetRow();
             $this->output[] = $obj->GetCol();
-
-            echo 'Reading objectgroup layer "'.$obj->name.'"'.CR;
         }
+
     }
 
     /**

@@ -231,7 +231,7 @@
                  "id":22,
                  "name":"streetlamp",
                  "rotation":0,
-                 "type":"factory",
+                 "type":"streetlamp",
                  "visible":true,
                  "width":8,
                  "x":104,
