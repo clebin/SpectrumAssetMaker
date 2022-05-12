@@ -26,15 +26,10 @@ class GameObject {
         }
 
         // read properties
-        if( isset($json['properties']) ) {
-            foreach($json['properties'] as $prop) {
-
-                // z-order
-                if( strtolower(str_replace('-', '', $prop['name'])) == 'zorder' ) {
-                    $this->zOrder = $prop['value'];
-                }
-            }
-        }
+        // if( isset($json['properties']) ) {
+        //     foreach($json['properties'] as $prop) {
+        //     }
+        // }
 
         // zOrder
         // if( isset($json['properties']))

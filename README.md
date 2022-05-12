@@ -88,11 +88,17 @@ Each tile in your tileset should have the following custom properties set:
 
 
 
-### Tilemap format ###
+### Importing Tilemap layers ###
 
-The tool will create a separate screen for each tilemap layer. The tool will ignore any layers that are not set to 'visible'.
+If --layer-type is set to 'all' (default) or 'tilelayer', the tool will create code for each tilemap layer. The tool will ignore any layers that are not set to 'visible'.
 
 The layer name will be used for variable and file naming, unless --name is specified.
+
+### Importing Object layers ###
+
+If --layer-type is set to 'all' (default) or 'objectgroup', the tool will create code for each objectgroup layer.
+
+You must define each object type in Tiled's Object Types Editor and give each object a unique 'index' custom value. Export the objecttypes.xml and set the path using the --object-types parameter.
 
 ### RLE Compression Format
 

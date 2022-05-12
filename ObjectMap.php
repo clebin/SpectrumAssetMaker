@@ -54,9 +54,6 @@ class ObjectMap {
             $this->objects[] = $obj;
         }
 
-        // sort object array by z-order
-        usort($this->objects, fn($a, $b) => $a->zOrder - $b->zOrder );
-
         foreach($this->objects as $obj) {
             // add to output array
             $this->output[] = $obj->GetIndex();
