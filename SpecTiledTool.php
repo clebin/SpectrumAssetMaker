@@ -9,7 +9,7 @@ require("Tile.php");
 require("Tilemap.php");
 require("Tileset.php");
 require("Tilemaps.php");
-require("TilesetGraphics.php");
+require("Graphics.php");
 require("Sprite.php");
 require("ObjectTypes.php");
 require("ObjectMap.php");
@@ -128,7 +128,7 @@ class SpecTiledTool
 
         // process tileset graphics
         if( self::$graphicsFilename !== false ) {
-            TilesetGraphics::Process(self::$graphicsFilename);
+            Graphics::Process(self::$graphicsFilename);
         }
 
         // process object maps

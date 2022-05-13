@@ -1,7 +1,7 @@
 <?php
 namespace ClebinGames\SpecTiledTool;
 
-class TilesetGraphics
+class Graphics
 {
     private static $image = false;
     private static $data = [];
@@ -10,8 +10,8 @@ class TilesetGraphics
     public static $numRows = 0;
     public static $numTiles = 0;
     
-    public static $codeName = 'tileset-graphics';
-    public static $defineName = 'tileset-graphics-len';
+    public static $codeName = 'graphics';
+    public static $defineName = 'graphics-len';
     /**
      * Read a black & white PNG or GIF file
      */
@@ -220,10 +220,10 @@ class TilesetGraphics
             return false;
         }
 
-        $success = TilesetGraphics::ReadFile($filename);
+        $success = Graphics::ReadFile($filename);
         
         if( $success === true ) {
-            file_put_contents(SpecTiledTool::GetOutputFilename('tileset-graphics'), self::GetCode());
+            file_put_contents(SpecTiledTool::GetOutputFilename('graphics'), self::GetCode());
         }
     }
 }
