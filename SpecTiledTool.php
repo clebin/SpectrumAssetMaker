@@ -1,4 +1,5 @@
 <?php
+
 namespace ClebinGames\SpecTiledTool;
 
 define('CR', "\n");
@@ -34,14 +35,14 @@ class SpecTiledTool
     const FORMAT_C = 'c';
     const NAMING_CAMELCASE = 'camelcase';
     const NAMING_UNDERSCORES = 'underscores';
-    
+
     // current output format
-    public static $formatsSupported = ['asm','c'];
+    public static $formatsSupported = ['asm', 'c'];
     public static $format = self::FORMAT_C;
 
-    public static $namingConventionsSupported = ['camelcase','underscores','titlecase'];
+    public static $namingConventionsSupported = ['camelcase', 'underscores', 'titlecase'];
     public static $namingConvention = self::NAMING_CAMELCASE;
-    
+
     // naming
     public static $name = false;
     public static $useLayerNames = false;
@@ -61,7 +62,7 @@ class SpecTiledTool
     // tilemap layers
     private static $ignoreHiddenLayers = false;
     private static $layerType = 'all';
-    private static $layerTypesSupported = ['all','objectgroup','tilelayer'];
+    private static $layerTypesSupported = ['all', 'objectgroup', 'tilelayer'];
 
     // object types
     private static $objectTypesFilename = false;
@@ -75,14 +76,14 @@ class SpecTiledTool
 
     // assembly section
     public static $section = 'rodata_user';
-    
+
     // save game properties
     public static $saveSolidData = false;
     public static $saveLethalData = false;
-    
+
     // add custom game properties to tiles
     public static $customProperties = [];
-    
+
     // output
     private static $output = '';
     public static $saveGameProperties = false;
@@ -99,7 +100,7 @@ class SpecTiledTool
         self::OutputIntro();
 
         // no options set - ask questions
-        if( sizeof($options) == 0 ) {
+        if (sizeof($options) == 0) {
             self::SetupWithUserPrompts();
         }
         // get options from command line arguments
@@ -108,59 +109,59 @@ class SpecTiledTool
         }
 
         // is format supported?
-        if( !in_array(self::$format, self::$formatsSupported) ) {
-            echo 'Error: Format not supported.'.CR;
+        if (!in_array(self::$format, self::$formatsSupported)) {
+            echo 'Error: Format not supported.' . CR;
             return false;
         }
 
-        if( self::$compression !== false && !in_array(self::$compression, self::$compressionSupported)) {
-            echo 'Error: Compression type not supported.'.CR;
+        if (self::$compression !== false && !in_array(self::$compression, self::$compressionSupported)) {
+            echo 'Error: Compression type not supported.' . CR;
             return false;
         }
-        
+
         // set output folder
-        self::$outputFolder = rtrim(self::$outputFolder, '/').'/';
+        self::$outputFolder = rtrim(self::$outputFolder, '/') . '/';
 
         // tileset colours and properties
-        if( self::$tilesetFilename !== false ) {
+        if (self::$tilesetFilename !== false) {
             Tileset::Process(self::$tilesetFilename);
         }
 
         // process tileset graphics
-        if( self::$graphicsFilename !== false ) {
+        if (self::$graphicsFilename !== false) {
             Graphics::Process(self::$graphicsFilename);
         }
 
         // process object maps
-        if( self::$objectTypesFilename !== false ) {
+        if (self::$objectTypesFilename !== false) {
             $success = ObjectTypes::Process(self::$objectTypesFilename);
 
             // quit before errors
-            if( $success === false ) {
+            if ($success === false) {
                 return false;
             }
         }
 
         // process tilemaps
-        if( self::$mapFilename !== false ) {
+        if (self::$mapFilename !== false) {
 
             // process tilemaps
             Tilemaps::Process(self::$mapFilename);
-        
+
             // save binaries.lst
-            if( SpecTiledTool::$createBinariesLst === true ) {
+            if (SpecTiledTool::$createBinariesLst === true) {
                 SpecTiledTool::ProcessBinariesLst();
             }
         }
 
         // process sprite
-        if( self::$spriteFilename !== false ) {
+        if (self::$spriteFilename !== false) {
             Sprite::Process(self::$spriteFilename, self::$maskFilename);
         }
 
         // display errors
-        if( self::$error === true ) {
-            echo 'Errors ('.sizeof(self::$errorDetails).'): '.implode('. ', self::$errorDetails);
+        if (self::$error === true) {
+            echo 'Errors (' . sizeof(self::$errorDetails) . '): ' . implode('. ', self::$errorDetails);
             return false;
         }
     }
@@ -174,10 +175,10 @@ class SpecTiledTool
         self::$name = CliTools::GetAnswer('Name for files and variables', '');
 
         // mode - map or sprite
-        $mode = CliTools::GetAnswer('Which mode?', 'map', ['map','sprite']);
-        
+        $mode = CliTools::GetAnswer('Which mode?', 'map', ['map', 'sprite']);
+
         // tilemap
-        if( $mode == 'map' ) {
+        if ($mode == 'map') {
             self::$mapFilename = CliTools::GetAnswer('Map filename', 'map.tmj');
             self::$tilesetFilename = CliTools::GetAnswer('Tileset filename', 'tileset.tsj');
             self::$graphicsFilename = CliTools::GetAnswer('Tile graphics filename', 'tiles.gif');
@@ -187,7 +188,7 @@ class SpecTiledTool
         else {
             self::$spriteFilename = CliTools::GetAnswer('Sprite filename', '');
             self::$maskFilename = CliTools::GetAnswer('Mask filename', str_replace('.gif', '-mask.gif', self::$spriteFilename));
-            self::$spriteWidth = CliTools::GetAnswer('Sprite width in columns', 2);   
+            self::$spriteWidth = CliTools::GetAnswer('Sprite width in columns', 2);
         }
 
         // output foloder
@@ -195,13 +196,13 @@ class SpecTiledTool
 
         // compression
         self::$compression = CliTools::GetAnswer('Use compression', 'none', array_merge(['none'], self::$compressionSupported));
-        if( self::$compression == 'none' ) {
+        if (self::$compression == 'none') {
             self::$compression = false;
         }
 
         // format
         self::$format = CliTools::GetAnswer('Output format', 'c', self::$formatsSupported);
-        if(self::$format == 'asm') {
+        if (self::$format == 'asm') {
             self::$section = CliTools::GetAnswer('Asssembly section', 'rodata_user');
         }
 
@@ -215,97 +216,97 @@ class SpecTiledTool
     private static function SetupWithArgs($options)
     {
         // prefix
-        if( isset($options['name'])) {
+        if (isset($options['name'])) {
             self::$name = $options['name'];
         }
 
-        if( isset($options['use-layer-names'])) {
+        if (isset($options['use-layer-names'])) {
             self::$useLayerNames = true;
         }
 
-        if( isset($options['create-binaries-lst'])) {
+        if (isset($options['create-binaries-lst'])) {
             self::$createBinariesLst = true;
         }
 
         // tilemaps
-        if( isset($options['map'])) {
+        if (isset($options['map'])) {
             self::$mapFilename = $options['map'];
         }
 
         // add dimension
-        if( isset($options['add-dimensions'])) {
+        if (isset($options['add-dimensions'])) {
             self::$addDimensions = true;
         }
 
         // layer type
-        if( isset($options['layer-type']) && in_array($options['layer-type'], self::$layerTypesSupported) ) {
+        if (isset($options['layer-type']) && in_array($options['layer-type'], self::$layerTypesSupported)) {
             self::$layerType = $options['layer-type'];
         }
 
         // ignore hidden layers
-        if( isset($options['ignore-hidden-layers'])) {
+        if (isset($options['ignore-hidden-layers'])) {
             self::$ignoreHiddenLayers = true;
         }
         // tileset
-        if( isset($options['tileset'])) {
+        if (isset($options['tileset'])) {
             self::$tilesetFilename = $options['tileset'];
         }
 
         // replace flash bit with solid
-        if( isset($options['replace-flash-with-solid']) ) {
+        if (isset($options['replace-flash-with-solid'])) {
             self::$replaceFlashWithSolid = true;
         }
 
         // graphics
-        if( isset($options['graphics'])) {
+        if (isset($options['graphics'])) {
             self::$graphicsFilename = $options['graphics'];
         }
 
         // object map
-        if( isset($options['object-map'])) {
+        if (isset($options['object-map'])) {
             self::$objectMapsFilename = $options['object-map'];
         }
-        
+
         // object types
-        if( isset($options['object-types'])) {
+        if (isset($options['object-types'])) {
             self::$objectTypesFilename = $options['object-types'];
         }
-        
+
         // format
-        if( isset($options['format'])) {
+        if (isset($options['format'])) {
             self::$format = $options['format'];
         }
 
         // output folder
-        if( isset($options['output-folder'])) {
+        if (isset($options['output-folder'])) {
             self::$outputFolder = $options['output-folder'];
         }
 
         // naming
-        if( isset($options['naming'])) {
+        if (isset($options['naming'])) {
             self::$namingConvention = $options['naming'];
         }
 
         // sprite file
-        if( isset($options['sprite'])) {
+        if (isset($options['sprite'])) {
             self::$spriteFilename = $options['sprite'];
 
-            if( isset($options['mask'])) {
+            if (isset($options['mask'])) {
                 self::$maskFilename = $options['mask'];
             }
-            
-            if( isset($options['sprite-width'])) {
+
+            if (isset($options['sprite-width'])) {
                 self::$spriteWidth = intval($options['sprite-width']);
             }
         }
 
         // section
-        if( isset($options['section'])) {
-            self::$section = intval($options['section']);
+        if (isset($options['section'])) {
+            self::$section = $options['section'];
         }
 
         // compression
-        if( isset($options['compression']) ) {
+        if (isset($options['compression'])) {
             self::$compression = $options['compression'];
         }
     }
@@ -316,12 +317,12 @@ class SpecTiledTool
     private static function ProcessBinariesLst()
     {
         $strBinaries = '';
-        if( self::$tilesetFilename !== false ) { 
-            $strBinaries = Tileset::GetBinariesLst().CR;
+        if (self::$tilesetFilename !== false) {
+            $strBinaries = Tileset::GetBinariesLst() . CR;
         }
         $strBinaries .= Tilemaps::GetBinariesLst();
 
-        file_put_contents(self::$outputFolder.'binaries.lst', $strBinaries);
+        file_put_contents(self::$outputFolder . 'binaries.lst', $strBinaries);
     }
 
     /**
@@ -353,7 +354,7 @@ class SpecTiledTool
      */
     public static function GetOutputFileExtension()
     {
-        switch(self::$format) {            
+        switch (self::$format) {
             case 'c':
                 return 'c';
                 break;
@@ -371,13 +372,13 @@ class SpecTiledTool
         $outputFilename = SpecTiledTool::$outputFolder;
 
         // output filename
-        if( self::$name !== false ) {
-            $outputFilename .= SpecTiledTool::GetConvertedFilename(self::$name).'-'.$suffix;
+        if (self::$name !== false) {
+            $outputFilename .= SpecTiledTool::GetConvertedFilename(self::$name) . '-' . $suffix;
         } else {
             $outputFilename .= $suffix;
         }
 
-        $outputFilename .= '.'.SpecTiledTool::GetOutputFileExtension();
+        $outputFilename .= '.' . SpecTiledTool::GetOutputFileExtension();
 
         return $outputFilename;
     }
@@ -429,51 +430,51 @@ class SpecTiledTool
     {
         return self::$spriteWidth;
     }
-    
+
     /**
      * Return an array as a string in C format
      */
     public static function GetCArray($name, $values, $numbase = 10)
     {
-        if( Tileset::$large_tileset === true ) {
-            $str = 'const uint16_t '.$name.'['.sizeof($values).'] = {'.CR;
+        if (Tileset::$large_tileset === true) {
+            $str = 'const uint16_t ' . $name . '[' . sizeof($values) . '] = {' . CR;
         } else {
-            $str = 'const uint8_t '.$name.'['.sizeof($values).'] = {'.CR;
+            $str = 'const uint8_t ' . $name . '[' . sizeof($values) . '] = {' . CR;
         }
-        
+
         // tile numbers
         $count = 0;
-        foreach($values as $val) {
+        foreach ($values as $val) {
 
-            if( $count > 0 ) {
+            if ($count > 0) {
                 $str .= ',';
-                if( $count % 8 == 0 ) {
+                if ($count % 8 == 0) {
                     $str .= CR;
                 }
             }
 
             // convert to numbers to hex
-            switch( $numbase ) {
+            switch ($numbase) {
 
-                // binary
+                    // binary
                 case 2:
-                    $str .= '0x'.dechex(bindec($val));
-                break;
-                
-                // decimal
-                case 10:
-                    $str .= '0x'.dechex($val);
-                break;
+                    $str .= '0x' . dechex(bindec($val));
+                    break;
 
-                // hex
+                    // decimal
+                case 10:
+                    $str .= '0x' . dechex($val);
+                    break;
+
+                    // hex
                 case 15:
-                    $str .= '0x'.$val;
+                    $str .= '0x' . $val;
             }
 
             $count++;
         }
 
-        $str .= CR.'};'.CR.CR;
+        $str .= CR . '};' . CR . CR;
 
         return $str;
     }
@@ -485,47 +486,47 @@ class SpecTiledTool
     {
         $str = '';
 
-        if( $public === true ) {
-            $str .= CR.'PUBLIC _'.$name.CR;
+        if ($public === true) {
+            $str .= CR . 'PUBLIC _' . $name . CR;
         }
 
         // output paper/ink/bright/flash
-        $str .= CR.'._'.$name;
-        
-        $count = 0;
-        foreach($values as $val) {
+        $str .= CR . '._' . $name;
 
-            if( $count % 4 == 0 ) {
-                $str .= CR.'defb ';
+        $count = 0;
+        foreach ($values as $val) {
+
+            if ($count % 4 == 0) {
+                $str .= CR . 'defb ';
             } else {
                 $str .= ', ';
             }
 
             // convert to numbers to binary
-            switch( $numbase ) {
+            switch ($numbase) {
 
-                // binary
+                    // binary
                 case 2:
                     // do nothing
-                break;
-                
-                // decimal
+                    break;
+
+                    // decimal
                 case 10:
                     $val = decbin($val);
-                break;
+                    break;
 
-                // hex
+                    // hex
                 case 16:
                     $val = decbin(hexdec($val));
             }
 
             // pad binary string
-            if( $length !== false ) {
-                $val = str_pad( $val, $length, '0', STR_PAD_LEFT );
+            if ($length !== false) {
+                $val = str_pad($val, $length, '0', STR_PAD_LEFT);
             }
-            
-            $str .= '@'.$val;
-            
+
+            $str .= '@' . $val;
+
             $count++;
         }
         return $str;
@@ -539,10 +540,10 @@ class SpecTiledTool
         $output = [];
 
         // add array data
-        for($i=0;$i<sizeof($input);$i++) {
+        for ($i = 0; $i < sizeof($input); $i++) {
 
             $count = 1;
-            while($i<sizeof($input)-1 && $input[$i] == $input[$i+1] && $count < 256) {
+            while ($i < sizeof($input) - 1 && $input[$i] == $input[$i + 1] && $count < 256) {
                 $count++;
                 $i++;
             }
@@ -554,14 +555,14 @@ class SpecTiledTool
         $outputSize = sizeof($output);
 
         // record array length
-        if( $add_length === true ) {
-            $bin = str_pad( decbin($outputSize), 16, '0', STR_PAD_LEFT );
+        if ($add_length === true) {
+            $bin = str_pad(decbin($outputSize), 16, '0', STR_PAD_LEFT);
 
             array_unshift($output, bindec(substr($bin, -8)));
             array_unshift($output, bindec(substr($bin, 0, 8)));
         }
-        
-        echo 'Compressed '.($name !== false ? $name : 'array').': '.$inputSize.'b -> '.$outputSize.'b, saved '.round( (($inputSize-$outputSize)/$inputSize)*100, 1).'%'.CR;
+
+        echo 'Compressed ' . ($name !== false ? $name : 'array') . ': ' . $inputSize . 'b -> ' . $outputSize . 'b, saved ' . round((($inputSize - $outputSize) / $inputSize) * 100, 1) . '%' . CR;
 
         return $output;
     }
@@ -574,16 +575,16 @@ class SpecTiledTool
         $str = '';
 
         // tile number arrays
-        $str .= 'const unsigned char *'.$arrayName.'['.$size.'] = {';
-        
-        for($i=0;$i<$size;$i++) {
-            if($i>0) {
+        $str .= 'const unsigned char *' . $arrayName . '[' . $size . '] = {';
+
+        for ($i = 0; $i < $size; $i++) {
+            if ($i > 0) {
                 $str .= ', ';
             }
-            $str .= $itemsBaseName.$i;
+            $str .= $itemsBaseName . $i;
         }
-        $str .= '};'.CR;
-    
+        $str .= '};' . CR;
+
         return $str;
     }
 
@@ -592,7 +593,7 @@ class SpecTiledTool
      */
     public static function GetConvertedCodeName($source_name)
     {
-        switch( self::$namingConvention ) {
+        switch (self::$namingConvention) {
             case 'underscores':
                 return self::GetConvertedCodeNameUnderscores($source_name);
                 break;
@@ -625,7 +626,7 @@ class SpecTiledTool
      */
     public static function GetConvertedCodeNameCamelCase($source_name)
     {
-        return lcfirst( implode('', array_map('ucfirst', explode(' ',str_replace('-', ' ',$source_name)))));
+        return lcfirst(implode('', array_map('ucfirst', explode(' ', str_replace('-', ' ', $source_name)))));
     }
 
     /**
@@ -633,9 +634,9 @@ class SpecTiledTool
      */
     public static function GetConvertedCodeNameTitleCase($source_name)
     {
-        return implode('', array_map('ucfirst', explode(' ',str_replace('-', ' ',$source_name))));
+        return implode('', array_map('ucfirst', explode(' ', str_replace('-', ' ', $source_name))));
     }
-    
+
     /**
      * Convert regular name to a filename format
      */
@@ -649,9 +650,9 @@ class SpecTiledTool
      */
     public static function OutputIntro()
     {
-        echo '** Spectrum Tiled Tool v'.self::VERSION.' - Chris Owen 2022 **'.CR.CR;
+        echo '** Spectrum Tiled Tool v' . self::VERSION . ' - Chris Owen 2022 **' . CR . CR;
     }
-    
+
     /**
      * Add to errors list
      */
@@ -680,21 +681,21 @@ class SpecTiledTool
 
 // read filenames from command line arguments
 $options = getopt('', [
-    'help::', 
-    'name::', 
-    'map::', 
-    'tileset::', 
+    'help::',
+    'name::',
+    'map::',
+    'tileset::',
     'graphics::',
-    'format::', 
-    'sprite::', 
-    'mask::', 
-    'section::', 
+    'format::',
+    'sprite::',
+    'mask::',
+    'section::',
     'compression::',
     'output-folder::',
     'use-layer-names::',
-    'create-binaries-lst::', 
+    'create-binaries-lst::',
     'replace-flash-with-solid::',
-    'naming::', 
+    'naming::',
     'add-dimensions::',
     'object-types::',
     'layer-type::',
