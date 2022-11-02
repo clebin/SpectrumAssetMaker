@@ -1,11 +1,12 @@
 <?php
+
 namespace ClebinGames\SpecTiledTool;
 
 /**
  * Class representing an object map
  */
-class ObjectMap {
-
+class ObjectMap
+{
     private $num = 0;
     private $data = false;
     private $filename = false;
@@ -25,15 +26,15 @@ class ObjectMap {
 
     public function SetName($name)
     {
-        $this->name = SpecTiledTool::GetConvertedCodeName($name.'-object-map');
-        $this->filename = SpecTiledTool::GetConvertedFilename($name.'-object-map');
+        $this->name = SpecTiledTool::GetConvertedCodeName($name . '-object-map');
+        $this->filename = SpecTiledTool::GetConvertedFilename($name . '-object-map');
     }
 
     public function GetOutputFilename()
     {
         $filename = SpecTiledTool::GetOutputFolder();
-        $filename .= $this->filename.'.'.SpecTiledTool::GetOutputFileExtension();
-        
+        $filename .= $this->filename . '.' . SpecTiledTool::GetOutputFileExtension();
+
         return $filename;
     }
 
@@ -43,9 +44,9 @@ class ObjectMap {
     public function ReadLayer($layer)
     {
         // loop through objects on layer
-        foreach($layer as $json) {
+        foreach ($layer as $json) {
 
-            echo 'Found object "'.$json['name'].'"'.CR;
+            echo 'Found object "' . $json['name'] . '"' . CR;
 
             // create new object
             $obj = new GameObject($json);
@@ -54,13 +55,18 @@ class ObjectMap {
             $this->objects[] = $obj;
         }
 
-        foreach($this->objects as $obj) {
+
+        foreach ($this->objects as $obj) {
             // add to output array
             $this->output[] = $obj->GetIndex();
             $this->output[] = $obj->GetRow();
             $this->output[] = $obj->GetCol();
-        }
 
+            // add custom properties
+            foreach (ObjectTypes::GetCustomProperties() as $prop) {
+                $this->output[] = $obj->GetCustomProperty($prop);
+            }
+        }
     }
 
     /**
@@ -69,39 +75,42 @@ class ObjectMap {
      */
     public function GetCode()
     {
-        switch( SpecTiledTool::GetFormat() ) {
+        switch (SpecTiledTool::GetFormat()) {
             case 'c':
                 return $this->GetC();
                 break;
             default:
                 return $this->GetAsm();
-            break;
+                break;
         }
     }
 
     public function GetC()
     {
         return SpecTiledTool::GetCArray(
-            $this->name, 
-            $this->output, 
+            $this->name,
+            $this->output,
             10
-        ).CR;
+        ) . CR;
     }
 
     public function GetAsm()
     {
         // add array length at the beginning
         array_unshift($this->output, sizeof($this->output));
-        
-        $str = 'SECTION '.SpecTiledTool::GetCodeSection().CR;
+
+        $str = 'SECTION ' . SpecTiledTool::GetCodeSection() . CR;
 
         $str .= SpecTiledTool::GetAsmArray(
-            $this->name, 
-            $this->output, 
+            $this->name,
+            $this->output,
             10,
             8
-        ).CR;
-        
+        ) . CR;
+
         return $str;
     }
+
+    // @todo Specify 8-bit layout for custom properties
+    // eg. |    -   |   -   |   -   |  -    |  player/computer  |  unit-type   | unit-type  | unit-type  |
 }

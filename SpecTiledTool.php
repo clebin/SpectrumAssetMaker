@@ -66,8 +66,9 @@ class SpecTiledTool
 
     // object types
     private static $objectTypesFilename = false;
+    private static $objectCustomPropertiesFilename = false;
 
-    // more settings
+    // more settngs
     private static $outputFolder = '.';
     private static $addDimensions = false;
     private static $outputFilename = false;
@@ -80,9 +81,6 @@ class SpecTiledTool
     // save game properties
     public static $saveSolidData = false;
     public static $saveLethalData = false;
-
-    // add custom game properties to tiles
-    public static $customProperties = [];
 
     // output
     private static $output = '';
@@ -134,7 +132,8 @@ class SpecTiledTool
 
         // process object maps
         if (self::$objectTypesFilename !== false) {
-            $success = ObjectTypes::Process(self::$objectTypesFilename);
+
+            $success = ObjectTypes::Process(self::$objectTypesFilename, self::$objectCustomPropertiesFilename);
 
             // quit before errors
             if ($success === false) {
@@ -262,14 +261,14 @@ class SpecTiledTool
             self::$graphicsFilename = $options['graphics'];
         }
 
-        // object map
-        if (isset($options['object-map'])) {
-            self::$objectMapsFilename = $options['object-map'];
-        }
-
         // object types
         if (isset($options['object-types'])) {
             self::$objectTypesFilename = $options['object-types'];
+        }
+
+        // object custom properties
+        if (isset($options['object-properties'])) {
+            self::$objectCustomPropertiesFilename = $options['object-properties'];
         }
 
         // format
@@ -693,6 +692,7 @@ $options = getopt('', [
     'compression::',
     'output-folder::',
     'use-layer-names::',
+    'custom-props::',
     'create-binaries-lst::',
     'replace-flash-with-solid::',
     'naming::',

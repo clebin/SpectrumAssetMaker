@@ -48,6 +48,8 @@ Running the script without parameters will prompt for each setting.
 
 **--object-types**=[object types XML file] (this is required for processing object maps)
 
+**--object-props**=[path to object custom properties text file (see below for info)]
+
 **--map**=[tilemap filename]
 
 **--tileset**=[tileset filename]
@@ -99,6 +101,25 @@ The layer name will be used for variable and file naming, unless --name is speci
 If --layer-type is set to 'all' (default) or 'objectgroup', the tool will create code for each objectgroup layer.
 
 You must define each object type in Tiled's Object Types Editor and give each object a unique 'index' custom value. Export the objecttypes.xml and set the path using the --object-types parameter.
+
+## Object layer custom properties (WIP / placeholder) ##
+
+We may not need all 8-bits to store the object type, and can use the spare bits to store some other data.
+
+--------------------------------------------------------------------------------------
+|       |           |   |   |              |              |             |             |
+| solid | invisible | 0 | 0 | object-type  | object-type  | object-type | object-type |
+|       |           |   |   |              |              |             |             |
+---------------------------------------------------------------------------------------
+
+In Tiled, we add the 'solid' and 'invisble' values to our object. We then create a text file containing the property names:
+
+solid
+invisible
+
+Finally we pass the path of the text file using the --object-props parameter.
+
+**To Do:** Allow adding a second byte of information to store additional object properties if required.
 
 ### RLE Compression Format
 
