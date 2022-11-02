@@ -11,10 +11,12 @@ class ObjectTypes
     private static $objectMapping = [];
     private static $customProperties = [];
 
-    public static function Process($mapFilename, $customPropertiesFilename)
+    public static function Process($mapFilename, $customPropertiesFilename = false)
     {
         // custom properties
-        self::ReadCustomPropertiesFile($customPropertiesFilename);
+        if ($customPropertiesFilename !== false) {
+            self::ReadCustomPropertiesFile($customPropertiesFilename);
+        }
 
         // object map
         self::ReadMapFile($mapFilename);
@@ -25,7 +27,6 @@ class ObjectTypes
      */
     public static function ReadMapFile($filename)
     {
-
         if (!file_exists($filename)) {
             echo 'Error: Object types file ' . $filename . ' not found' . CR;
             return false;

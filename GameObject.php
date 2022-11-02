@@ -18,7 +18,7 @@ class GameObject
 
     public function __construct($json)
     {
-        $this->type = strval($json['type']);
+        $this->type = strval($json['class']);
         $this->row = intval($json['y'] / 8);
         $this->col = intval($json['x'] / 8);
 

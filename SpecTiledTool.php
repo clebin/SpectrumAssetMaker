@@ -692,12 +692,12 @@ $options = getopt('', [
     'compression::',
     'output-folder::',
     'use-layer-names::',
-    'custom-props::',
     'create-binaries-lst::',
     'replace-flash-with-solid::',
     'naming::',
     'add-dimensions::',
     'object-types::',
+    'object-properties::',
     'layer-type::',
     'ignore-hidden-layers::'
 ]);
