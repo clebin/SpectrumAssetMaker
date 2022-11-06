@@ -102,25 +102,13 @@ If --layer-type is set to 'all' (default) or 'objectgroup', the tool will create
 
 You must define each object type in Tiled's Object Types Editor and give each object a unique 'index' custom value. Export the objecttypes.xml and set the path using the --object-types parameter.
 
-## Object layer custom properties (WIP / placeholder) ##
+### Object properties ###
 
-We may not need all 8-bits to store the object type, and can use the spare bits to store some other data.
+To add custom properties to an objec, you must list the properties in the object layer. In Tiled, 
+view the layer's properties and add the names for the properties required. On the objects themselves, add custom properties with the same names.
 
---------------------------------------------------------------------------------------
-|       |           |   |   |              |              |             |             |
-| solid | invisible | 0 | 0 | object-type  | object-type  | object-type | object-type |
-|       |           |   |   |              |              |             |             |
----------------------------------------------------------------------------------------
-
-In Tiled, we add the 'solid' and 'invisble' values to our object. We then create a text file containing the property names:
-
-solid
-invisible
-
-Finally we pass the path of the text file using the --object-props parameter.
-
-**To Do:** Allow adding a second byte of information to store additional object properties if required.
-
+To add the width & height of objects, ad a boolean 'add-dimensions' property to the appropriate layer and
+set to 'true'.
 ### RLE Compression Format
 
 1 byte for tilenum, 1 byte for run-length.

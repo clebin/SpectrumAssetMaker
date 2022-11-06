@@ -78,6 +78,7 @@ class ObjectMap
         }
 
         // loop through objects
+        $count = 0;
         foreach ($this->objects as $obj) {
             // add to output array
             if ($obj->GetIndex() > -1) {
@@ -98,6 +99,10 @@ class ObjectMap
             foreach ($this->customProperties as $prop) {
                 $this->output[] = $obj->GetCustomProperty($prop);
             }
+            if ($count == 0) {
+                print_r($this->output);
+            }
+            $count++;
         }
     }
 
