@@ -68,8 +68,8 @@ class GameObject
     public function GetCustomProperty($name)
     {
         // property is set
-        if (isset($this->customProperties['name'])) {
-            return $this->customProperties['name'];
+        if (isset($this->customProperties[$name])) {
+            return $this->customProperties[$name];
         }
 
         // return false if not set
