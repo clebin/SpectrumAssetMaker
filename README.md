@@ -113,7 +113,7 @@ Export the objecttypes.xml and specify the path using the --object-types paramet
 To add custom properties to an object, you must list the properties in the object layer. In Tiled, 
 view the layer's properties and add the names for the properties required.
 
-On the objects themselves, add custom properties with the same names and set the required values.
+On the objects themselves, add custom properties with the same names and set the required valuesgitr a.
 
 To add the width & height of objects, add a boolean 'add-dimensions' property to the appropriate layer and set to 'true'.
 ### RLE Compression Format
@@ -129,3 +129,5 @@ The data will be preceded by 2 bytes specifying the array length (hi/lo). This w
 * Don't leave gaps in the middle of tilesets as this will cause errors.
 
 * This tool is work-in-progress and features are currently in flux.
+
+* Each object custom property takes up a one byte regardless of how many bits are needed to store the information. The tool should allow a custom bit layout to store values more efficiently.
