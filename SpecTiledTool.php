@@ -133,7 +133,7 @@ class SpecTiledTool
         // process object maps
         if (self::$objectTypesFilename !== false) {
 
-            $success = ObjectTypes::Process(self::$objectTypesFilename, self::$objectCustomPropertiesFilename);
+            $success = ObjectTypes::Process(self::$objectTypesFilename);
 
             // quit before errors
             if ($success === false) {

@@ -1,11 +1,13 @@
 <?php
+
 namespace ClebinGames\SpecTiledTool;
 
 /**
  * Class representing a tilemap with functions for reading and exporting
  */
-class Tilemaps {
-    
+class Tilemaps
+{
+
     // data arrays
     public static $maps = [];
 
@@ -19,22 +21,23 @@ class Tilemaps {
     // allowed properties on enemies, objects, etc.
     private static $object_allowed_properties = [
         'collectable',
-        'deltax', 
-        'deltay', 
-        'speed', 
-        'numhits', 
-        'transient', 
-        'lethal', 
-        'endval', 
+        'deltax',
+        'deltay',
+        'speed',
+        'numhits',
+        'transient',
+        'lethal',
+        'endval',
         'movement'
     ];
 
     /**
      * Read the tilemap JSON file.
      */
-    public static function ReadFile($filename) {
+    public static function ReadFile($filename)
+    {
 
-        if(!file_exists($filename)) {
+        if (!file_exists($filename)) {
             return false;
         }
 
@@ -42,12 +45,12 @@ class Tilemaps {
         $data = json_decode($json, true);
 
         // set name for #define screens length
-        if( SpecTiledTool::GetName() !== false ) {
-            self::$defineName = strtoupper(SpecTiledTool::GetName()).'_'.self::$defineName;
+        if (SpecTiledTool::GetName() !== false) {
+            self::$defineName = strtoupper(SpecTiledTool::GetName()) . '_' . self::$defineName;
         }
 
         // read simple
-        if( isset($data['layers'][0]['layers']) ) {
+        if (isset($data['layers'][0]['layers'])) {
             $success = self::ReadFileWithGroups($data);
         }
         // read with object layers
@@ -72,33 +75,38 @@ class Tilemaps {
         self::$numTilemaps = 0;
         self::$numObjectMaps = 0;
 
-        foreach($data['layers'] as $group) {
+        foreach ($data['layers'] as $group) {
             self::ReadLayerGroup($group['layers'], $group['name']);
         }
 
         return true;
     }
 
-    public static function ReadLayerGroup($group, $name = false)
+    public static function ReadLayerGroup($group, $groupName = false)
     {
-        foreach($group as $layer) {
+        foreach ($group as $layer) {
+
+            echo 'Reading layer "' . $layer['name'] . '" (' . $layer['type'] . ')' . CR;
 
             // tilemap
-            if( SpecTiledTool::GetIgnoreHiddenLayers() === true && $layer['hidden'] === true ) {
+            if (SpecTiledTool::GetIgnoreHiddenLayers() === true && $layer['hidden'] === true) {
                 // do nothing
                 $map = false;
             }
             // tile layer
-            else if( $layer['type'] == 'tilelayer' && 
+            else if (
+                $layer['type'] == 'tilelayer' &&
                 (SpecTiledTool::GetLayerType() == 'tilelayer' || SpecTiledTool::GetLayerType() == 'all')
-                ) {
+            ) {
                 $map = new Tilemap(self::$numTilemaps, $layer);
                 self::$numTilemaps++;
             }
             // object layer
-            else if( $layer['type'] == 'objectgroup' &&
-                (SpecTiledTool::GetLayerType() == 'objectgroup' || SpecTiledTool::GetLayerType() == 'all')) {
-                    
+            else if (
+                $layer['type'] == 'objectgroup' &&
+                (SpecTiledTool::GetLayerType() == 'objectgroup' || SpecTiledTool::GetLayerType() == 'all')
+            ) {
+
                 $map = new ObjectMap(self::$numObjectMaps, $layer);
                 self::$numObjectMaps++;
             }
@@ -108,28 +116,28 @@ class Tilemaps {
             }
 
             // layer has been processed
-            if($map !== false) {
-
+            if ($map !== false) {
                 // set name
-                if( $name !== false ) {
-                    $map->SetName($name);
-                }
-                // use prefix
-                else if( SpecTiledTool::GetName() !== false ) {
-                    $map->SetName(SpecTiledTool::GetName());
-                }
-                // use layer name
-                else {
-                    $map->SetName($layer['name']);
+                if (SpecTiledTool::UseLayerNames() === true) {
+                    if ($groupName !== false) {
+                        $map->SetName($groupName . '-' . $layer['name']);
+                    } else {
+                        $map->SetName($layer['name']);
+                    }
+                } else {
+                    $map->SetName(SpecTiledTool::GetName() . '-' . $layer['type']);
                 }
 
+                // add to maps array
                 self::$maps[] = $map;
+            } else {
+                echo 'Error processing layer ' . $layer['name'] . '' . CR;
             }
         }
 
         return true;
     }
-    
+
     /**
      * Return the number of screens
      */
@@ -137,7 +145,7 @@ class Tilemaps {
     {
         return self::$numTilemaps;
     }
-    
+
     /**
      * Return the number of screens
      */
@@ -153,9 +161,9 @@ class Tilemaps {
     {
         $str = '';
 
-        for($i=0;$i<sizeof(self::$maps);$i++) {
+        for ($i = 0; $i < sizeof(self::$maps); $i++) {
 
-            switch( SpecTiledTool::GetFormat() ) {
+            switch (SpecTiledTool::GetFormat()) {
                 case 'c':
                     $str .= self::GetCodeC($i);
                     break;
@@ -173,8 +181,8 @@ class Tilemaps {
     public static function GetBinariesLst()
     {
         $str = '';
-        foreach(self::$maps as $map) {
-            $str .= $map->GetCodeName().CR;
+        foreach (self::$maps as $map) {
+            $str .= $map->GetCodeName() . CR;
         }
         return $str;
     }
@@ -183,12 +191,12 @@ class Tilemaps {
     {
         // read map and tilset
         $success = self::ReadFile($filename);
-        
-        if( $success === true ) {
+
+        if ($success === true) {
 
             // write tilemaps to files
             $count = 0;
-            foreach(self::$maps as $map) {
+            foreach (self::$maps as $map) {
                 file_put_contents($map->GetOutputFilename(), $map->GetCode());
                 $count++;
             }

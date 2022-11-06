@@ -13,14 +13,16 @@ class GameObject
     private $col = 0;
     private $width = 0;
     private $height = 0;
-    private $zOrder = 0;
-    private $custom_properties = [];
+    private $customProperties = [];
+    // private $zOrder = 0;
 
     public function __construct($json)
     {
         $this->type = strval($json['class']);
         $this->row = intval($json['y'] / 8);
         $this->col = intval($json['x'] / 8);
+        $this->width = intval($json['width'] / 8);
+        $this->height = intval($json['height'] / 8);
 
         // name (optional)
         if ($json['name'] != '') {
@@ -30,7 +32,7 @@ class GameObject
         // read custom properties
         if (isset($json['properties'])) {
             foreach ($json['properties'] as $prop) {
-                $this->custom_properties[$prop['name']] = $prop['value'];
+                $this->customProperties[$prop['name']] = $prop['value'];
             }
         }
 
@@ -53,14 +55,29 @@ class GameObject
         return $this->col;
     }
 
+    public function GetWidth()
+    {
+        return $this->width;
+    }
+
+    public function GetHeight()
+    {
+        return $this->height;
+    }
+
     public function GetCustomProperty($name)
     {
         // property is set
-        if (isset($this->custom_properties[$name])) {
-            return $this->custom_properties[$name];
+        if (isset($this->customProperties['name'])) {
+            return $this->customProperties['name'];
         }
 
         // return false if not set
-        return false;
+        return 0;
+    }
+
+    public function IsUsingDimensions()
+    {
+        return $this->addDimensions;
     }
 }

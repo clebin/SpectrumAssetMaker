@@ -12,11 +12,33 @@ class ObjectMap
     private $filename = false;
     private $objects = [];
     private $output = [];
+    private $customProperties = [];
+    private $addDimensions = false;
 
     public function __construct($num, $layer)
     {
         $this->num = 0;
-        $this->ReadLayer($layer['objects']);
+
+        // custom properties
+        if (isset($layer['properties'])) {
+            foreach ($layer['properties'] as $prop) {
+
+                if ($prop['name'] == 'add-dimensions') {
+                    if ($prop['value'] === true) {
+                        $this->addDimensions = true;
+                        echo 'Add object dimensions. ';
+                    }
+                } else {
+                    $this->customProperties[] = $prop['name'];
+                }
+            }
+            if (sizeof($this->customProperties) > 0) {
+                echo 'Adding ' . sizeof($this->customProperties) . ' custom properties (' . implode(',', $this->customProperties) . ')' . CR;
+            }
+        }
+
+        // read objects from layer
+        $this->ReadLayerObjects($layer['objects']);
     }
 
     public function SetData($data)
@@ -26,8 +48,8 @@ class ObjectMap
 
     public function SetName($name)
     {
-        $this->name = SpecTiledTool::GetConvertedCodeName($name . '-object-map');
-        $this->filename = SpecTiledTool::GetConvertedFilename($name . '-object-map');
+        $this->name = SpecTiledTool::GetConvertedCodeName($name);
+        $this->filename = SpecTiledTool::GetConvertedFilename($name);
     }
 
     public function GetOutputFilename()
@@ -41,7 +63,7 @@ class ObjectMap
     /**
      * Read an Tiled object layer
      */
-    public function ReadLayer($layer)
+    public function ReadLayerObjects($layer)
     {
         // loop through objects on layer
         foreach ($layer as $json) {
@@ -55,15 +77,25 @@ class ObjectMap
             $this->objects[] = $obj;
         }
 
-
+        // loop through objects
         foreach ($this->objects as $obj) {
             // add to output array
-            $this->output[] = $obj->GetIndex();
+            if ($obj->GetIndex() > -1) {
+                $this->output[] = $obj->GetIndex();
+            }
+
+            // add row and column
             $this->output[] = $obj->GetRow();
             $this->output[] = $obj->GetCol();
 
+            // add dimensions
+            if ($this->addDimensions === true) {
+                $this->output[] = $obj->GetHeight();
+                $this->output[] = $obj->GetWidth();
+            }
+
             // add custom properties
-            foreach (ObjectTypes::GetCustomProperties() as $prop) {
+            foreach ($this->customProperties as $prop) {
                 $this->output[] = $obj->GetCustomProperty($prop);
             }
         }

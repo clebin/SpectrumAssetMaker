@@ -7,17 +7,10 @@ namespace ClebinGames\SpecTiledTool;
  */
 class ObjectTypes
 {
-
     private static $objectMapping = [];
-    private static $customProperties = [];
 
-    public static function Process($mapFilename, $customPropertiesFilename = false)
+    public static function Process($mapFilename)
     {
-        // custom properties
-        if ($customPropertiesFilename !== false) {
-            self::ReadCustomPropertiesFile($customPropertiesFilename);
-        }
-
         // object map
         self::ReadMapFile($mapFilename);
     }
@@ -39,18 +32,6 @@ class ObjectTypes
         $success = self::ProcessData($data);
 
         return $success;
-    }
-
-    public static function ReadCustomPropertiesFile($filename)
-    {
-        $text = file_get_contents($filename);
-
-        $props = explode(CR, $text);
-
-        foreach ($props as $prop) {
-            echo 'Added custom property "' . $prop . '"' . CR;
-            self::$customProperties[] = $prop;
-        }
     }
 
     public static function ProcessData($data)
@@ -78,14 +59,9 @@ class ObjectTypes
     public static function GetIndex($name)
     {
         if (!isset(self::$objectMapping[$name])) {
-            echo 'Error: object type ' . $name . ' not found. Size of objectMapping is ' . sizeof(self::$objectMapping) . CR;
-            exit();
+            echo 'Object type mapping ' . $name . ' not set.' . CR;
+            return -1;
         }
         return self::$objectMapping[$name];
-    }
-
-    public static function GetCustomProperties()
-    {
-        return self::$customProperties;
     }
 }

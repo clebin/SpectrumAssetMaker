@@ -1,10 +1,12 @@
 <?php
+
 namespace ClebinGames\SpecTiledTool;
 
 /**
  * Class representing a tilemap
  */
-class Tilemap {
+class Tilemap
+{
 
     public $num = 0;
     public $name = false;
@@ -26,8 +28,8 @@ class Tilemap {
 
     public function SetName($name)
     {
-        $this->name = SpecTiledTool::GetConvertedCodeName($name.'-tilemap');
-        $this->filename = SpecTiledTool::GetConvertedFilename($name.'-tilemap');
+        $this->name = SpecTiledTool::GetConvertedCodeName($name);
+        $this->filename = SpecTiledTool::GetConvertedFilename($name);
     }
 
     public function GetData()
@@ -46,17 +48,18 @@ class Tilemap {
     public function ReadLayer($layer)
     {
         $data = [];
-        
+
+        // map dimensions
         $this->width = $layer['width'];
         $this->height = $layer['height'];
 
-        echo 'Reading tilemap.'.CR;
-        foreach($layer['data'] as $tileNum) {
+        // data
+        foreach ($layer['data'] as $tileNum) {
 
-            $tileNum = intval($tileNum)-1;
+            $tileNum = intval($tileNum) - 1;
 
-            if( Tileset::TilesetIsSet() === true && Tileset::TileExists($tileNum) !== true ) {
-                echo 'Warning: tile '.$tileNum.' not found. '.CR;
+            if (Tileset::TilesetIsSet() === true && Tileset::TileExists($tileNum) !== true) {
+                echo 'Warning: tile ' . $tileNum . ' not found. ' . CR;
             }
             $data[] = $tileNum;
         }
@@ -68,33 +71,34 @@ class Tilemap {
     public function GetOutputFilename()
     {
         $filename = SpecTiledTool::GetOutputFolder();
-        $filename .= $this->filename.'.'.SpecTiledTool::GetOutputFileExtension();
-        
+        $filename .= $this->filename . '.' . SpecTiledTool::GetOutputFileExtension();
+
         return $filename;
     }
-    
+
     /**
      * Get code for screen in currently set language
      */
     public function GetCode()
     {
-        switch( SpecTiledTool::GetFormat() ) {
+        switch (SpecTiledTool::GetFormat()) {
             case 'c':
                 return $this->GetC();
                 break;
             default:
                 return $this->GetAsm();
-            break;
+                break;
         }
     }
 
     /**
      * Get array of tile numbers for specified screen
      */
-    public function GetTileNums() {
+    public function GetTileNums()
+    {
 
         $tileNums = [];
-        foreach($this->data as $attr) {
+        foreach ($this->data as $attr) {
             $tileNums[] = $attr->tileNum;
         }
         return $tileNums;
@@ -106,28 +110,28 @@ class Tilemap {
     public function GetDataArray()
     {
         // compression
-        if(SpecTiledTool::$compression === 'rle' ) {
-            
-            if( SpecTiledTool::GetFormat() == 'asm' ) {
+        if (SpecTiledTool::$compression === 'rle') {
+
+            if (SpecTiledTool::GetFormat() == 'asm') {
                 $add_length = true;
             } else {
                 $add_length = false;
             }
-            
+
             $data = SpecTiledTool::CompressArrayRLE(
-                $this->name, 
-                $this->data, 
-                $add_length, 
+                $this->name,
+                $this->data,
+                $add_length,
             );
         } else {
             $data = $this->data;
         }
 
         // dimensions
-        if( SpecTiledTool::GetAddDimensions() === true ) {
+        if (SpecTiledTool::GetAddDimensions() === true) {
             array_unshift($data, $this->height, $this->width);
         }
-        
+
         return $data;
     }
 
@@ -139,17 +143,17 @@ class Tilemap {
         $str = '';
 
         // add to first screen
-        if( $this->num == 0 && Tilemaps::GetNumTilemaps() > 1) {
-            $str .= '#define '.Tilemaps::$defineName.' '.Tilemaps::GetNumTilemaps().CR.CR;
+        if ($this->num == 0 && Tilemaps::GetNumTilemaps() > 1) {
+            $str .= '#define ' . Tilemaps::$defineName . ' ' . Tilemaps::GetNumTilemaps() . CR . CR;
         }
-        
+
         // tile numbers
         $str .= SpecTiledTool::GetCArray(
-            $this->name, 
-            $this->GetDataArray(), 
+            $this->name,
+            $this->GetDataArray(),
             10
-        ).CR;
-        
+        ) . CR;
+
         return $str;
     }
 
@@ -158,16 +162,15 @@ class Tilemap {
      */
     public function GetAsm()
     {
-        $str = 'SECTION '.SpecTiledTool::GetCodeSection().CR;
-        
+        $str = 'SECTION ' . SpecTiledTool::GetCodeSection() . CR;
+
         $str .= SpecTiledTool::GetAsmArray(
-            $this->name, 
-            $this->GetDataArray(), 
-            10, 
+            $this->name,
+            $this->GetDataArray(),
+            10,
             8
-        ).CR;
+        ) . CR;
 
         return $str;
     }
-
 }
