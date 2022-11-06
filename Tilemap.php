@@ -50,8 +50,8 @@ class Tilemap
         $data = [];
 
         // map dimensions
-        $this->width = $layer['width'] / 8;
-        $this->height = $layer['height'] / 8;
+        $this->width = $layer['width'];
+        $this->height = $layer['height'];
 
         // data
         foreach ($layer['data'] as $tileNum) {
