@@ -57,12 +57,12 @@ class GameObject
 
     public function GetWidth()
     {
-        return ($this->width / 8);
+        return $this->width;
     }
 
     public function GetHeight()
     {
-        return ($this->height / 8);
+        return $this->height;
     }
 
     public function GetCustomProperty($name)
