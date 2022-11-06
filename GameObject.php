@@ -8,7 +8,7 @@ namespace ClebinGames\SpecTiledTool;
 class GameObject
 {
     private $type = '';
-    private $index = 0;
+    private $index = false;
     private $row = 0;
     private $col = 0;
     private $width = 0;

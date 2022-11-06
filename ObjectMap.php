@@ -81,8 +81,9 @@ class ObjectMap
         $count = 0;
         foreach ($this->objects as $obj) {
             // add to output array
-            if ($obj->GetIndex() > -1) {
-                $this->output[] = $obj->GetIndex();
+            $index = $obj->GetIndex();
+            if ($index !== false && $index > -1) {
+                $this->output[] = $index;
             }
 
             // add row and column

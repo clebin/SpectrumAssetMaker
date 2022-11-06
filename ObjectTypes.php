@@ -60,7 +60,7 @@ class ObjectTypes
     {
         if (!isset(self::$objectMapping[$name])) {
             echo 'Object type mapping ' . $name . ' not set.' . CR;
-            return -1;
+            return false;
         }
         return self::$objectMapping[$name];
     }

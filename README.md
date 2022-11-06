@@ -88,8 +88,6 @@ Each tile in your tileset should have the following custom properties set:
 
 * platform (boolean)
 
-
-
 ### Importing Tilemap layers ###
 
 If --layer-type is set to 'all' (default) or 'tilelayer', the tool will create code for each tilemap layer. The tool will ignore any layers that are not set to 'visible'.
