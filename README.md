@@ -100,15 +100,22 @@ The layer name will be used for variable and file naming, unless --name is speci
 
 If --layer-type is set to 'all' (default) or 'objectgroup', the tool will create code for each objectgroup layer.
 
-You must define each object type in Tiled's Object Types Editor and give each object a unique 'index' custom value. Export the objecttypes.xml and set the path using the --object-types parameter.
+### Saving object type as an ID ###
+
+You can map object types in Tiled to an ID that can be used in code. This will be saved as the first
+value in the code. To do this, you must define each object type in Tiled's Object Types Editor
+and give each object a unique 'index' custom value.
+
+Export the objecttypes.xml and specify the path using the --object-types parameter.
 
 ### Object properties ###
 
-To add custom properties to an objec, you must list the properties in the object layer. In Tiled, 
-view the layer's properties and add the names for the properties required. On the objects themselves, add custom properties with the same names.
+To add custom properties to an object, you must list the properties in the object layer. In Tiled, 
+view the layer's properties and add the names for the properties required.
 
-To add the width & height of objects, ad a boolean 'add-dimensions' property to the appropriate layer and
-set to 'true'.
+On the objects themselves, add custom properties with the same names and set the required values.
+
+To add the width & height of objects, add a boolean 'add-dimensions' property to the appropriate layer and set to 'true'.
 ### RLE Compression Format
 
 1 byte for tilenum, 1 byte for run-length.
