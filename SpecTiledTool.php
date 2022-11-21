@@ -6,6 +6,7 @@ define('CR', "\n");
 
 require("CliTools.php");
 require("Attribute.php");
+require("BlankData.php");
 require("Tile.php");
 require("Tilemap.php");
 require("Tileset.php");
@@ -63,6 +64,9 @@ class SpecTiledTool
     private static $ignoreHiddenLayers = false;
     private static $layerType = 'all';
     private static $layerTypesSupported = ['all', 'objectgroup', 'tilelayer'];
+
+    // blank data
+    private static $blankDataSize = 0;
 
     // object types
     private static $objectTypesFilename = false;
@@ -130,6 +134,11 @@ class SpecTiledTool
             Graphics::Process(self::$graphicsFilename);
         }
 
+        // blank data
+        if (self::$blankDataSize > 0) {
+            BlankData::Process(self::$blankDataSize);
+        }
+
         // process object maps
         if (self::$objectTypesFilename !== false) {
 
@@ -190,6 +199,8 @@ class SpecTiledTool
             self::$spriteWidth = CliTools::GetAnswer('Sprite width in columns', 2);
         }
 
+        // blank data
+
         // output foloder
         self::$outputFolder = CliTools::GetAnswer('Output folder?', './');
 
@@ -219,12 +230,9 @@ class SpecTiledTool
             self::$name = $options['name'];
         }
 
+        // use tilemap layer names
         if (isset($options['use-layer-names'])) {
             self::$useLayerNames = true;
-        }
-
-        if (isset($options['create-binaries-lst'])) {
-            self::$createBinariesLst = true;
         }
 
         // tilemaps
@@ -232,7 +240,12 @@ class SpecTiledTool
             self::$mapFilename = $options['map'];
         }
 
-        // add dimension
+        // createbinaries.lst file
+        if (isset($options['create-binaries-lst'])) {
+            self::$createBinariesLst = true;
+        }
+
+        // add dimensions
         if (isset($options['add-dimensions'])) {
             self::$addDimensions = true;
         }
@@ -259,6 +272,11 @@ class SpecTiledTool
         // graphics
         if (isset($options['graphics'])) {
             self::$graphicsFilename = $options['graphics'];
+        }
+
+        // blank data
+        if (isset($options['blank-data'])) {
+            self::$blankDataSize = $options['blank-data'];
         }
 
         // object types
@@ -366,15 +384,20 @@ class SpecTiledTool
     /**
      * Get output filename using a suffix
      */
-    public static function GetOutputFilename($suffix)
+    public static function GetOutputFilename($suffix = false)
     {
         $outputFilename = SpecTiledTool::$outputFolder;
 
         // output filename
         if (self::$name !== false) {
-            $outputFilename .= SpecTiledTool::GetConvertedFilename(self::$name) . '-' . $suffix;
-        } else {
+            $outputFilename .= SpecTiledTool::GetConvertedFilename(self::$name);
+            if ($suffix !== false) {
+                $outputFilename .= '-' . $suffix;
+            }
+        } else if ($suffix !== false) {
             $outputFilename .= $suffix;
+        } else {
+            $outputFilename .= 'data';
         }
 
         $outputFilename .= '.' . SpecTiledTool::GetOutputFileExtension();
@@ -683,6 +706,7 @@ $options = getopt('', [
     'help::',
     'name::',
     'map::',
+    'blank-data::',
     'tileset::',
     'graphics::',
     'format::',

@@ -56,6 +56,8 @@ Running the script without parameters will prompt for each setting.
 
 **--graphics**=[tileset graphics filename]
 
+**--blank-data**=[size in bytes] (create blank data of a specified size)
+
 **--add-dimensions** (add rows & columns, as the first two elements in the tilemap data arrays)
 
 **--compression**=rle [enable RLE compression on tilemaps]
