@@ -39,7 +39,7 @@ class SpecTiledTool
 
     // current output format
     public static $formatsSupported = ['asm', 'c'];
-    public static $format = self::FORMAT_C;
+    public static $format = self::FORMAT_ASM;
 
     public static $namingConventionsSupported = ['camelcase', 'underscores', 'titlecase'];
     public static $namingConvention = self::NAMING_CAMELCASE;
@@ -211,7 +211,7 @@ class SpecTiledTool
         }
 
         // format
-        self::$format = CliTools::GetAnswer('Output format', 'c', self::$formatsSupported);
+        self::$format = CliTools::GetAnswer('Output format', 'asm', self::$formatsSupported);
         if (self::$format == 'asm') {
             self::$section = CliTools::GetAnswer('Asssembly section', 'rodata_user');
         }
