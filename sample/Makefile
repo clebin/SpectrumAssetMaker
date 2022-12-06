@@ -1,42 +1,49 @@
-toolpath = ../SpecTiledTool.php
+toolpath = ../SpectrumAssetMaker.php
 
 all: asm c
 
 clean:
-	rm ./output/asm/tilemaps/*
-	rm ./output/asm/object-maps/*
+	rm ./output/asm/tilemaps/*.asm
+	rm ./output/asm/object-maps/*.asm
 	rm ./output/asm/*.asm
 	rm ./output/c/*.c
 	rm ./output/c/tilemaps/*.c
 	rm ./output/c/object-maps/*.c
 
 # assembly output
-asm: tilemap-asm tileset-asm screens-asm masked-sprite-asm unmasked-sprite-asm object-map-asm
+asm: tilemap-asm font-asm screens-asm masked-sprite-asm unmasked-sprite-asm object-map-asm blank-data-asm
+
+blank-data-asm:
+	php $(toolpath) \
+		--name=empty-data \
+		--blank-data=40 \
+		--output-folder=./output/asm \
+		--format=asm
 
 tilemap-asm:
 	php $(toolpath) \
 		--name=laundrette \
-		--map=laundrette.tmj \
+		--map=./raw-assets/laundrette.tmj \
 		--output-folder=./output/asm \
 		--format=asm \
-		--naming=underscores \
 		--add-dimensions
 
-tileset-asm:
+font-asm:
 	php $(toolpath) \
 		--name=font \
-		--graphics=./font.gif \
+		--graphics=./raw-assets/font.gif \
 		--output-folder=./output/asm \
 		--format=asm \
 		--naming=underscores \
 
 screens-asm:
 	php $(toolpath) \
+		--name=tileset \
 		--use-layer-names \
 		--replace-flash-with-solid \
-		--tileset=./tileset.tsj \
-		--map=./screen-tilemaps.tmj \
-		--graphics=./tiles-bw.gif \
+		--tileset=./raw-assets/tileset.tsj \
+		--map=./raw-assets/screen-tilemaps.tmj \
+		--graphics=./raw-assets/tiles-bw.gif \
 		--output-folder=./output/asm/tilemaps \
 		--compression=rle \
 		--format=asm \
@@ -45,8 +52,8 @@ screens-asm:
 masked-sprite-asm:
 	php $(toolpath) \
 		--name=bubble \
-		--sprite=./bubble.gif \
-		--mask=./bubble-mask.gif \
+		--sprite=./raw-assets/bubble.gif \
+		--mask=./raw-assets/bubble-mask.gif \
 		--output-folder=./output/asm \
 		--format=asm \
 		--naming=underscores
@@ -54,44 +61,46 @@ masked-sprite-asm:
 unmasked-sprite-asm:
 	php $(toolpath) \
 		--name=face \
-		--sprite=./face.gif \
+		--sprite=./raw-assets/face.gif \
 		--output-folder=./output/asm \
 		--format=asm \
 		--naming=underscores
 
 object-map-asm:
 		php $(toolpath) \
-		--map=./screen-objects.tmj \
-		--object-types=objecttypes.xml \
+		--name=screen-objects \
+		--map=./raw-assets/screen-objects.tmj \
+		--object-types=./raw-assets/objecttypes.xml \
 		--output-folder=./output/asm/object-maps \
 		--format=asm \
 		--naming=underscores
 
 # c output
-c: tilemap-c tileset-c screens-c masked-sprite-c unmasked-sprite-c object-map-c
+c: tilemap-c font-c screens-c masked-sprite-c unmasked-sprite-c object-map-c
 
 tilemap-c:
 	php $(toolpath) \
 		--name=laundrette \
-		--map=laundrette.tmj \
+		--map=./raw-assets/laundrette.tmj \
 		--output-folder=./output/c \
 		--format=c \
 		--add-dimensions
 
-tileset-c:
+font-c:
 	php $(toolpath) \
 		--name=font \
-		--graphics=./font.gif \
+		--graphics=./raw-assets/font.gif \
 		--output-folder=./output/c \
 		--format=c
 
 screens-c:
 	php $(toolpath) \
+		--name=tileset \
 		--use-layer-names \
 		--replace-flash-with-solid \
-		--tileset=./tileset.tsj \
-		--map=./screen-tilemaps.tmj \
-		--graphics=./tiles-bw.gif \
+		--tileset=./raw-assets/tileset.tsj \
+		--map=./raw-assets/screen-tilemaps.tmj \
+		--graphics=./raw-assets/tiles-bw.gif \
 		--output-folder=./output/c/tilemaps \
 		--compression=rle \
 		--format=c
@@ -99,23 +108,24 @@ screens-c:
 masked-sprite-c:
 	php $(toolpath) \
 		--name=bubble \
-		--sprite=./bubble.gif \
-		--mask=./bubble-mask.gif \
+		--sprite=./raw-assets/bubble.gif \
+		--mask=./raw-assets/bubble-mask.gif \
 		--output-folder=./output/c \
 		--format=c
 
 unmasked-sprite-c:
 	php $(toolpath) \
 		--name=face \
-		--sprite=./face.gif \
+		--sprite=./raw-assets/face.gif \
 		--output-folder=./output/c \
 		--format=c \
 		--naming=titlecase
 
 object-map-c:
 	php $(toolpath) \
-		--map=./screen-objects.tmj \
-		--object-types=objecttypes.xml \
+		--name=screen-objects \
+		--map=./raw-assets/screen-objects.tmj \
+		--object-types=./raw-assets/objecttypes.xml \
 		--output-folder=./output/c/object-maps \
 		--format=c
 

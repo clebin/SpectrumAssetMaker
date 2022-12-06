@@ -1,4 +1,4 @@
-# Spectrum Tiled Tool
+# Spectrum Asset Maker
 ## Chris Owen 2022
 
 Utility to to create z88dk/Sp1 compatible screens, tilesets and sprites in assembly or C format from GIFs and Tiled source files.
@@ -20,7 +20,7 @@ Utility to to create z88dk/Sp1 compatible screens, tilesets and sprites in assem
 
 ## Usage:
 
-> php SpecTiledTool.php
+> php SpectrumAssetMaker.php
 
 Running the script without parameters will prompt for each setting.
 
