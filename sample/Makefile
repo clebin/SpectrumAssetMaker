@@ -21,6 +21,12 @@ text-asm:
 		--output-folder=./output/asm \
 		--format=asm
 
+text-c:
+	php $(toolpath) \
+		--name=sample-text \
+		--text=./raw-assets/text.txt \
+		--output-folder=./output/c \
+		--format=c
 
 blank-data-asm:
 	php $(toolpath) \
