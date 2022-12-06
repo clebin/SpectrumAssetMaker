@@ -4,7 +4,9 @@ namespace ClebinGames\SpectrumAssetMaker;
 
 use \ClebinGames\SpectrumAssetMaker\Datatypes\BlankData;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Tilemap;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\TilemapXML;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Tileset;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\TilesetXML;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Graphics;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Sprite;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
@@ -51,6 +53,7 @@ class App
     private static $mapFilename = false;
     private static $tilesetFilename = false;
     private static $graphicsFilename = false;
+    private static $textFilename = false;
 
     // tilemap layers
     private static $ignoreHiddenLayers = false;
@@ -118,14 +121,29 @@ class App
 
         // tileset colours and properties
         if (self::$tilesetFilename !== false) {
-            $tileset = new Tileset(self::$name . '-properties');
-            $tileset->Process(self::$tilesetFilename);
+
+            // xml format
+            if (strpos(self::$tilesetFilename, '.tsx') !== false) {
+                $tileset = new TilesetXML(self::$name . '-properties');
+            }
+            // json format
+            else {
+                $tileset = new Tileset(self::$name . '-properties');
+            }
+            $tileset->ProcessFile(self::$tilesetFilename);
         }
 
         // process tileset graphics
         if (self::$graphicsFilename !== false) {
             $graphics = new Graphics(self::$name);
-            $graphics->Process(self::$graphicsFilename);
+            $graphics->ProcessFile(self::$graphicsFilename);
+        }
+
+
+        // blank data
+        if (self::$textFilename !== false) {
+            $datatype = new Text(self::$name);
+            $datatype->ProcessFile(self::$textFilename);
         }
 
         // blank data
@@ -137,7 +155,7 @@ class App
         // process object maps
         if (self::$objectTypesFilename !== false) {
 
-            $success = ObjectTypes::Process(self::$objectTypesFilename);
+            $success = ObjectTypes::ProcessFile(self::$objectTypesFilename);
 
             // quit before errors
             if ($success === false) {
@@ -148,9 +166,16 @@ class App
         // process tilemaps
         if (self::$mapFilename !== false) {
 
-            // process tilemaps
-            $tilemaps = new Tilemap(self::$name);
-            $tilemaps->Process(self::$mapFilename);
+            // xml tilemap
+            if (strpos(self::$mapFilename, '.tmx') !== false) {
+                $tilemap = new TilemapXML(self::$name);
+            }
+            // json tilemap
+            else {
+                $tilemap = new Tilemap(self::$name);
+            }
+
+            $tilemap->ProcessFile(self::$mapFilename);
 
             // save binaries.lst
             if (App::$createBinariesLst === true) {
@@ -259,6 +284,11 @@ class App
         // tileset
         if (isset($options['tileset'])) {
             self::$tilesetFilename = $options['tileset'];
+        }
+
+        // text
+        if (isset($options['text'])) {
+            self::$textFilename = $options['text'];
         }
 
         // replace flash bit with solid
@@ -695,5 +725,10 @@ class App
     public static function DidErrorOccur()
     {
         return self::$error;
+    }
+
+    public static function objectToArray($object)
+    {
+        return @json_decode(@json_encode($object), 1);
     }
 }

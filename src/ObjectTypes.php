@@ -9,7 +9,7 @@ class ObjectTypes
 {
     private static $objectMapping = [];
 
-    public static function Process($mapFilename)
+    public static function ProcessFile($mapFilename)
     {
         // object map
         self::ReadMapFile($mapFilename);

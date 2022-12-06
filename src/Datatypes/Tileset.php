@@ -150,13 +150,4 @@ class Tileset extends Datatype
 
         return $str;
     }
-
-    public function Process($filename)
-    {
-        $success = $this->ReadFile($filename);
-
-        if ($success === true) {
-            $this->WriteFile();
-        }
-    }
 }

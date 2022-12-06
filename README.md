@@ -3,11 +3,11 @@
 
 Utility to to create z88dk/Sp1 compatible screens, tilesets and sprites in assembly or C format from GIFs and Tiled source files.
 
-## Input formats required:
+## Input file formats:
 
-**Tilemap** - Tiled JSON tilemap (.tmj)
+**Tilemap** - Tiled tilemap as JSON (.tmj) or XML (.tmx)
 
-**Tileset** - Tiled JSON tileset (.tsj)
+**Tileset** - Tiled tileset as (.tsj) or XML (.tsx)
 
 **Object types** - Tiled Object Types XML file (.xml)
 
@@ -57,6 +57,8 @@ Running the script without parameters will prompt for each setting.
 **--graphics**=[tileset graphics filename]
 
 **--blank-data**=[size in bytes] (create blank data of a specified size)
+
+**--text**=[text filename] (convert text into assembly or c array)
 
 **--add-dimensions** (add rows & columns, as the first two elements in the tilemap data arrays)
 
@@ -123,8 +125,6 @@ To add the width & height of objects, add a boolean 'add-dimensions' property to
 The data will be preceded by 2 bytes specifying the array length (hi/lo). This will appear after rows and columns if --add-dimensions is specified.
 
 ### Known Issues:
-
-* Currently tilesets and tilemaps must be exported as JSON (.tsj and .tmj files)
 
 * Don't leave gaps in the middle of tilesets as this will cause errors.
 

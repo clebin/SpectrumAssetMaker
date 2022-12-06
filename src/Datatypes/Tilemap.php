@@ -33,7 +33,7 @@ class Tilemap extends Datatype
     ];
 
     /**
-     * Read the tilemap JSON file.
+     * Read a tilemap JSON file.
      */
     public function ReadFile($filename)
     {
@@ -44,11 +44,11 @@ class Tilemap extends Datatype
         $json = file_get_contents($filename);
         $data = json_decode($json, true);
 
-        // read simple
+        // read file with groups
         if (isset($data['layers'][0]['layers'])) {
             $success = $this->ReadFileWithGroups($data);
         }
-        // read with object layers
+        // read simple
         else {
             $success = $this->ReadFileSimple($data);
         }
@@ -93,7 +93,8 @@ class Tilemap extends Datatype
                 $layer['type'] == 'tilelayer' &&
                 (App::GetLayerType() == 'tilelayer' || App::GetLayerType() == 'all')
             ) {
-                $map = new TileLayer($this, $this->numTileLayers, $layer);
+
+                $map = new TileLayer($this, $this->numTileLayers, $layer['data'], $layer['width'], $layer['height']);
                 $this->numTileLayers++;
             }
             // object layer
@@ -177,9 +178,9 @@ class Tilemap extends Datatype
         return $str;
     }
 
-    public function Process($filename)
+    public function ProcessFile($filename)
     {
-        // read map and tilset
+        // xml tilemap
         $success = $this->ReadFile($filename);
 
         if ($success === true) {

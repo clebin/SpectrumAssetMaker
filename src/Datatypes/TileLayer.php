@@ -15,11 +15,13 @@ class TileLayer extends Datatype
     public $tilemap;
     protected $addArrayLength = false;
 
-    public function __construct($tilemap, $num, $layer)
+    public function __construct($tilemap, $num, $data, $width, $height)
     {
         $this->tilemap = $tilemap;
         $this->num = $num;
-        $this->data = $this->ReadLayer($layer);
+        $this->width = intval($width);
+        $this->height = intval($height);
+        $this->data = $this->ReadLayer($data);
     }
 
     /**
@@ -28,14 +30,8 @@ class TileLayer extends Datatype
     public function ReadLayer($layer)
     {
         $data = [];
-
-        // map dimensions
-        $this->width = $layer['width'];
-        $this->height = $layer['height'];
-
         // data
-        foreach ($layer['data'] as $tileNum) {
-
+        foreach ($layer as $tileNum) {
             $tileNum = intval($tileNum) - 1;
             $data[] = $tileNum;
         }

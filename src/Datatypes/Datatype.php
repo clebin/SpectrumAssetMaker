@@ -121,4 +121,17 @@ abstract class Datatype
     {
         file_put_contents($this->GetOutputFilepath(), $this->GetCode());
     }
+
+    public function ProcessFile($filename)
+    {
+        // read tileset graphics
+        if ($filename === false) {
+            return false;
+        }
+        $success = $this->ReadFile($filename);
+
+        if ($success === true) {
+            $this->WriteFile();
+        }
+    }
 }

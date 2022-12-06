@@ -181,17 +181,4 @@ class Graphics extends Datatype
 
         return $str;
     }
-
-    public function Process($filename)
-    {
-        // read tileset graphics
-        if ($filename === false) {
-            return false;
-        }
-        $success = $this->ReadFile($filename);
-
-        if ($success === true) {
-            file_put_contents(App::GetOutputFilename(), $this->GetCode());
-        }
-    }
 }

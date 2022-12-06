@@ -16,30 +16,33 @@ class GameObject
     private $customProperties = [];
     // private $zOrder = 0;
 
-    public function __construct($json)
+    public function __construct($data)
     {
         // get object type
-        if (isset($json['class'])) {
-            $this->type = strval($json['class']);
-        } else if (isset($json['type'])) {
-            $this->type = strval($json['type']);
+        if (isset($data['class'])) {
+            $this->type = strval($data['class']);
+        } else if (isset($data['type'])) {
+            $this->type = strval($data['type']);
         } else {
-            $this->type = strval($json['name']);
+            $this->type = strval($data['name']);
         }
 
-        $this->row = intval($json['y'] / 8);
-        $this->col = intval($json['x'] / 8);
-        $this->width = intval($json['width'] / 8);
-        $this->height = intval($json['height'] / 8);
+        $this->row = intval($data['y'] / 8);
+        $this->col = intval($data['x'] / 8);
+        $this->width = intval($data['width'] / 8);
+        $this->height = intval($data['height'] / 8);
 
         // name (optional)
-        if ($json['name'] != '') {
-            $this->name = $json['name'];
+        if (!isset($data['name'])) {
+            print_r($data);
+            exit();
+            return false;
         }
+        $this->name = $data['name'];
 
         // read custom properties
-        if (isset($json['properties'])) {
-            foreach ($json['properties'] as $prop) {
+        if (isset($data['properties'])) {
+            foreach ($data['properties'] as $prop) {
                 $this->customProperties[$prop['name']] = $prop['value'];
             }
         }

@@ -8,14 +8,8 @@ use \ClebinGames\SpectrumAssetMaker\GameObject;
 /**
  * Class representing an object map
  */
-class ObjectMap extends Datatype
+class ObjectMapXML extends ObjectMap
 {
-    protected $num = 0;
-    protected $objects = [];
-    protected $customProperties = [];
-    protected $addDimensions = false;
-    protected $tilemap;
-
     public function __construct($tilemap, $num, $layer)
     {
         $this->tilemap = $tilemap;
@@ -40,7 +34,7 @@ class ObjectMap extends Datatype
         }
 
         // read objects from layer
-        $this->ReadLayerObjects($layer['objects']);
+        $this->ReadLayerObjects($layer['object']);
     }
 
     /**
@@ -49,48 +43,34 @@ class ObjectMap extends Datatype
     public function ReadLayerObjects($layer)
     {
         // loop through objects on layer
-        foreach ($layer as $json) {
+        foreach ($layer as $objdata) {
 
-            echo 'Found object "' . $json['name'] . '"' . CR;
+            if (isset($objdata['@attributes'])) {
+                $data = $objdata['@attributes'];
+
+                // parse properties
+                if (isset($objdata['properties'])) {
+                    $data['properties'] = [];
+                    foreach ($objdata['properties']['property'] as $prop) {
+
+                        if (isset($prop['@attributes'])) {
+                            $data['properties'][] = $prop['@attributes'];
+                        } else {
+                            $data['properties'][] = $prop;
+                        }
+                    }
+                }
+            } else {
+                $data = $objdata;
+            }
+
+            echo 'Found object "' . $data['name'] . '"' . CR;
 
             // create new object
-            $obj = new GameObject($json);
+            $obj = new GameObject($data);
 
             // add to array
             $this->objects[] = $obj;
         }
-    }
-
-    public function GetData()
-    {
-        // loop through objects
-        $count = 0;
-        foreach ($this->objects as $obj) {
-            // add to output array
-            $index = $obj->GetIndex();
-            if ($index !== false && $index > -1) {
-                $this->data[] = $index;
-            }
-
-            // add row and column
-            $this->data[] = $obj->GetRow();
-            $this->data[] = $obj->GetCol();
-
-            // add dimensions
-            if ($this->addDimensions === true) {
-                $this->data[] = $obj->GetHeight();
-                $this->data[] = $obj->GetWidth();
-            }
-
-            // add custom properties
-            foreach ($this->customProperties as $prop) {
-                $this->data[] = $obj->GetCustomProperty($prop);
-            }
-            $count++;
-        }
-        if ($count == 0) {
-            print_r($this->data);
-        }
-        return $this->data;
     }
 }
