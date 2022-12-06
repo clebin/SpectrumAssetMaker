@@ -127,11 +127,11 @@ class App
 
             // xml format
             if (strpos(self::$tilesetFilename, '.tsx') !== false) {
-                $tileset = new TilesetXML(self::$name . '-properties');
+                $tileset = new TilesetXML(self::$name);
             }
             // json format
             else {
-                $tileset = new Tileset(self::$name . '-properties');
+                $tileset = new Tileset(self::$name);
             }
             $tileset->ProcessFile(self::$tilesetFilename);
         }

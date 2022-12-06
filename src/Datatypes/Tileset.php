@@ -17,6 +17,17 @@ class Tileset extends Datatype
     public $large_tileset = false;
 
     /**
+     * Set name and filename
+     */
+    public function SetName($name)
+    {
+        $this->name = $name;
+        $this->codeName = App::GetConvertedCodeName($name);
+        $this->filename = App::GetConvertedFilename($name . '-properties');
+        $this->defineName = App::GetConvertedConstantName($name . '-len');
+    }
+
+    /**
      * Read the tileset JSON file
      */
     public function ReadFile($filename)
