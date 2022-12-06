@@ -6,14 +6,18 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class Text extends Datatype
 {
-    private $linefeed = 13;
-    private $charsetStart = 32;
-    private $charset = [
+    protected $linefeed = 13;
+    protected $sourceDelimiter = CR;
+    protected $asmDelimiter = 0;
+    protected $charsetStart = 32;
+    protected $addArrayLength = false;
+
+    protected $charset = [
         ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/',
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
         ':', ';', '<', '=', '>', '?', '@',
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-        '[', ']', '^', '_', '£',
+        '[', ']', '\\', '^', '_', '£',
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
     ];
 
@@ -21,30 +25,36 @@ class Text extends Datatype
     {
         $strData = trim(file_get_contents($filename));
 
+        $this->sourceDelimiter = App::GetStringDelimiter();
+
         // c
         if (App::GetFormat() == App::FORMAT_C) {
-            $this->data = explode(App::GetStringDelimiter(), $strData);
+            $this->data = explode($this->sourceDelimiter, $strData);
         }
         // assembly
         else {
             for ($i = 0; $i < strlen($strData); $i++) {
 
+                // regular charset
                 if (in_array($strData[$i], $this->charset)) {
                     $this->data[] = $this->charsetStart + array_search($strData[$i], $this->charset);
                 }
-                // line-feed
+                // delimiter (default is line-feed)
+                else if ($strData[$i] == $this->sourceDelimiter) {
+                    $this->data[] = $this->asmDelimiter; // add \0
+                }
+                // line-feed (when not used as delimiter)
                 else if ($strData[$i] == CR) {
                     $this->data[] = $this->linefeed;
                 }
             }
         }
-
-        print_r($this->data);
+        $this->data[] = $this->asmDelimiter;
 
         return true;
     }
 
-    public function GetC()
+    public function GetCodeC()
     {
         $output = 'char *' . $this->codeName . '[] = {' . CR;
 

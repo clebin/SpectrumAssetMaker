@@ -6,6 +6,7 @@ Thumbs.db
 sample/output/asm/*.asm
 sample/output/asm/tilemaps/*.asm
 sample/output/asm/object-maps/*.asm
+
 sample/output/c/*.c
 sample/output/c/tilemaps/*.c
 sample/output/c/object-maps/*.c

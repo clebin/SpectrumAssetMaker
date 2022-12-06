@@ -127,7 +127,7 @@ class Tileset extends Datatype
     /**
      * Return C array of tile colours and properties
      */
-    public function GetC()
+    public function GetCodeC()
     {
         $str = '';
 
