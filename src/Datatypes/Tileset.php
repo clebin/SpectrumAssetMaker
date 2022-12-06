@@ -91,7 +91,7 @@ class Tileset extends Datatype
     /**
      * Return tileset in assembly format
      */
-    public function GetAsm()
+    public function GetCodeAsm()
     {
         $str = 'SECTION ' . App::GetCodeSection() . CR;
 

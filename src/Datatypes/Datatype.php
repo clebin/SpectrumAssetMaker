@@ -80,16 +80,16 @@ abstract class Datatype
     {
         switch (App::GetFormat()) {
             case App::FORMAT_C:
-                return $this->GetC();
+                return $this->GetCodeC();
                 break;
 
             default:
-                return $this->GetAsm();
+                return $this->GetCodeAsm();
                 break;
         }
     }
 
-    public function GetC()
+    public function GetCodeC()
     {
         return App::GetCArray(
             $this->codeName,
@@ -98,18 +98,20 @@ abstract class Datatype
         ) . CR;
     }
 
-    public function GetAsm()
+    public function GetCodeAsm()
     {
+        $data = $this->GetData();
+
         // add array length at the beginning
         if ($this->addArrayLength === true) {
-            array_unshift($this->data, sizeof($this->data));
+            array_unshift($data, sizeof($data));
         }
 
         $str = 'SECTION ' . App::GetCodeSection() . CR;
 
         $str .= App::GetAsmArray(
             $this->codeName,
-            $this->GetData(),
+            $data,
             10,
             8
         ) . CR;

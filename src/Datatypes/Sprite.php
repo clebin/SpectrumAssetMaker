@@ -129,7 +129,7 @@ class Sprite extends Datatype
     /**
      * Return sprite graphics in C format
      */
-    public function GetC()
+    public function GetCodeC()
     {
         $str = 'Error: C sprite export is not supported.';
         return $str;
@@ -138,7 +138,7 @@ class Sprite extends Datatype
     /**
      * Return sprite graphics in assembly format
      */
-    public function GetAsm()
+    public function GetCodeAsm()
     {
         $str = 'SECTION ' . App::GetCodeSection() . CR;
 

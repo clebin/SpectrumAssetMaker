@@ -118,7 +118,7 @@ class Graphics extends Datatype
     /**
      * Return tile graphics in C format
      */
-    public function GetC()
+    public function GetCodeC()
     {
         $str = '';
 
@@ -159,7 +159,7 @@ class Graphics extends Datatype
     /**
      * Return tile graphics in assembly format
      */
-    public function GetAsm()
+    public function GetCodeAsm()
     {
         $str = 'SECTION ' . App::GetCodeSection() . CR . CR;
 

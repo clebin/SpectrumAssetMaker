@@ -14,6 +14,7 @@ class ObjectMap extends Datatype
     protected $objects = [];
     protected $customProperties = [];
     protected $addDimensions = false;
+    protected $addArrayLength = true;
     protected $tilemap;
 
     public function __construct($tilemap, $num, $layer)
@@ -88,9 +89,11 @@ class ObjectMap extends Datatype
             }
             $count++;
         }
+
         if ($count == 0) {
             print_r($this->data);
         }
+
         return $this->data;
     }
 }
