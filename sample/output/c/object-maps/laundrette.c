@@ -1,5 +1,0 @@
-const uint8_t laundrette[3] = {
-0x8,0x5,0xa
-};
-
-

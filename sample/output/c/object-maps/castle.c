@@ -1,5 +1,0 @@
-const uint8_t castle[3] = {
-0x6,0x4,0x2
-};
-
-
