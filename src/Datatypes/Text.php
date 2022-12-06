@@ -6,7 +6,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class Text extends Datatype
 {
-    private $delimeter = 144; // 13=linefeed, 144=first udg
+    private $linefeed = 13;
     private $charsetStart = 32;
     private $charset = [
         ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/',
@@ -19,20 +19,43 @@ class Text extends Datatype
 
     public function ReadFile($filename)
     {
-        $strData = file_get_contents($filename);
+        $strData = trim(file_get_contents($filename));
 
-        for ($i = 0; $i < strlen($strData); $i++) {
+        // c
+        if (App::GetFormat() == App::FORMAT_C) {
+            $this->data = explode(App::GetStringDelimiter(), $strData);
+        }
+        // assembly
+        else {
+            for ($i = 0; $i < strlen($strData); $i++) {
 
-            if (in_array($strData[$i], $this->charset)) {
-                $this->data[] = $this->charsetStart + array_search($strData[$i], $this->charset);
-            }
-            // line-feed
-            else if ($strData[$i] == CR) {
-                $this->data[] = $this->delimeter;
+                if (in_array($strData[$i], $this->charset)) {
+                    $this->data[] = $this->charsetStart + array_search($strData[$i], $this->charset);
+                }
+                // line-feed
+                else if ($strData[$i] == CR) {
+                    $this->data[] = $this->linefeed;
+                }
             }
         }
+
         print_r($this->data);
 
         return true;
+    }
+
+    public function GetC()
+    {
+        $output = 'char *' . $this->codeName . '[] = {' . CR;
+
+        for ($i = 0; $i < sizeof($this->data); $i++) {
+            $output .= '    "' . $this->data[$i] . '"';
+            if ($i < sizeof($this->data) - 1) {
+                $output .= ',' . CR;
+            }
+        }
+        $output .= '};' . CR;
+
+        return $output;
     }
 }

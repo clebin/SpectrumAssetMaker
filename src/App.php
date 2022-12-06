@@ -53,7 +53,10 @@ class App
     private static $mapFilename = false;
     private static $tilesetFilename = false;
     private static $graphicsFilename = false;
+
+    // text
     private static $textFilename = false;
+    private static $stringDelimiter = CR;
 
     // tilemap layers
     private static $ignoreHiddenLayers = false;
@@ -289,6 +292,10 @@ class App
         // text
         if (isset($options['text'])) {
             self::$textFilename = $options['text'];
+
+            if (isset($options['string-delimiter'])) {
+                self::$stringDelimiter = intval($options['string-delimiter']);
+            }
         }
 
         // replace flash bit with solid
@@ -711,6 +718,13 @@ class App
         self::$errorDetails[] = ltrim($error, '.');
     }
 
+    /**
+     * Text delimeter for processing strings
+     */
+    public static function GetStringDelimiter()
+    {
+        return self::$stringDelimiter;
+    }
     /**
      * Adding dimensions?
      */

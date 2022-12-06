@@ -30,6 +30,7 @@ $options = getopt('', [
     'map::',
     'blank-data::',
     'text::',
+    'string-delimiter::',
     'tileset::',
     'graphics::',
     'format::',

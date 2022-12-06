@@ -17,6 +17,7 @@ Utility to to create z88dk/Sp1 compatible screens, tilesets and sprites in assem
 
 **Sprite Mask** - Black and white GIF
 
+**Text** - Plain text file
 
 ## Usage:
 
@@ -58,7 +59,9 @@ Running the script without parameters will prompt for each setting.
 
 **--blank-data**=[size in bytes] (create blank data of a specified size)
 
-**--text**=[text filename] (convert text into assembly or c array)
+**--text**=[text filename] (convert text into assembly or C array)
+
+**--string-delimiter**=[character] (character to use for splitting strings into C arrays)
 
 **--add-dimensions** (add rows & columns, as the first two elements in the tilemap data arrays)
 
