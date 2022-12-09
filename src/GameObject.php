@@ -7,7 +7,7 @@ namespace ClebinGames\SpectrumAssetMaker;
  */
 class GameObject
 {
-    private $type = '';
+    private $type = false;
     private $index = false;
     private $row = 0;
     private $col = 0;
@@ -23,8 +23,6 @@ class GameObject
             $this->type = strval($data['class']);
         } else if (isset($data['type'])) {
             $this->type = strval($data['type']);
-        } else {
-            $this->type = strval($data['name']);
         }
 
         $this->row = intval($data['y'] / 8);
@@ -48,7 +46,9 @@ class GameObject
         }
 
         // loop up index
-        $this->index = ObjectTypes::GetIndex($this->type);
+        if ($this->type !== false) {
+            $this->index = ObjectTypes::GetIndex($this->type);
+        }
     }
 
     public function GetIndex()

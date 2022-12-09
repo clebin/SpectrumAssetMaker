@@ -69,6 +69,7 @@ class ObjectMap extends Datatype
         foreach ($this->objects as $obj) {
             // add to output array
             $index = $obj->GetIndex();
+
             if ($index !== false && $index > -1) {
                 $this->data[] = $index;
             }
@@ -90,9 +91,8 @@ class ObjectMap extends Datatype
             $count++;
         }
 
-        if ($count == 0) {
-            print_r($this->data);
-        }
+        // if ($count == 0)
+        print_r($this->data);
 
         return $this->data;
     }

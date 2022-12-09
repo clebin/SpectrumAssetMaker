@@ -23,7 +23,7 @@ class Text extends Datatype
 
     public function ReadFile($filename)
     {
-        $strData = trim(file_get_contents($filename));
+        $strData = file_get_contents($filename);
 
         $this->sourceDelimiter = App::GetStringDelimiter();
 
@@ -49,7 +49,11 @@ class Text extends Datatype
                 }
             }
         }
-        $this->data[] = $this->asmDelimiter;
+
+        // add delimiter to the end
+        if ($this->data[sizeof($this->data)] != $this->asmDelimiter) {
+            $this->data[] = $this->asmDelimiter;
+        }
 
         return true;
     }
