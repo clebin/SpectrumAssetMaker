@@ -51,7 +51,7 @@ class Text extends Datatype
         }
 
         // add delimiter to the end
-        if ($this->data[sizeof($this->data)] != $this->asmDelimiter) {
+        if ($this->data[sizeof($this->data) - 1] != $this->asmDelimiter) {
             $this->data[] = $this->asmDelimiter;
         }
 
