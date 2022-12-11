@@ -52,10 +52,10 @@ class ObjectMap extends Datatype
         // loop through objects on layer
         foreach ($layer as $json) {
 
-            echo 'Found object "' . $json['name'] . '"' . CR;
-
             // create new object
             $obj = new GameObject($json);
+
+            echo 'Found object "' . $json['name'] . '" (' . $obj->GetIndex() . ')' . CR;
 
             // add to array
             $this->objects[] = $obj;
@@ -92,7 +92,7 @@ class ObjectMap extends Datatype
         }
 
         // if ($count == 0)
-        print_r($this->data);
+        // print_r($this->data);
 
         return $this->data;
     }

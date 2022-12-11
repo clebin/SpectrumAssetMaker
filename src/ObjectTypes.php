@@ -49,6 +49,7 @@ class ObjectTypes
                     $index = intval($val);
                 }
             }
+            echo 'Object type - ' . $name . ' (index ' . $index . ')' . CR;
 
             self::$objectMapping[$name] = $index;
         }
@@ -58,10 +59,6 @@ class ObjectTypes
 
     public static function GetIndex($name)
     {
-        if (!isset(self::$objectMapping[$name])) {
-            echo 'Object type mapping ' . $name . ' not set.' . CR;
-            return false;
-        }
         return self::$objectMapping[$name];
     }
 }

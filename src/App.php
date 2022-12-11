@@ -23,7 +23,7 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
  */
 class App
 {
-    const VERSION = '0.4';
+    const VERSION = '0.8';
 
     // constants
     const FORMAT_ASM = 'asm';
@@ -706,7 +706,7 @@ class App
      */
     public static function OutputIntro()
     {
-        echo '** Spectrum Tiled Tool v' . self::VERSION . ' - Chris Owen 2022 **' . CR . CR;
+        echo '** Spectrum Asset Maker v' . self::VERSION . ' - Chris Owen 2022 **' . CR . CR;
     }
 
     /**

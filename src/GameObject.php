@@ -32,8 +32,6 @@ class GameObject
 
         // name (optional)
         if (!isset($data['name'])) {
-            print_r($data);
-            exit();
             return false;
         }
         $this->name = $data['name'];
