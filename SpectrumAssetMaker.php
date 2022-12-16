@@ -47,7 +47,8 @@ $options = getopt('', [
     'object-types::',
     'object-properties::',
     'layer-type::',
-    'ignore-hidden-layers::'
+    'ignore-hidden-layers::',
+    'add-tileset-properties::'
 ]);
 
 // run

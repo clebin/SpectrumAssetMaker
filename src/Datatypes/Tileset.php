@@ -11,10 +11,20 @@ use \ClebinGames\SpectrumAssetMaker\Tile;
 class Tileset extends Datatype
 {
     protected $tilesetIsSet = false;
+    protected $addProperties = false;
 
     // array of tiles
     protected $tiles = [];
     public $large_tileset = false;
+
+    public function __construct($name)
+    {
+        parent::__construct($name);
+
+        if (App::$forceTilesetProperties === true) {
+            $this->addProperties = true;
+        }
+    }
 
     /**
      * Set name and filename
@@ -113,7 +123,7 @@ class Tileset extends Datatype
         ) . CR;
 
         // properties
-        if (App::ReplaceFlashWithSolid() === false) {
+        if ($this->addProperties === true) {
             $str .= App::GetAsmArray(
                 $this->codeName . 'Properties',
                 $properties,
@@ -136,9 +146,17 @@ class Tileset extends Datatype
         // tile info
         $colours = [];
         $properties = [];
+
         foreach ($this->tiles as $tile) {
             $colours[] = $tile->GetColoursByte();
-            $properties[] = $tile->GetPropertiesByte();
+
+            $props = $tile->GetPropertiesByte();
+
+            // if ($props != '00000000') {
+            //     $this->addProperties = true;
+            // }
+
+            $properties[] = $props;
         }
 
         // colours
@@ -150,7 +168,7 @@ class Tileset extends Datatype
         ) . CR;
 
         // properties array
-        if (App::ReplaceFlashWithSolid() === false) {
+        if ($this->addProperties === true) {
             $str .= App::GetCArray(
                 $this->codeName . 'Properties',
                 $properties,

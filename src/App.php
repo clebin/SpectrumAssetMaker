@@ -54,6 +54,9 @@ class App
     private static $tilesetFilename = false;
     private static $graphicsFilename = false;
 
+    // tileset properties
+    public static $forceTilesetProperties = false;
+
     // text
     private static $textFilename = false;
     private static $stringDelimiter = CR;
@@ -287,6 +290,11 @@ class App
         // tileset
         if (isset($options['tileset'])) {
             self::$tilesetFilename = $options['tileset'];
+        }
+
+        // always add tileset properties array
+        if (isset($options['add-tileset-properties'])) {
+            self::$forceTilesetProperties = true;
         }
 
         // text
