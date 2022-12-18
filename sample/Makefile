@@ -1,4 +1,4 @@
-toolpath = ../SpectrumAssetMaker.php
+TOOLPATH = ../SpectrumAssetMaker.php
 
 all: asm c
 
@@ -15,28 +15,28 @@ asm: tilemap-asm font-asm screens-asm masked-sprite-asm \
 	unmasked-sprite-asm object-map-asm blank-data-asm xml-tileset-asm
 
 text-asm:
-	php $(toolpath) \
+	php $(TOOLPATH) \
 		--name=sample-text \
 		--text=./raw-assets/text.txt \
 		--output-folder=./output/asm \
 		--format=asm
 
 text-c:
-	php $(toolpath) \
+	php $(TOOLPATH) \
 		--name=sample-text \
 		--text=./raw-assets/text.txt \
 		--output-folder=./output/c \
 		--format=c
 
 blank-data-asm:
-	php $(toolpath) \
+	php $(TOOLPATH) \
 		--name=empty-data \
 		--blank-data=40 \
 		--output-folder=./output/asm \
 		--format=asm
 
 tilemap-asm:
-	php $(toolpath) \
+	php $(TOOLPATH) \
 		--name=laundrette \
 		--map=./raw-assets/laundrette.tmj \
 		--output-folder=./output/asm \
@@ -44,23 +44,23 @@ tilemap-asm:
 		--add-dimensions
 
 xml-tilemap-asm:
-	php $(toolpath) \
-		--name=laundrette \
-		--map=./raw-assets/laundrette.tmx \
-		--output-folder=./output/asm \
+	php $(TOOLPATH) \
+		--map=./raw-assets/islands.tmx \
+		--output-folder=./output/asm/tilemaps \
+		--object-types=raw-assets/objecttypes-units.xml \
 		--format=asm \
 		--add-dimensions
 
 font-asm:
-	php $(toolpath) \
+	php $(TOOLPATH) \
 		--name=font \
 		--graphics=./raw-assets/font.gif \
 		--output-folder=./output/asm \
 		--format=asm \
-		--naming=underscores \
+		--naming=underscores
 
 screens-asm:
-	php $(toolpath) \
+	php $(TOOLPATH) \
 		--name=tileset \
 		--use-layer-names \
 		--replace-flash-with-solid \
@@ -73,7 +73,7 @@ screens-asm:
 		--naming=underscores
 
 tileset-asm:
-	php $(toolpath) \
+	php $(TOOLPATH) \
 		--name=tileset \
 		--tileset=./raw-assets/tileset.tsj \
 		--graphics=./raw-assets/tiles-bw.gif \
@@ -82,7 +82,7 @@ tileset-asm:
 		--naming=underscores
 
 xml-tileset-asm:
-	php $(toolpath) \
+	php $(TOOLPATH) \
 		--name=tileset \
 		--tileset=./raw-assets/tileset.tsx \
 		--graphics=./raw-assets/tiles-bw.gif \
@@ -91,7 +91,7 @@ xml-tileset-asm:
 		--naming=underscores
 
 xml-screens-asm:
-	php $(toolpath) \
+	php $(TOOLPATH) \
 		--name=tileset \
 		--use-layer-names \
 		--replace-flash-with-solid \
@@ -104,7 +104,7 @@ xml-screens-asm:
 		--naming=camelcase
 
 masked-sprite-asm:
-	php $(toolpath) \
+	php $(TOOLPATH) \
 		--name=bubble \
 		--sprite=./raw-assets/bubble.gif \
 		--mask=./raw-assets/bubble-mask.gif \
@@ -113,7 +113,7 @@ masked-sprite-asm:
 		--naming=underscores
 
 unmasked-sprite-asm:
-	php $(toolpath) \
+	php $(TOOLPATH) \
 		--name=face \
 		--sprite=./raw-assets/face.gif \
 		--output-folder=./output/asm \
@@ -121,7 +121,7 @@ unmasked-sprite-asm:
 		--naming=underscores
 
 object-map-asm:
-		php $(toolpath) \
+		php $(TOOLPATH) \
 		--name=screen-objects \
 		--map=./raw-assets/screen-objects.tmj \
 		--object-types=./raw-assets/objecttypes.xml \
@@ -130,7 +130,7 @@ object-map-asm:
 		--naming=underscores
 
 xml-object-map-asm:
-		php $(toolpath) \
+		php $(TOOLPATH) \
 		--name=screen-objects \
 		--map=./raw-assets/screen-objects.tmx \
 		--object-types=./raw-assets/objecttypes.xml \
@@ -142,7 +142,7 @@ xml-object-map-asm:
 c: tilemap-c font-c screens-c masked-sprite-c unmasked-sprite-c object-map-c
 
 tilemap-c:
-	php $(toolpath) \
+	php $(TOOLPATH) \
 		--name=laundrette \
 		--map=./raw-assets/laundrette.tmj \
 		--output-folder=./output/c \
@@ -150,14 +150,14 @@ tilemap-c:
 		--add-dimensions
 
 font-c:
-	php $(toolpath) \
+	php $(TOOLPATH) \
 		--name=font \
 		--graphics=./raw-assets/font.gif \
 		--output-folder=./output/c \
 		--format=c
 
 screens-c:
-	php $(toolpath) \
+	php $(TOOLPATH) \
 		--name=tileset \
 		--use-layer-names \
 		--replace-flash-with-solid \
@@ -169,7 +169,7 @@ screens-c:
 		--format=c
 
 masked-sprite-c:
-	php $(toolpath) \
+	php $(TOOLPATH) \
 		--name=bubble \
 		--sprite=./raw-assets/bubble.gif \
 		--mask=./raw-assets/bubble-mask.gif \
@@ -177,7 +177,7 @@ masked-sprite-c:
 		--format=c
 
 unmasked-sprite-c:
-	php $(toolpath) \
+	php $(TOOLPATH) \
 		--name=face \
 		--sprite=./raw-assets/face.gif \
 		--output-folder=./output/c \
@@ -185,10 +185,17 @@ unmasked-sprite-c:
 		--naming=titlecase
 
 object-map-c:
-	php $(toolpath) \
+	php $(TOOLPATH) \
 		--name=screen-objects \
 		--map=./raw-assets/screen-objects.tmj \
 		--object-types=./raw-assets/objecttypes.xml \
 		--output-folder=./output/c/object-maps \
 		--format=c
 
+xml-tilemap-c:
+	php $(TOOLPATH) \
+		--map=./raw-assets/islands.tmx \
+		--output-folder=./output/c/tilemaps \
+		--object-types=raw-assets/objecttypes-units.xml \
+		--format=c \
+		--add-dimensions

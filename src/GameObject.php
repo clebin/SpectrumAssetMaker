@@ -13,6 +13,7 @@ class GameObject
     private $col = 0;
     private $width = 0;
     private $height = 0;
+    private $name = '';
     private $customProperties = [];
     // private $zOrder = 0;
 

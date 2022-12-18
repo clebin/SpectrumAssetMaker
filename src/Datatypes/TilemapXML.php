@@ -21,15 +21,23 @@ class TilemapXML extends Tilemap
         $xml = file_get_contents($filename);
         $data = App::objectToArray(simplexml_load_string($xml));
 
-        if (isset($data['group'])) {
-            $this->ReadFileWithGroups($data);
-        } else {
-            $this->ReadFileSimple($data);
-        }
-
+        $this->ParseNode($data);
         return true;
     }
 
+    public function ParseNode($node)
+    {
+        foreach ($node as $key => $val) {
+
+            if ($key == 'layer') {
+                $this->ReadTileLayerGroup($val);
+            } else if ($key == 'objectgroup') {
+                $this->ReadObjectMapGroup($val);
+            } else if (is_array($val)) {
+                $this->ParseNode($val);
+            }
+        }
+    }
 
     /**
      * Read a simple file with only tilemap layers and no groups
@@ -54,15 +62,20 @@ class TilemapXML extends Tilemap
 
         foreach ($data['group'] as $group) {
 
-            $groupName = $group['@attributes']['name'];
+            // print_r($group);
+            if (isset($group['@attributes']['name'])) {
+                $groupName = $group['@attributes']['name'];
 
-            // tile layers
-            if (isset($group['layer'])) {
-                $this->ReadTileLayerGroup($group['layer'], $groupName);
-            }
-            // object maps
-            else if (isset($group['objectgroup'])) {
-                $this->ReadObjectMapGroup($group['objectgroup'], $groupName);
+                // tile layers
+                if (isset($group['layer'])) {
+                    $this->ReadTileLayerGroup($group['layer'], $groupName);
+                }
+                // object maps
+                else if (isset($group['objectgroup'])) {
+                    $this->ReadObjectMapGroup($group['objectgroup'], $groupName);
+                }
+            } else {
+                print_r($group);
             }
         }
 

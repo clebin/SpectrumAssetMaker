@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objecttypes>
+ <objecttype name="apc" color="#a0a0a4">
+  <property name="index" type="int" default="10"/>
+ </objecttype>
+ <objecttype name="artillery" color="#a0a0a4">
+  <property name="index" type="int" default="4"/>
+ </objecttype>
+ <objecttype name="battleship" color="#a0a0a4">
+  <property name="index" type="int" default="7"/>
+ </objecttype>
+ <objecttype name="bomber" color="#a0a0a4">
+  <property name="index" type="int" default="6"/>
+ </objecttype>
+ <objecttype name="carrier" color="#a0a0a4">
+  <property name="index" type="int" default="8"/>
+ </objecttype>
+ <objecttype name="city" color="#a0a0a4">
+  <property name="index" type="int" default="1"/>
+ </objecttype>
+ <objecttype name="cruiser" color="#a0a0a4">
+  <property name="index" type="int" default="9"/>
+ </objecttype>
+ <objecttype name="factory" color="#a0a0a4">
+  <property name="index" type="int" default="2"/>
+ </objecttype>
+ <objecttype name="fighter" color="#a0a0a4">
+  <property name="index" type="int" default="5"/>
+ </objecttype>
+ <objecttype name="heavy-tank" color="#a0a0a4">
+  <property name="index" type="int" default="3"/>
+ </objecttype>
+ <objecttype name="hq" color="#a0a0a4">
+  <property name="index" type="int" default="0"/>
+ </objecttype>
+ <objecttype name="infantry" color="#a0a0a4">
+  <property name="index" type="int" default="0"/>
+ </objecttype>
+ <objecttype name="mech" color="#a0a0a4">
+  <property name="index" type="int" default="1"/>
+ </objecttype>
+ <objecttype name="recon" color="#a0a0a4">
+  <property name="index" type="int" default="12"/>
+ </objecttype>
+ <objecttype name="t.copter" color="#a0a0a4">
+  <property name="index" type="int" default="11"/>
+ </objecttype>
+ <objecttype name="tank" color="#a0a0a4">
+  <property name="index" type="int" default="2"/>
+ </objecttype>
+</objecttypes>
