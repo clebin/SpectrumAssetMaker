@@ -91,9 +91,11 @@ abstract class Datatype
 
     public function GetCodeC()
     {
+        $data = $this->GetData();
+
         return App::GetCArray(
             $this->codeName,
-            $this->data,
+            $data,
             10
         ) . CR;
     }
