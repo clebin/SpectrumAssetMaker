@@ -10,6 +10,7 @@ class Graphics extends Datatype
     public $numColumns = 0;
     public $numRows = 0;
     public $numTiles = 0;
+    public $extension = 'gif';
 
     /**
      * Read a black & white PNG or GIF file
@@ -22,14 +23,14 @@ class Graphics extends Datatype
         }
 
         // read image file
-        $extension = substr($filename, -3);
+        $this->extension = substr($filename, -3);
 
-        if ($extension == 'png') {
+        if ($this->extension == 'png') {
             $this->image = imagecreatefrompng($filename);
-        } else if ($extension == 'gif') {
+        } else if ($this->extension == 'gif') {
             $this->image = imagecreatefromgif($filename);
         } else {
-            App::AddError('Filetype (' . $extension . ') not supported');
+            App::AddError('Filetype (' . $this->extension . ') not supported');
             return false;
         }
 
@@ -40,7 +41,7 @@ class Graphics extends Datatype
         $this->numRows = $dimensions[1] / 8;
         $this->numTiles = $this->numColumns * $this->numRows;
 
-        echo 'Tileset graphics (' . $extension . '): ' .
+        echo 'Tileset graphics (' . $this->extension . '): ' .
             $this->numColumns . ' x ' . $this->numRows .
             ' attributes (' . $dimensions[0] . ' x ' . $dimensions[1] . 'px) = ' .
             $this->numTiles . ' attributes. ' . CR;
@@ -90,18 +91,16 @@ class Graphics extends Datatype
 
                 $rgb = imagecolorat($this->image, $x, $y);
 
-                // get rgb values
-                $r = ($rgb >> 16) & 0xFF;
-                $g = ($rgb >> 8) & 0xFF;
-                $b = $rgb & 0xFF;
-
-                // pure black counts as ink
-                if ($r == 0 && $g == 0 && $b == 0) {
-                    $pixel = 1;
-                }
-                // anything else is paper
-                else {
+                // transparent counts as paper, or black or white depending on setting
+                if (
+                    ($this->extension == 'gif' && $rgb == 1) ||
+                    ($this->extension == 'png' && App::colourIsPaper($rgb) === true)
+                ) {
                     $pixel = 0;
+                }
+                // anything else is ink
+                else {
+                    $pixel = 1;
                 }
 
                 // add pixel value to this row

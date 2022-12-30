@@ -33,6 +33,7 @@ $options = getopt('', [
     'string-delimiter::',
     'tileset::',
     'graphics::',
+    'paper-colour::',
     'format::',
     'sprite::',
     'mask::',

@@ -23,13 +23,38 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
  */
 class App
 {
-    const VERSION = '0.8';
+    const VERSION = '0.9';
 
     // constants
     const FORMAT_ASM = 'asm';
     const FORMAT_C = 'c';
     const NAMING_CAMELCASE = 'camelcase';
     const NAMING_UNDERSCORES = 'underscores';
+
+    // colour constants
+    const COLOUR_BLACK = 'black';
+    const COLOUR_BLUE = 'blue';
+    const COLOUR_RED = 'red';
+    const COLOUR_MAGENTA = 'magenta';
+    const COLOUR_GREEN = 'green';
+    const COLOUR_CYAN = 'cyan';
+    const COLOUR_YELLOW = 'yellow';
+    const COLOUR_WHITE = 'white';
+
+    // speccy rgb colour equivalents
+    public static $rgbColours = [
+        App::COLOUR_BLACK => [0, 0, 0],
+        App::COLOUR_BLUE => [0, 0, 255],
+        App::COLOUR_RED => [255, 0, 0],
+        App::COLOUR_MAGENTA => [255, 0, 255],
+        App::COLOUR_GREEN => [0, 255, 0],
+        App::COLOUR_CYAN => [0, 255, 255],
+        App::COLOUR_YELLOW => [255, 255, 0],
+        App::COLOUR_WHITE => [255, 255, 255]
+    ];
+
+    // set graphics paper colourcolourIsPaper
+    public static $paperColour = self::COLOUR_WHITE;
 
     // current output format
     public static $formatsSupported = ['asm', 'c'];
@@ -101,15 +126,7 @@ class App
     public static function Run($options)
     {
         self::OutputIntro();
-
-        // no options set - ask questions
-        if (sizeof($options) == 0) {
-            self::SetupWithUserPrompts();
-        }
-        // get options from command line arguments
-        else {
-            self::SetupWithArgs($options);
-        }
+        self::SetupWithArgs($options);
 
         // is format supported?
         if (!in_array(self::$format, self::$formatsSupported)) {
@@ -203,52 +220,6 @@ class App
     }
 
     /**
-     * Set up the tool by prompting the user to answer questions
-     */
-    private static function SetupWithUserPrompts()
-    {
-        // naming
-        self::$name = CliTools::GetAnswer('Name for files and variables', '');
-
-        // mode - map or sprite
-        $mode = CliTools::GetAnswer('Which mode?', 'map', ['map', 'sprite']);
-
-        // tilemap
-        if ($mode == 'map') {
-            self::$mapFilename = CliTools::GetAnswer('Map filename', 'map.tmj');
-            self::$tilesetFilename = CliTools::GetAnswer('Tileset filename', 'tileset.tsj');
-            self::$graphicsFilename = CliTools::GetAnswer('Tile graphics filename', 'tiles.gif');
-            self::$addDimensions = CliTools::GetAnswerBoolean('Add tilemap dimensions?');
-        }
-        // sprite
-        else {
-            self::$spriteFilename = CliTools::GetAnswer('Sprite filename', '');
-            self::$maskFilename = CliTools::GetAnswer('Mask filename', str_replace('.gif', '-mask.gif', self::$spriteFilename));
-            self::$spriteWidth = CliTools::GetAnswer('Sprite width in columns', 2);
-        }
-
-        // blank data
-
-        // output foloder
-        self::$outputFolder = CliTools::GetAnswer('Output folder?', './');
-
-        // compression
-        self::$compression = CliTools::GetAnswer('Use compression', 'none', array_merge(['none'], self::$compressionSupported));
-        if (self::$compression == 'none') {
-            self::$compression = false;
-        }
-
-        // format
-        self::$format = CliTools::GetAnswer('Output format', 'asm', self::$formatsSupported);
-        if (self::$format == 'asm') {
-            self::$section = CliTools::GetAnswer('Asssembly section', 'rodata_user');
-        }
-
-        // naming
-        self::$namingConvention = CliTools::GetAnswer('Naming convention', 'camelcase', self::$namingConventionsSupported);
-    }
-
-    /**
      * Set up the tool using parameters passed on the command line
      */
     private static function SetupWithArgs($options)
@@ -314,6 +285,35 @@ class App
         // graphics
         if (isset($options['graphics'])) {
             self::$graphicsFilename = $options['graphics'];
+        }
+
+        // paper colour
+        if (isset($options['paper-colour'])) {
+            switch ($options['paper-colour']) {
+                case 'black':
+                    self::$paperColour = self::COLOUR_BLACK;
+                    break;
+                case 'blue':
+                    self::$paperColour = self::COLOUR_BLUE;
+                    break;
+                case 'red':
+                    self::$paperColour = self::COLOUR_RED;
+                    break;
+                case 'magenta':
+                    self::$paperColour = self::COLOUR_MAGENTA;
+                    break;
+                case 'green':
+                    self::$paperColour = self::COLOUR_GREEN;
+                    break;
+                case 'cyan':
+                    self::$paperColour = self::COLOUR_CYAN;
+                    break;
+                case 'yellow':
+                    self::$paperColour = self::COLOUR_YELLOW;
+                    break;
+                case 'white':
+                    self::$paperColour = self::COLOUR_WHITE;
+            }
         }
 
         // blank data
@@ -398,6 +398,26 @@ class App
     public static function GetLayerType()
     {
         return self::$layerType;
+    }
+
+    /**
+     * Check if rgb colour matches paper colour
+     */
+    public static function colourIsPaper($rgb)
+    {
+        // get rgb values
+        $r = ($rgb >> 16) & 0xFF;
+        $g = ($rgb >> 8) & 0xFF;
+        $b = $rgb & 0xFF;
+
+        // echo $r . '-' . $g . '-' . $b . CR;
+        $paper = self::$rgbColours[self::$paperColour];
+
+        if ($r != 255 || $g != 255 || $b != 255) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**

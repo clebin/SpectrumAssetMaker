@@ -36,6 +36,7 @@ Running the script without parameters will prompt for each setting.
 
 **--section**=[assembly section to place code into, default: rodata_user]
 
+**--paper-colour**=['black','white','blue','red','magenta','green','cyan','yellow' or 'white', default: white] (when importing graphics, specify which colour to use as the paper colour. Everything else will be considered as ink. *PNG-24 files only.*)
 
 ### Parameters for Tilemap/Object Map/Tileset Processing:
 

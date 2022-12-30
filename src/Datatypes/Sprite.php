@@ -15,6 +15,8 @@ class Sprite extends Datatype
     public $width = 0;
     public $height = 0;
     public $numColumns = 0;
+    public $spriteExtension = 'gif';
+    public $maskExtension = 'gif';
 
     /**
      * Read a black & white PNG or GIF file
@@ -24,7 +26,7 @@ class Sprite extends Datatype
         $this->spriteImage = self::GetImage($spriteFile);
 
         if ($maskFile !== false) {
-            $this->maskImage = self::GetImage($maskFile);
+            $this->maskImage = self::GetImage($maskFile, true);
         }
 
         if (App::DidErrorOccur() === true) {
@@ -49,7 +51,7 @@ class Sprite extends Datatype
         return true;
     }
 
-    public function GetImage($filename)
+    public function GetImage($filename, $mask = false)
     {
         if (!file_exists($filename)) {
             App::AddError('File "' . $filename . '" not found');
@@ -59,6 +61,14 @@ class Sprite extends Datatype
         // read image file
         $extension = substr($filename, -3);
 
+        // file extension
+        if ($mask === true) {
+            $this->maskExtension = $extension;
+        } else {
+            $this->spriteExtension = $extension;
+        }
+
+        // get the image
         if ($extension == 'png') {
             return imagecreatefrompng($filename);
         } else if ($extension == 'gif') {
@@ -90,29 +100,33 @@ class Sprite extends Datatype
 
         $coldata = [];
 
+        // file extension
+        if ($mask === true) {
+            $extension = $this->maskExtension;
+        } else {
+            $extension = $this->spriteExtension;
+        }
+
         // rows
-        for ($line = 0; $line < $this->height; $line++) {
+        for ($y = 0; $y < $this->height; $y++) {
 
             $linedata = [];
 
             // cols
             for ($x = $startx; $x < $startx + 8; $x++) {
 
-                $rgb = imagecolorat($image, $x, $line);
+                $rgb = imagecolorat($image, $x, $y);
 
-                // get rgb values
-                $r = ($rgb >> 16) & 0xFF;
-                $g = ($rgb >> 8) & 0xFF;
-                $b = $rgb & 0xFF;
-
-                // pure black counts as ink
-                if ($r == 0 && $g == 0 && $b == 0) {
-
-                    $pixel = ($mask === true ? 1 : 0);
+                // transparent counts as paper, or black or white depending on setting
+                if (
+                    ($extension == 'gif' && $rgb == 0) ||
+                    ($extension == 'png' && App::colourIsPaper($rgb) === true)
+                ) {
+                    $pixel = 0;
                 }
-                // anything else is paper
+                // anything else is ink
                 else {
-                    $pixel = ($mask === true ? 0 : 1);
+                    $pixel = 1;
                 }
 
                 // add pixel value to this row
