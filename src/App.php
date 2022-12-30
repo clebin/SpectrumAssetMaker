@@ -427,7 +427,7 @@ class App
             // echo $r . '-' . $g . '-' . $b . CR;
             $paper = self::$rgbColours[self::$paperColour];
 
-            if ($r != 255 || $g != 255 || $b != 255) {
+            if ($r != $paper[0] || $g != $paper[1] || $b != $paper[2]) {
                 return false;
             } else {
                 return true;
