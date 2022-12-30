@@ -91,11 +91,15 @@ class Graphics extends Datatype
 
                 $rgb = imagecolorat($this->image, $x, $y);
 
+                if ($this->extension == 'gif') {
+
+                    if ($rgb == 0) {
+                    } else {
+                    }
+                }
+
                 // transparent counts as paper, or black or white depending on setting
-                if (
-                    ($this->extension == 'gif' && $rgb == 1) ||
-                    ($this->extension == 'png' && App::colourIsPaper($rgb) === true)
-                ) {
+                if (App::colourIsPaper($rgb, $this->extension) === true) {
                     $pixel = 0;
                 }
                 // anything else is ink

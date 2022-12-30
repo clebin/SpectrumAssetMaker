@@ -403,20 +403,35 @@ class App
     /**
      * Check if rgb colour matches paper colour
      */
-    public static function colourIsPaper($rgb)
+    public static function colourIsPaper($rgb, $filetype = 'gif')
     {
         // get rgb values
         $r = ($rgb >> 16) & 0xFF;
         $g = ($rgb >> 8) & 0xFF;
         $b = $rgb & 0xFF;
 
-        // echo $r . '-' . $g . '-' . $b . CR;
-        $paper = self::$rgbColours[self::$paperColour];
+        // gif
+        if ($filetype == 'gif') {
+            // pure black counts as ink
+            if ($r == 0 && $g == 0 && $b == 0) {
+                return false;
+            }
+            // anything else is paper
+            else {
+                return true;
+            }
+        }
+        // png file
+        else {
 
-        if ($r != 255 || $g != 255 || $b != 255) {
-            return false;
-        } else {
-            return true;
+            // echo $r . '-' . $g . '-' . $b . CR;
+            $paper = self::$rgbColours[self::$paperColour];
+
+            if ($r != 255 || $g != 255 || $b != 255) {
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 
