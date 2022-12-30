@@ -119,11 +119,11 @@ class Sprite extends Datatype
 
                 // transparent counts as paper, or black or white depending on setting
                 if (App::colourIsPaper($rgb, $extension) === true) {
-                    $pixel = 0;
+                    $pixel = ($mask === true ? 1 : 0);
                 }
                 // anything else is ink
                 else {
-                    $pixel = 1;
+                    $pixel = ($mask === true ? 0 : 1);
                 }
 
                 // add pixel value to this row
