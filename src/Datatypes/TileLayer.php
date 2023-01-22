@@ -45,7 +45,6 @@ class TileLayer extends Datatype
      */
     public function GetTileNums()
     {
-
         $tileNums = [];
         foreach ($this->data as $attr) {
             $tileNums[] = $attr->tileNum;

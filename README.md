@@ -127,6 +127,7 @@ view the layer's properties and add the names for the properties required.
 On the objects themselves, add custom properties with the same names and set the required valuesgitr a.
 
 To add the width & height of objects, add a boolean 'add-dimensions' property to the appropriate layer and set to 'true'.
+
 ### RLE Compression Format
 
 1 byte for tilenum, 1 byte for run-length.

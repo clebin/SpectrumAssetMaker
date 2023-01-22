@@ -13,7 +13,7 @@ class ObjectMap extends Datatype
     protected $num = 0;
     protected $objects = [];
     protected $customProperties = [];
-    protected $addDimensions = false;
+    protected $addObjectDimensions = false;
     protected $addArrayLength = true;
     protected $tilemap;
 
@@ -22,14 +22,15 @@ class ObjectMap extends Datatype
         $this->tilemap = $tilemap;
         $this->num = 0;
 
+        echo 'Reading layer.' . CR;
         // custom properties
         if (isset($layer['properties'])) {
             foreach ($layer['properties'] as $prop) {
 
                 if ($prop['name'] == 'add-dimensions') {
                     if ($prop['value'] === true) {
-                        $this->addDimensions = true;
-                        echo 'Add object dimensions. ';
+                        $this->addObjectDimensions = true;
+                        echo 'Adding object dimensions. ' . CR;
                     }
                 } else {
                     $this->customProperties[] = $prop['name'];
@@ -79,9 +80,10 @@ class ObjectMap extends Datatype
             $this->data[] = $obj->GetCol();
 
             // add dimensions
-            if ($this->addDimensions === true) {
+            if ($this->addObjectDimensions === true) {
                 $this->data[] = $obj->GetHeight();
                 $this->data[] = $obj->GetWidth();
+                // echo CR . CR . $index . ': ' . $obj->GetRow() . ',' . $obj->GetCol() . ',' . $obj->GetHeight() . ',' . $obj->GetWidth() . CR . CR;
             }
 
             // add custom properties

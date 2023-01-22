@@ -81,12 +81,15 @@ class Tilemap extends Datatype
     {
         foreach ($group as $layer) {
 
+            $map = false;
+            $paths = false;
             echo 'Reading layer "' . $layer['name'] . '" (' . $layer['type'] . ')' . CR;
 
             // tilemap
             if (App::GetIgnoreHiddenLayers() === true && $layer['hidden'] === true) {
                 // do nothing
                 $map = false;
+                $paths = false;
             }
             // tile layer
             else if (
@@ -95,6 +98,8 @@ class Tilemap extends Datatype
             ) {
 
                 $map = new TileLayer($this, $this->numTileLayers, $layer['data'], $layer['width'], $layer['height']);
+                $paths = new MapPaths($this, $this->numTileLayers, $layer['data'], $layer['width'], $layer['height']);
+
                 $this->numTileLayers++;
             }
             // object layer
@@ -104,10 +109,6 @@ class Tilemap extends Datatype
             ) {
                 $map = new ObjectMap($this, $this->numObjectMaps, $layer);
                 $this->numObjectMaps++;
-            }
-            // another type of layer (unsupported)
-            else {
-                $map = false;
             }
 
             // layer has been processed
@@ -123,6 +124,21 @@ class Tilemap extends Datatype
                 $this->maps[] = $map;
             } else {
                 echo 'Error processing layer ' . $layer['name'] . '' . CR;
+            }
+
+            // paths layer
+            if ($paths !== false) {
+                // set name
+                if ($groupName !== false) {
+                    $paths->SetName($groupName . '-' . $layer['name'] . '-paths');
+                } else {
+                    $paths->SetName($layer['name'] . '-paths');
+                }
+
+                // add to maps array
+                $this->maps[] = $paths;
+            } else {
+                echo 'Error processing paths ' . $layer['name'] . '' . CR;
             }
         }
 
