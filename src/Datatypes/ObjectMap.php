@@ -21,6 +21,8 @@ class ObjectMap extends Datatype
 
     public function __construct($config)
     {
+        parent::__construct($config);
+
         $this->tilemap = $config['tilemap'];
         $this->num = $config['num'];
         $this->layer = $config['layer'];
@@ -28,8 +30,8 @@ class ObjectMap extends Datatype
         $this->outputFolder = $config['output-folder'];
         $this->codeFormat = $config['format'];
 
-
         echo 'Reading layer.' . CR;
+
         // custom properties
         if (isset($layer['properties'])) {
             foreach ($layer['properties'] as $prop) {

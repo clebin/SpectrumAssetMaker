@@ -20,15 +20,16 @@ class TileLayer extends Datatype
 
     public function __construct($config)
     {
+        parent::__construct($config);
+
         $this->tilemap = $config['tilemap'];
         $this->num = $config['num'];
         $this->width = intval($config['width']);
         $this->height = intval($config['height']);
-        $this->data = $this->ReadLayer($config['data']);
-        $this->codeFormat = $config['format'];
         $this->addDimensions = $config['add-dimensions'];
         $this->compression = $config['compression'];
-        $this->outputFolder = $config['output-folder'];
+        $this->data = $this->ReadLayer($config['data']);
+        $this->codeSection = $config['section'];
     }
 
     /**

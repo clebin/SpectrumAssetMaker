@@ -11,7 +11,7 @@ abstract class Datatype
     protected $codeName;
     protected $codeFormat = 'asm';
     protected $defineName;
-    protected $codeSection = 'rodata';
+    protected $codeSection = 'rodata_user';
     protected $filename = false;
     protected $addArrayLength = true;
     protected $outputFormat = App::FORMAT_ASM;

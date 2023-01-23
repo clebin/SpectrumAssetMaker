@@ -153,6 +153,7 @@ class Tilemap extends Datatype
                     'add-dimensions' => $this->addDimensions,
                     'compression' => $this->compression,
                     'format' => $this->codeFormat,
+                    'section' => $this->codeSection,
                     'output-folder' => $this->outputFolder
                 ]);
 
@@ -167,6 +168,7 @@ class Tilemap extends Datatype
                             'height' => $layer['height'],
                             'add-dimensions' => $this->addDimensions,
                             'compression' => $this->compression,
+                            'section' => $this->codeSection,
                             'format' => $this->codeFormat,
                             'output-folder' => $this->outputFolder
                         ]
@@ -186,6 +188,7 @@ class Tilemap extends Datatype
                     'layer' => $layer,
                     'object-types' => $this->objectTypes,
                     'format' => $this->codeFormat,
+                    'section' => $this->codeSection,
                     'output-folder' => $this->outputFolder
                 ]);
                 $this->numObjectMaps++;
