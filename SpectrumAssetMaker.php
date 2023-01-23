@@ -47,10 +47,10 @@ $options = getopt('', [
     'naming::',
     'add-dimensions::',
     'object-types::',
-    'object-properties::',
     'layer-type::',
     'ignore-hidden-layers::',
-    'add-tileset-properties::'
+    'add-tileset-properties::',
+    'generate-paths::'
 ]);
 
 // run

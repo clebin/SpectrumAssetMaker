@@ -23,7 +23,7 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
  */
 class App
 {
-    const VERSION = '0.9';
+    const VERSION = '0.10';
 
     // constants
     const FORMAT_ASM = 'asm';
@@ -90,13 +90,13 @@ class App
     private static $ignoreHiddenLayers = false;
     private static $layerType = 'all';
     private static $layerTypesSupported = ['all', 'objectgroup', 'tilelayer'];
+    public static $generatePaths = false;
 
     // blank data
     private static $blankDataSize = 0;
 
     // object types
     private static $objectTypesFilename = false;
-    private static $objectCustomPropertiesFilename = false;
 
     // more settngs
     private static $outputFolder = '.';
@@ -161,7 +161,6 @@ class App
             $graphics = new Graphics(self::$name);
             $graphics->ProcessFile(self::$graphicsFilename);
         }
-
 
         // blank data
         if (self::$textFilename !== false) {
@@ -237,6 +236,11 @@ class App
         // tilemaps
         if (isset($options['map'])) {
             self::$mapFilename = $options['map'];
+        }
+
+        // generate paths from tilemap
+        if (isset($options['generate-paths'])) {
+            self::$generatePaths = true;
         }
 
         // createbinaries.lst file
@@ -324,11 +328,6 @@ class App
         // object types
         if (isset($options['object-types'])) {
             self::$objectTypesFilename = $options['object-types'];
-        }
-
-        // object custom properties
-        if (isset($options['object-properties'])) {
-            self::$objectCustomPropertiesFilename = $options['object-properties'];
         }
 
         // format

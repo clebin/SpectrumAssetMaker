@@ -1,0 +1,136 @@
+{
+    "settings": {
+        "create-binaries-lst": true,
+        "naming": "camelcase",
+        "output-folder": "./assets"
+    },
+    "tiles": {
+        "solid": [],
+        "ladders": [
+            7,
+            8
+        ],
+        "space": [
+            35,
+            23,
+            24,
+            39,
+            40,
+            62,
+            63,
+            78,
+            79
+        ],
+        "slopes": [],
+        "lifts": []
+    },
+    "blank-data": [
+        {
+            "name": "level-tilemap",
+            "size": 2208,
+            "output-folder": "./assets/blank-data"
+        },
+        {
+            "name": "tileset",
+            "size": 1024,
+            "output-folder": "./assets/blank-data"
+        },
+        {
+            "name": "tileset-colours",
+            "colours": 128,
+            "output-folder": "./assets/blank-data"
+        }
+    ],
+    "tilemaps": [
+        {
+            "map": "raw-assets/tilemaps/screens.tmj",
+            "object-types": "raw-assets/objects/objecttypes.xml",
+            "output-folder": "./assets/levels",
+            "useLayerNames": true,
+            "generatePaths": true,
+            "format": "asm",
+            "compression": "rle",
+            "ignore-hidden-layers": false,
+            "section": "BANK_6"
+        },
+        {
+            "name": "menu-tiles",
+            "map": "raw-assets/tilemaps/main-menu.tmj",
+            "tileset": "raw-assets/tilesets/menu-tiles.tsj",
+            "graphics": "raw-assets/tilesets/menu-tiles-bw.png",
+            "paper-colour": "white",
+            "output-folder": "./assets/main-menu"
+        }
+    ],
+    "tilesets": [
+        {
+            "name": "game-tileset",
+            "tileset": "raw-assets/tilesets/game-tileset.tsj",
+            "graphics": "raw-assets/tilesets/game-tileset-bw.png",
+            "paper-colour": "black",
+            "output-folder": "./assets/tilesets",
+            "replace-flash-with-solid": true,
+            "section": "BANK_6"
+        }
+    ],
+    "sprites": [
+        {
+            "name": "player-sprite",
+            "graphics": "raw-assets/sprites/bagman-sprite.png",
+            "mask": "raw-assets/sprites/bagman-sprite-mask.png",
+            "paper-colour": "black",
+            "output-folder": "./assets",
+            "section": "BANK_0"
+        },
+        {
+            "name": "bandit-sprite",
+            "graphics": "raw-assets/sprites/bandit-sprite.png",
+            "mask": "raw-assets/sprites/bandit-sprite-mask.png",
+            "paper-colour": "black",
+            "output-folder": "./assets",
+            "section": "BANK_0"
+        },
+        {
+            "name": "wheelbarrow-sprite",
+            "graphics": "raw-assets/sprites/wheelbarrow-sprite.png",
+            "mask": "raw-assets/sprites/wheelbarrow-mask.png",
+            "paper-colour": "black",
+            "output-folder": "./assets",
+            "section": "BANK_0"
+        },
+        {
+            "name": "minecart-sprite",
+            "graphics": "raw-assets/sprites/minecart-sprite.png",
+            "mask": "raw-assets/sprites/minecart-mask.png",
+            "paper-colour": "black",
+            "output-folder": "./assets",
+            "section": "BANK_0"
+        },
+        {
+            "name": "moneybag-sprite",
+            "graphics": "raw-assets/sprites/moneybag-sprite.png",
+            "mask": "raw-assets/sprites/moneybag-mask.png",
+            "paper-colour": "black",
+            "output-folder": "./assets",
+            "section": "BANK_0"
+        },
+        {
+            "name": "lift-sprite",
+            "graphics": "raw-assets/sprites/lift.png",
+            "mask": "raw-assets/sprites/lift-mask.png",
+            "paper-colour": "black",
+            "output-folder": "./assets",
+            "section": "BANK_0"
+        }
+    ],
+    "graphics": [
+        {
+            "name": "font",
+            "image": "raw-assets/fonts/lander-bold.png",
+            "paper-colour": "black",
+            "output-folder": "./assets",
+            "section": "BANK_0"
+        }
+    ],
+    "text": []
+}

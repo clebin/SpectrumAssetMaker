@@ -24,8 +24,8 @@ class MapPaths extends TileLayer
 
         echo 'Calculating paths for ' . $this->GetName() . CR;
 
-        for ($row = 0; $row < 10; $row++) {
-            for ($col = 0; $col < 10; $col++) {
+        for ($row = 0; $row < $this->height; $row++) {
+            for ($col = 0; $col < $this->width; $col++) {
 
                 $moves = 0;
 
@@ -55,6 +55,11 @@ class MapPaths extends TileLayer
                 ) {
                     $moves += self::DIRECTION_LEFT;
                 }
+
+                // if ($row == 0) {
+                //     echo '(' . $this->getTile($row, $col + 2) . ',';
+                //     echo $this->getTile($row + 1, $col + 2) . ') ';
+                // }
 
                 // right
                 if (

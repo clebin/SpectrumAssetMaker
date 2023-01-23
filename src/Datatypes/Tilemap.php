@@ -98,7 +98,11 @@ class Tilemap extends Datatype
             ) {
 
                 $map = new TileLayer($this, $this->numTileLayers, $layer['data'], $layer['width'], $layer['height']);
-                $paths = new MapPaths($this, $this->numTileLayers, $layer['data'], $layer['width'], $layer['height']);
+
+                // generate open paths
+                if (App::$generatePaths === true) {
+                    $paths = new MapPaths($this, $this->numTileLayers, $layer['data'], $layer['width'], $layer['height']);
+                }
 
                 $this->numTileLayers++;
             }
@@ -127,18 +131,20 @@ class Tilemap extends Datatype
             }
 
             // paths layer
-            if ($paths !== false) {
-                // set name
-                if ($groupName !== false) {
-                    $paths->SetName($groupName . '-' . $layer['name'] . '-paths');
-                } else {
-                    $paths->SetName($layer['name'] . '-paths');
-                }
+            if (App::$generatePaths == true) {
+                if ($paths !== false) {
+                    // set name
+                    if ($groupName !== false) {
+                        $paths->SetName($groupName . '-' . $layer['name'] . '-paths');
+                    } else {
+                        $paths->SetName($layer['name'] . '-paths');
+                    }
 
-                // add to maps array
-                $this->maps[] = $paths;
-            } else {
-                echo 'Error processing paths ' . $layer['name'] . '' . CR;
+                    // add to maps array
+                    $this->maps[] = $paths;
+                } else {
+                    echo 'Error processing paths ' . $layer['name'] . '' . CR;
+                }
             }
         }
 
