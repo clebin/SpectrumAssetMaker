@@ -19,7 +19,7 @@ class Graphics extends Datatype
 
         // paper colour
         if (isset($config['paper-colour']) && in_array($config['paper-colour'], App::$coloursSupported)) {
-            self::$paperColour = $config['paper-colour'];
+            $this->paperColour = $config['paper-colour'];
         }
 
         // set input file

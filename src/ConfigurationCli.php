@@ -233,7 +233,8 @@ class ConfigurationCli
             $graphics = new Graphics(array_merge(
                 $baseConfig,
                 [
-                    'image' => self::$graphicsFilename
+                    'image' => self::$graphicsFilename,
+                    'paper-colour' => self::$paperColour
                 ]
             ));
 
