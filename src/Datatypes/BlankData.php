@@ -13,6 +13,7 @@ class BlankData extends Datatype
         parent::__construct($config);
 
         $this->size = intval($config['size']);
+        $this->addArrayLength = false;
 
         if ($this->size > 0)
             $this->isValid = true;
