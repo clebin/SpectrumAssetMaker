@@ -9,19 +9,37 @@ abstract class Datatype
     protected $data = [];
     protected $name;
     protected $codeName;
+    protected $codeFormat = 'asm';
     protected $defineName;
+    protected $codeSection = 'rodata';
     protected $filename = false;
     protected $addArrayLength = true;
     protected $outputFormat = App::FORMAT_ASM;
+    protected $outputFolder = '';
+    protected $isValid = false;
 
-    protected $outputFormatsSupported = [
-        App::FORMAT_C,
-        App::FORMAT_ASM
-    ];
-
-    public function __construct($name)
+    public function __construct($config)
     {
-        $this->SetName($name);
+        // set name, including code name, define name, etc
+        if (isset($config['name']))
+            $this->SetName($config['name']);
+
+        // code section
+        if (isset($config['section'])) {
+            $this->SetCodeSection($config['section']);
+        }
+
+        // output format
+        if (isset($config['format'])) {
+            $this->SetFormat($config['format']);
+        }
+
+        // output folder
+        if (isset($config['output-folder'])) {
+            $this->outputFolder = rtrim($config['output-folder'], '/') . '/';
+        } else {
+            $this->outputFolder = Configuration::GetoutputFolder();
+        }
     }
 
     public function GetName()
@@ -41,6 +59,7 @@ abstract class Datatype
     }
 
     /**
+     * 
      * Set array of data manually
      */
     public function SetData($data)
@@ -61,7 +80,23 @@ abstract class Datatype
      */
     public function GetOutputFilename()
     {
-        return $this->filename . '.' . App::GetOutputFileExtension();
+        return $this->filename . '.' . $this->GetOutputFileExtension();
+    }
+
+
+    /**
+     * Get output file extension for the current format/language
+     */
+    public function GetOutputFileExtension()
+    {
+        switch ($this->codeFormat) {
+            case 'c':
+                return 'c';
+                break;
+
+            default:
+                return 'asm';
+        }
     }
 
     /**
@@ -69,7 +104,25 @@ abstract class Datatype
      */
     public function GetOutputFilepath()
     {
-        return App::GetOutputFolder() . $this->GetOutputFilename();
+        return $this->outputFolder . $this->GetOutputFilename();
+    }
+
+    /**
+     * Set code section (eg. BANK_3)
+     */
+    public function SetCodeSection($section)
+    {
+        $this->codeSection = $section;
+    }
+
+    /**
+     * Set whether to output in C or Assembly
+     */
+    public function SetFormat($format)
+    {
+        if (in_array($format, App::$formatsSupported)) {
+            $this->codeFormat = $format;
+        }
     }
 
     /**
@@ -78,7 +131,7 @@ abstract class Datatype
      */
     public function GetCode()
     {
-        switch (App::GetFormat()) {
+        switch ($this->codeFormat) {
             case App::FORMAT_C:
                 return $this->GetCodeC();
                 break;
@@ -89,6 +142,9 @@ abstract class Datatype
         }
     }
 
+    /**
+     * Get code in C format
+     */
     public function GetCodeC()
     {
         $data = $this->GetData();
@@ -100,6 +156,9 @@ abstract class Datatype
         ) . CR;
     }
 
+    /**
+     * Get code in assembly format
+     */
     public function GetCodeAsm()
     {
         $data = $this->GetData();
@@ -109,7 +168,7 @@ abstract class Datatype
             array_unshift($data, sizeof($data));
         }
 
-        $str = 'SECTION ' . App::GetCodeSection() . CR;
+        $str = 'SECTION ' . $this->codeSection . CR;
 
         $str .= App::GetAsmArray(
             $this->codeName,
@@ -121,11 +180,25 @@ abstract class Datatype
         return $str;
     }
 
+    /**
+     * Write to output file
+     */
     public function WriteFile()
     {
         file_put_contents($this->GetOutputFilepath(), $this->GetCode());
     }
 
+    /**
+     * 
+     */
+    public function Process()
+    {
+        file_put_contents($this->GetOutputFilepath(), $this->GetCode());
+    }
+
+    /**
+     * Process input file
+     */
     public function ProcessFile($filename)
     {
         // read tileset graphics

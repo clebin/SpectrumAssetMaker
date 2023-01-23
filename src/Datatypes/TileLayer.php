@@ -13,15 +13,22 @@ class TileLayer extends Datatype
     public $width = false;
     public $height = false;
     public $tilemap;
+    public $compression = false;
+    public $codeFormat = App::FORMAT_ASM;
+    public $addDimensions = true;
     protected $addArrayLength = false;
 
-    public function __construct($tilemap, $num, $data, $width, $height)
+    public function __construct($config)
     {
-        $this->tilemap = $tilemap;
-        $this->num = $num;
-        $this->width = intval($width);
-        $this->height = intval($height);
-        $this->data = $this->ReadLayer($data);
+        $this->tilemap = $config['tilemap'];
+        $this->num = $config['num'];
+        $this->width = intval($config['width']);
+        $this->height = intval($config['height']);
+        $this->data = $this->ReadLayer($config['data']);
+        $this->codeFormat = $config['format'];
+        $this->addDimensions = $config['add-dimensions'];
+        $this->compression = $config['compression'];
+        $this->outputFolder = $config['output-folder'];
     }
 
     /**
@@ -58,9 +65,9 @@ class TileLayer extends Datatype
     public function GetData()
     {
         // compression
-        if (App::$compression === 'rle') {
+        if ($this->compression === 'rle') {
 
-            if (App::GetFormat() == 'asm') {
+            if ($this->codeFormat == 'asm') {
                 $add_length = true;
             } else {
                 $add_length = false;
@@ -76,7 +83,7 @@ class TileLayer extends Datatype
         }
 
         // dimensions
-        if (App::GetAddDimensions() === true) {
+        if ($this->addDimensions === true) {
             array_unshift($data, $this->height, $this->width);
         }
 

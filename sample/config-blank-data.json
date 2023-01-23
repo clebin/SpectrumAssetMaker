@@ -1,0 +1,20 @@
+{
+    "settings": {
+        "create-binaries-lst": true,
+        "naming": "camelcase",
+        "output-folder": "./assets"
+    },
+    "blank-data": [
+        {
+            "name": "test-data",
+            "size": 32,
+            "output-folder": "./output/asm/blank-data"
+        },
+        {
+            "name": "test-data",
+            "size": 32,
+            "output-folder": "./output/c/blank-data",
+            "format": "c"
+        }
+    ]
+}

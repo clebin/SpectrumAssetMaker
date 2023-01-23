@@ -8,17 +8,18 @@ namespace ClebinGames\SpectrumAssetMaker;
 class ObjectTypes
 {
     private static $objectMapping = [];
+    public static $isValid = false;
 
     public static function ProcessFile($mapFilename)
     {
         // object map
-        self::ReadMapFile($mapFilename);
+        self::ReadFile($mapFilename);
     }
 
     /**
      * Read the object-types XML file.
      */
-    public static function ReadMapFile($filename)
+    public static function ReadFile($filename)
     {
         if (!file_exists($filename)) {
             echo 'Error: Object types file ' . $filename . ' not found' . CR;
@@ -29,9 +30,7 @@ class ObjectTypes
         $xml = file_get_contents($filename);
         $data = simplexml_load_string($xml);
 
-        $success = self::ProcessData($data);
-
-        return $success;
+        self::$isValid = self::ProcessData($data);
     }
 
     public static function ProcessData($data)

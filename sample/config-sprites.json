@@ -1,0 +1,17 @@
+{
+    "settings": {
+        "create-binaries-lst": true,
+        "naming": "camelcase",
+        "output-folder": "./assets"
+    },
+    "sprites": [
+        {
+            "name": "player-sprite",
+            "image": "./raw-assets/bubble.gif",
+            "mask": "./raw-assets/bubble-mask.gif",
+            "paper-colour": "white",
+            "output-folder": "./output/asm/sprites",
+            "section": "BANK_0"
+        }
+    ]
+}

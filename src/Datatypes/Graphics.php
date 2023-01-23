@@ -10,7 +10,17 @@ class Graphics extends Datatype
     public $numColumns = 0;
     public $numRows = 0;
     public $numTiles = 0;
-    public $extension = 'gif';
+    public $extension = 'png';
+
+    public function __construct($config)
+    {
+        parent::__construct($config);
+
+        // set input file
+        if (isset($config['image'])) {
+            $this->isValid = $this->ReadFile($config['image']);
+        }
+    }
 
     /**
      * Read a black & white PNG or GIF file
@@ -18,7 +28,7 @@ class Graphics extends Datatype
     public function ReadFile($filename)
     {
         if (!file_exists($filename)) {
-            App::AddError('Graphics file not found');
+            App::AddError('Graphics file (' . $filename . ') not found');
             return false;
         }
 
@@ -164,7 +174,7 @@ class Graphics extends Datatype
      */
     public function GetCodeAsm()
     {
-        $str = 'SECTION ' . App::GetCodeSection() . CR . CR;
+        $str = 'SECTION ' . $this->codeSection . CR . CR;
 
         $str .= 'PUBLIC _' . $this->codeName . CR . CR;
 

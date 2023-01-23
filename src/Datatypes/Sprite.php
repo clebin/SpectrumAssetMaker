@@ -18,6 +18,26 @@ class Sprite extends Datatype
     public $spriteExtension = 'gif';
     public $maskExtension = 'gif';
 
+    public function __construct($config)
+    {
+        parent::__construct($config);
+
+        // set sprite image
+        if (isset($config['image'])) {
+            $spriteFile = $config['image'];
+        } else {
+            $this->isValid = false;
+            return;
+        }
+
+        // set mask image
+        if (isset($config['mask'])) {
+            $maskFile = $config['mask'];
+        }
+
+        $this->isValid = $this->ReadFiles($spriteFile, $maskFile);
+    }
+
     /**
      * Read a black & white PNG or GIF file
      */
@@ -151,7 +171,7 @@ class Sprite extends Datatype
      */
     public function GetCodeAsm()
     {
-        $str = 'SECTION ' . App::GetCodeSection() . CR;
+        $str = 'SECTION ' . $this->codeSection . CR;
 
         $str .= 'PUBLIC _' . $this->codeName . CR . CR;
 
@@ -207,13 +227,10 @@ class Sprite extends Datatype
         return $str;
     }
 
-    public function Process($spriteFilename, $maskFilename)
+    public function Process()
     {
-        $success = self::ReadFiles($spriteFilename, $maskFilename);
-
-        if ($success === true) {
+        if ($this->isValid === true) {
             $this->WriteFile();
-            // file_put_contents(App::GetOutputFilename('sprite'), self::GetCode());
         }
     }
 }

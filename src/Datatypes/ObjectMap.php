@@ -16,11 +16,18 @@ class ObjectMap extends Datatype
     protected $addObjectDimensions = false;
     protected $addArrayLength = true;
     protected $tilemap;
+    protected $objectTypes = [];
+    protected $layer = [];
 
-    public function __construct($tilemap, $num, $layer)
+    public function __construct($config)
     {
-        $this->tilemap = $tilemap;
-        $this->num = 0;
+        $this->tilemap = $config['tilemap'];
+        $this->num = $config['num'];
+        $this->layer = $config['layer'];
+        $this->objectTypes = $config['object-types'];
+        $this->outputFolder = $config['output-folder'];
+        $this->codeFormat = $config['format'];
+
 
         echo 'Reading layer.' . CR;
         // custom properties
@@ -42,7 +49,7 @@ class ObjectMap extends Datatype
         }
 
         // read objects from layer
-        $this->ReadLayerObjects($layer['objects']);
+        $this->ReadLayerObjects($this->layer['objects']);
     }
 
     /**

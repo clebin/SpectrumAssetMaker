@@ -1,0 +1,15 @@
+{
+    "settings": {
+        "create-binaries-lst": true,
+        "naming": "camelcase",
+        "output-folder": "./assets"
+    },
+    "text": [
+        {
+            "name": "sample-text",
+            "text": "./raw-assets/sample-text.txt",
+            "output-folder": "./output/asm/text",
+            "section": "BANK_6"
+        }
+    ]
+}

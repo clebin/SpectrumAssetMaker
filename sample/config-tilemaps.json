@@ -1,0 +1,31 @@
+{
+    "settings": {
+        "create-binaries-lst": true,
+        "naming": "camelcase",
+        "object-types": "raw-assets/objects/objecttypes.xml"
+    },
+    "tilemaps": [
+        {
+            "map": "raw-assets/screen-tilemaps.tmj",
+            "output-folder": "./output/asm/tilemaps",
+            "useLayerNames": true,
+            "generatePaths": true,
+            "format": "asm",
+            "compression": "rle",
+            "ignore-hidden-layers": false,
+            "add-dimensions": true,
+            "section": "BANK_6"
+        },
+        {
+            "map": "raw-assets/screen-objects.tmj",
+            "output-folder": "./output/asm/object-maps",
+            "useLayerNames": true,
+            "generatePaths": true,
+            "format": "asm",
+            "compression": "rle",
+            "ignore-hidden-layers": false,
+            "add-dimensions": true,
+            "section": "BANK_6"
+        }
+    ]
+}

@@ -11,6 +11,7 @@ class Text extends Datatype
     protected $asmDelimiter = 0;
     protected $charsetStart = 32;
     protected $addArrayLength = false;
+    protected $filename = '';
 
     protected $charset = [
         ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/',
@@ -21,14 +22,30 @@ class Text extends Datatype
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
     ];
 
+    public function __construct($config)
+    {
+        parent::__construct($config);
+
+        if (isset($config['text'])) {
+            $this->isValid = $this->ReadFile($config['text']);
+        }
+    }
+
     public function ReadFile($filename)
     {
+        if (!file_exists($filename)) {
+            App::AddError('Text file (' . $filename . ') not found');
+            return false;
+        }
+
+        // get contents
         $strData = file_get_contents($filename);
 
+        // delimiter
         $this->sourceDelimiter = App::GetStringDelimiter();
 
         // c
-        if (App::GetFormat() == App::FORMAT_C) {
+        if ($this->codeFormat == App::FORMAT_C) {
             $this->data = explode($this->sourceDelimiter, $strData);
         }
         // assembly

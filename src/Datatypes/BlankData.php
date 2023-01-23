@@ -6,9 +6,23 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class BlankData extends Datatype
 {
-    public function Process($size)
+    protected $size = 0;
+
+    public function __construct($config)
     {
-        $this->data = array_fill(0, $size, 0);
-        $this->WriteFile();
+        parent::__construct($config);
+
+        $this->size = intval($config['size']);
+
+        if ($this->size > 0)
+            $this->isValid = true;
+    }
+
+    public function Process()
+    {
+        if ($this->isValid === true) {
+            $this->data = array_fill(0, $this->size, 0);
+            $this->WriteFile();
+        }
     }
 }

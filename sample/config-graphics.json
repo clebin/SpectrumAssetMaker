@@ -1,0 +1,16 @@
+{
+    "settings": {
+        "create-binaries-lst": true,
+        "naming": "camelcase",
+        "output-folder": "./assets"
+    },
+    "graphics": [
+        {
+            "name": "font",
+            "image": "./raw-assets/font.gif",
+            "paper-colour": "white",
+            "output-folder": "./output/asm/graphics",
+            "section": "BANK_0"
+        }
+    ]
+}

@@ -14,6 +14,21 @@ clean:
 asm: tilemap-asm font-asm screens-asm masked-sprite-asm \
 	unmasked-sprite-asm object-map-asm blank-data-asm xml-tileset-asm
 
+config-blank-data:
+	php $(TOOLPATH) --config=./config-blank-data.json
+
+config-sprites:
+	php $(TOOLPATH) --config=./config-sprites.json
+
+config-graphics:
+	php $(TOOLPATH) --config=./config-graphics.json
+
+config-text:
+	php $(TOOLPATH) --config=./config-text.json
+
+config-tilemaps:
+	php $(TOOLPATH) --config=./config-tilemaps.json
+
 text-asm:
 	php $(TOOLPATH) \
 		--name=sample-text \
@@ -47,7 +62,7 @@ xml-tilemap-asm:
 	php $(TOOLPATH) \
 		--map=./raw-assets/islands.tmx \
 		--output-folder=./output/asm/tilemaps \
-		--object-types=raw-assets/objecttypes-units.xml \
+		--object-types=raw-assets/objects/objecttypes-units.xml \
 		--format=asm \
 		--add-dimensions
 
@@ -124,7 +139,7 @@ object-map-asm:
 		php $(TOOLPATH) \
 		--name=screen-objects \
 		--map=./raw-assets/screen-objects.tmj \
-		--object-types=./raw-assets/objecttypes.xml \
+		--object-types=./raw-assets/objects/objecttypes.xml \
 		--output-folder=./output/asm/object-maps \
 		--format=asm \
 		--naming=underscores
@@ -133,7 +148,7 @@ xml-object-map-asm:
 		php $(TOOLPATH) \
 		--name=screen-objects \
 		--map=./raw-assets/screen-objects.tmx \
-		--object-types=./raw-assets/objecttypes.xml \
+		--object-types=./raw-assets/objects/objecttypes.xml \
 		--output-folder=./output/asm/object-maps \
 		--format=asm \
 		--naming=underscores
@@ -188,7 +203,7 @@ object-map-c:
 	php $(TOOLPATH) \
 		--name=screen-objects \
 		--map=./raw-assets/screen-objects.tmj \
-		--object-types=./raw-assets/objecttypes.xml \
+		--object-types=./raw-assets/objects/objecttypes.xml \
 		--output-folder=./output/c/object-maps \
 		--format=c
 
@@ -196,6 +211,6 @@ xml-tilemap-c:
 	php $(TOOLPATH) \
 		--map=./raw-assets/islands.tmx \
 		--output-folder=./output/c/tilemaps \
-		--object-types=raw-assets/objecttypes-units.xml \
+		--object-types=raw-assets/objects/objecttypes-units.xml \
 		--format=c \
 		--add-dimensions
