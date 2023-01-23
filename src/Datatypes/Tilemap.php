@@ -72,6 +72,7 @@ class Tilemap extends Datatype
         if (isset($config['add-dimensions']) && in_array($config['add-dimensions'], App::$layerTypesSupported)) {
             $this->addDimensions = $config['add-dimensions'];
         }
+
         // read tilemap
         if (isset($config['map'])) {
             $this->isValid = $this->ReadFile($config['map']);

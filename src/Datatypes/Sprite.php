@@ -33,7 +33,7 @@ class Sprite extends Datatype
 
         // paper colour
         if (isset($config['paper-colour']) && in_array($config['paper-colour'], App::$coloursSupported)) {
-            self::$paperColour = $config['paper-colour'];
+            $this->paperColour = $config['paper-colour'];
         }
 
         // set mask image
@@ -49,10 +49,10 @@ class Sprite extends Datatype
      */
     public function ReadFiles($spriteFile, $maskFile = false)
     {
-        $this->spriteImage = self::GetImage($spriteFile);
+        $this->spriteImage = $this->GetImage($spriteFile);
 
         if ($maskFile !== false) {
-            $this->maskImage = self::GetImage($maskFile, true);
+            $this->maskImage = $this->GetImage($maskFile, true);
         }
 
         if (App::DidErrorOccur() === true) {
@@ -65,13 +65,13 @@ class Sprite extends Datatype
         $this->height = imagesy($this->spriteImage);
         $this->numColumns = $this->width / 8;
 
-        echo 'Reading sprite: ' . $this->numColumns . ' columns (' . $this->width . ' x ' . $this->height . 'px)';
+        echo 'Reading sprite: ' . $this->numColumns . ' columns (' . $this->width . ' x ' . $this->height . 'px)' . CR;
 
         // get raw pixel data
-        $this->spriteData = self::GetImageData($this->spriteImage);
+        $this->spriteData = $this->GetImageData($this->spriteImage);
 
         if ($maskFile !== false) {
-            $this->maskData = self::GetImageData($this->maskImage, true);
+            $this->maskData = $this->GetImageData($this->maskImage, true);
         }
 
         return true;
@@ -111,7 +111,7 @@ class Sprite extends Datatype
 
         // loop through columns
         for ($col = 0; $col < $this->numColumns; $col++) {
-            $data[] = self::GetPixelData($image, $col, $mask);
+            $data[] = $this->GetPixelData($image, $col, $mask);
         }
         return $data;
     }

@@ -98,6 +98,8 @@ class Configuration
     private static function ReadTilesets($config)
     {
         foreach ($config as $item) {
+            $tilesetObj = new Tileset($item);
+            $tilesetObj->Process();
         }
     }
 
