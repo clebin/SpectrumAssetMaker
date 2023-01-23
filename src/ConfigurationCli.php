@@ -184,6 +184,7 @@ class ConfigurationCli
             }
         }
 
+        print_r($options);
         // section
         if (isset($options['section'])) {
             self::$section = $options['section'];
@@ -212,8 +213,9 @@ class ConfigurationCli
             'output-folder' => self::$outputFolder,
             'format' => self::$format,
             'section' => self::$section,
-
         ];
+
+        echo self::$section . '!!!';
 
         // tileset colours and properties
         if (self::$tilesetFilename !== false) {
