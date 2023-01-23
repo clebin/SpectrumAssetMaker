@@ -27,7 +27,8 @@ class MapPaths extends TileLayer
         $moves = 0x0;
         $data = [];
 
-        echo 'Calculating paths for ' . $this->GetName() . CR;
+        echo 'Calculating paths for ' . $this->GetName() .
+            '(W:' . $this->width . ',H:' . $this->height . ')' . CR;
 
         for ($row = 0; $row < $this->height; $row++) {
             for ($col = 0; $col < $this->width; $col++) {
@@ -45,7 +46,7 @@ class MapPaths extends TileLayer
 
                 // down
                 if (
-                    $row < $this->height - 1 &&
+                    $row < $this->height - 2 &&
                     $this->isLadder($row + 2, $col) === true &&
                     $this->isLadder($row + 2, $col + 1) === true
                 ) {
@@ -68,7 +69,7 @@ class MapPaths extends TileLayer
 
                 // right
                 if (
-                    $col < $this->width - 1 &&
+                    $col < $this->width - 2 &&
                     $this->isSpace($row, $col + 2) === true &&
                     $this->isSpace($row + 1, $col + 2) === true
                 ) {
@@ -91,6 +92,7 @@ class MapPaths extends TileLayer
         }
         return false;
     }
+
     public function isSpace($row, $col)
     {
         $tileNum = $this->getTile($row, $col);
@@ -106,6 +108,11 @@ class MapPaths extends TileLayer
 
     public function GetTile($row, $col)
     {
-        return $this->data[($row * $this->width) + $col];
+        $index = ($row * $this->width) + $col;
+        if (isset($this->data[$index]))
+            return $this->data[$index];
+
+        echo 'Index ' . $index . ' not found' . CR;
+        return false;
     }
 }

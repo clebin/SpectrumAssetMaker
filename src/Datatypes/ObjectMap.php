@@ -77,6 +77,7 @@ class ObjectMap extends Datatype
         // loop through objects
         $count = 0;
         foreach ($this->objects as $obj) {
+
             // add to output array
             $index = $obj->GetIndex();
 

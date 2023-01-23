@@ -147,7 +147,7 @@ class ConfigurationCli
 
         // object types
         if (isset($options['object-types'])) {
-            self::$objectTypesFilename = $options['object-types'];
+            ObjectTypes::ProcessFile($options['object-types']);
         }
 
         // format
@@ -220,7 +220,8 @@ class ConfigurationCli
                 $baseConfig,
                 [
                     'tileset' => self::$tilesetFilename,
-                    'add-tileset-properties' => self::$addTilesetProperties
+                    'add-tileset-properties' => self::$addTilesetProperties,
+                    'replace-flash-with-solid' => self::$replaceFlashWithSolid
                 ]
             ));
 

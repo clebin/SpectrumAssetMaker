@@ -63,7 +63,6 @@ class Tileset extends Datatype
             return false;
         }
 
-        echo 'test';
         $json = file_get_contents($filename);
         $data = json_decode($json, true);
 
@@ -73,7 +72,7 @@ class Tileset extends Datatype
             $id = intval($tile['id']);
 
             // save to tiles array using id as key
-            $this->tiles[] = new Tile($id, $tile['properties']);
+            $this->tiles[] = new Tile($id, $tile['properties'], $this->replaceFlashWithSolid);
 
             $count++;
         }
