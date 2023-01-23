@@ -59,7 +59,8 @@ class ObjectTypes
     public static function GetIndex($name)
     {
         // print_r(self::$objectMapping);
-        if ($name != '')
+        if ($name != '' && isset(self::$objectMapping[$name])) {
             return self::$objectMapping[$name];
+        }
     }
 }

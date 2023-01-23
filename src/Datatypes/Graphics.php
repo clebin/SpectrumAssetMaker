@@ -11,10 +11,16 @@ class Graphics extends Datatype
     public $numRows = 0;
     public $numTiles = 0;
     public $extension = 'png';
+    public $paperColour = App::COLOUR_BLACK;
 
     public function __construct($config)
     {
         parent::__construct($config);
+
+        // paper colour
+        if (isset($config['paper-colour']) && in_array($config['paper-colour'], App::$coloursSupported)) {
+            self::$paperColour = $config['paper-colour'];
+        }
 
         // set input file
         if (isset($config['image'])) {
@@ -109,7 +115,7 @@ class Graphics extends Datatype
                 }
 
                 // transparent counts as paper, or black or white depending on setting
-                if (App::colourIsPaper($rgb, $this->extension) === true) {
+                if (App::colourIsPaper($rgb, $this->paperColour, $this->extension) === true) {
                     $pixel = 0;
                 }
                 // anything else is ink

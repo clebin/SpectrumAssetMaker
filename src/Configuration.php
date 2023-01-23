@@ -4,9 +4,7 @@ namespace ClebinGames\SpectrumAssetMaker;
 
 use \ClebinGames\SpectrumAssetMaker\Datatypes\BlankData;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Tilemap;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\TilemapXML;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Tileset;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\TilesetXML;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Graphics;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Sprite;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
@@ -142,6 +140,11 @@ class Configuration
         // object types
         if (isset($config['object-types'])) {
             ObjectTypes::ProcessFile($config['object-types']);
+        }
+
+        // naming convention
+        if (isset($config['naming'])) {
+            App::$namingConvention = $config['naming'];
         }
 
         // save all settings here

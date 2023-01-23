@@ -17,6 +17,7 @@ class Sprite extends Datatype
     public $numColumns = 0;
     public $spriteExtension = 'gif';
     public $maskExtension = 'gif';
+    public $paperColour = App::COLOUR_BLACK;
 
     public function __construct($config)
     {
@@ -28,6 +29,11 @@ class Sprite extends Datatype
         } else {
             $this->isValid = false;
             return;
+        }
+
+        // paper colour
+        if (isset($config['paper-colour']) && in_array($config['paper-colour'], App::$coloursSupported)) {
+            self::$paperColour = $config['paper-colour'];
         }
 
         // set mask image
@@ -138,7 +144,7 @@ class Sprite extends Datatype
                 $rgb = imagecolorat($image, $x, $y);
 
                 // transparent counts as paper, or black or white depending on setting
-                if (App::colourIsPaper($rgb, $extension) === true) {
+                if (App::colourIsPaper($rgb, $this->paperColour, $extension) === true) {
                     $pixel = ($mask === true ? 1 : 0);
                 }
                 // anything else is ink

@@ -4,9 +4,7 @@ namespace ClebinGames\SpectrumAssetMaker;
 
 use \ClebinGames\SpectrumAssetMaker\Datatypes\BlankData;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Tilemap;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\TilemapXML;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Tileset;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\TilesetXML;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Graphics;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Sprite;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
@@ -41,6 +39,17 @@ class App
     const COLOUR_YELLOW = 'yellow';
     const COLOUR_WHITE = 'white';
 
+    public static $coloursSupported = [
+        self::COLOUR_BLACK,
+        self::COLOUR_BLUE,
+        self::COLOUR_RED,
+        self::COLOUR_MAGENTA,
+        self::COLOUR_GREEN,
+        self::COLOUR_CYAN,
+        self::COLOUR_YELLOW,
+        self::COLOUR_WHITE
+    ];
+
     // speccy rgb colour equivalents
     public static $rgbColours = [
         App::COLOUR_BLACK => [0, 0, 0],
@@ -52,9 +61,6 @@ class App
         App::COLOUR_YELLOW => [255, 255, 0],
         App::COLOUR_WHITE => [255, 255, 255]
     ];
-
-    // set graphics paper colourcolourIsPaper
-    public static $paperColour = self::COLOUR_WHITE;
 
     // current output format
     public static $formatsSupported = ['asm', 'c'];
@@ -101,7 +107,7 @@ class App
     /**
      * Check if rgb colour matches paper colour
      */
-    public static function colourIsPaper($rgb, $filetype = 'gif')
+    public static function colourIsPaper($rgb, $paperColour, $filetype = 'gif')
     {
         // get rgb values
         $r = ($rgb >> 16) & 0xFF;
@@ -123,7 +129,7 @@ class App
         else {
 
             // echo $r . '-' . $g . '-' . $b . CR;
-            $paper = self::$rgbColours[self::$paperColour];
+            $paper = self::$rgbColours[$paperColour];
 
             if ($r != $paper[0] || $g != $paper[1] || $b != $paper[2]) {
                 return false;

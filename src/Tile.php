@@ -9,6 +9,7 @@ class Tile
 {
     // graphics data
     public $graphics = [];
+    public $replaceFlashWithSolid = false;
 
     public $id = 0;
 
@@ -24,47 +25,52 @@ class Tile
     public $platform = false;
     public $custom = false;
 
-    public function __construct($id, $properties)
+    public function __construct($id, $properties, $replaceFlashWithSolid = false)
     {
         // id
         $this->id = $id;
 
+        // replace flash bit with solid property
+        $this->replaceFlashWithSolid = $replaceFlashWithSolid;
+
         // loop through properties
-        foreach ($properties as $prop) {
+        if (is_array($properties)) {
+            foreach ($properties as $prop) {
 
-            switch ($prop['name']) {
+                switch ($prop['name']) {
 
-                    // attribute properties
-                case 'paper':
-                    $this->paper = intval($prop['value']);
-                    break;
-                case 'ink':
-                    $this->ink = intval($prop['value']);
-                    break;
-                case 'bright':
-                    $this->bright = intval($prop['value']);
-                    break;
-                case 'flash':
-                    $this->flash = intval($prop['value']);
-                    break;
+                        // attribute properties
+                    case 'paper':
+                        $this->paper = intval($prop['value']);
+                        break;
+                    case 'ink':
+                        $this->ink = intval($prop['value']);
+                        break;
+                    case 'bright':
+                        $this->bright = intval($prop['value']);
+                        break;
+                    case 'flash':
+                        $this->flash = intval($prop['value']);
+                        break;
 
-                    // game properties
-                case 'solid':
-                    $this->solid = intval($prop['value']);
-                    App::$saveGameProperties = true;
-                    break;
-                case 'lethal':
-                    $this->lethal = intval($prop['value']);
-                    App::$saveGameProperties = true;
-                    break;
-                case 'platform':
-                    $this->platform = intval($prop['value']);
-                    App::$saveGameProperties = true;
-                    break;
-                case 'custom':
-                    $this->custom = intval($prop['value']);
-                    App::$saveGameProperties = true;
-                    break;
+                        // game properties
+                    case 'solid':
+                        $this->solid = intval($prop['value']);
+                        App::$saveGameProperties = true;
+                        break;
+                    case 'lethal':
+                        $this->lethal = intval($prop['value']);
+                        App::$saveGameProperties = true;
+                        break;
+                    case 'platform':
+                        $this->platform = intval($prop['value']);
+                        App::$saveGameProperties = true;
+                        break;
+                    case 'custom':
+                        $this->custom = intval($prop['value']);
+                        App::$saveGameProperties = true;
+                        break;
+                }
             }
         }
     }
@@ -140,7 +146,7 @@ class Tile
     {
         $str = '';
 
-        if (App::ReplaceFlashWithSolid() === true) {
+        if ($this->replaceFlashWithSolid === true) {
             $str .= ($this->solid == true ? '1' : '0');
         } else {
             $str .= ($this->flash == true ? '1' : '0');

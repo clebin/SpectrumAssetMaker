@@ -2,9 +2,19 @@
 
 namespace ClebinGames\SpectrumAssetMaker;
 
+use \ClebinGames\SpectrumAssetMaker\Datatypes\BlankData;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\Tilemap;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\Tileset;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\Graphics;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\Sprite;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
+
 class ConfigurationCli
 {
-    public static $format = self::FORMAT_ASM;
+    public static $format = App::FORMAT_ASM;
+
+    // set graphics paper colourcolourIsPaper
+    public static $paperColour = App::COLOUR_WHITE;
 
     // naming
     public static $name = false;
@@ -22,7 +32,7 @@ class ConfigurationCli
     private static $graphicsFilename = false;
 
     // tileset properties
-    public static $forceTilesetProperties = false;
+    public static $addTilesetProperties = false;
 
     // text
     private static $textFilename = false;
@@ -55,7 +65,7 @@ class ConfigurationCli
     /**
      * Set up the tool using parameters passed on the command line
      */
-    private static function Setup($options)
+    public static function Setup($options)
     {
         // prefix
         if (isset($options['name'])) {
@@ -103,7 +113,7 @@ class ConfigurationCli
 
         // always add tileset properties array
         if (isset($options['add-tileset-properties'])) {
-            self::$forceTilesetProperties = true;
+            self::$addTilesetProperties = true;
         }
 
         // text
@@ -126,32 +136,8 @@ class ConfigurationCli
         }
 
         // paper colour
-        if (isset($options['paper-colour'])) {
-            switch ($options['paper-colour']) {
-                case 'black':
-                    self::$paperColour = self::COLOUR_BLACK;
-                    break;
-                case 'blue':
-                    self::$paperColour = self::COLOUR_BLUE;
-                    break;
-                case 'red':
-                    self::$paperColour = self::COLOUR_RED;
-                    break;
-                case 'magenta':
-                    self::$paperColour = self::COLOUR_MAGENTA;
-                    break;
-                case 'green':
-                    self::$paperColour = self::COLOUR_GREEN;
-                    break;
-                case 'cyan':
-                    self::$paperColour = self::COLOUR_CYAN;
-                    break;
-                case 'yellow':
-                    self::$paperColour = self::COLOUR_YELLOW;
-                    break;
-                case 'white':
-                    self::$paperColour = self::COLOUR_WHITE;
-            }
+        if (isset($options['paper-colour']) && in_array($options['paper-colour'], App::$coloursSupported)) {
+            self::$paperColour = $options['paper-colour'];
         }
 
         // blank data
@@ -169,14 +155,20 @@ class ConfigurationCli
             self::$format = $options['format'];
         }
 
+        // is format supported?
+        if (!in_array(self::$format, App::$formatsSupported)) {
+            echo 'Error: Format not supported.' . CR;
+            return false;
+        }
+
         // output folder
         if (isset($options['output-folder'])) {
-            self::$outputFolder = $options['output-folder'];
+            self::$outputFolder = rtrim($options['output-folder'], '/') . '/';
         }
 
         // naming
         if (isset($options['naming'])) {
-            self::$namingConvention = $options['naming'];
+            App::$namingConvention = $options['naming'];
         }
 
         // sprite file
@@ -201,74 +193,89 @@ class ConfigurationCli
         if (isset($options['compression'])) {
             self::$compression = $options['compression'];
         }
-    }
-
-    /**
-     * Run the tool
-     */
-    public static function Run($options)
-    {
-        self::SetupWithArgs($options);
-
-        // is format supported?
-        if (!in_array(self::$format, self::$formatsSupported)) {
-            echo 'Error: Format not supported.' . CR;
-            return false;
-        }
 
         if (self::$compression !== false && !in_array(self::$compression, self::$compressionSupported)) {
             echo 'Error: Compression type not supported.' . CR;
             return false;
         }
 
-        // set output folder
-        self::$outputFolder = rtrim(self::$outputFolder, '/') . '/';
+        self::Process();
+    }
+
+    /**
+     * Run the tool
+     */
+    public static function Process()
+    {
+        $baseConfig = [
+            'name' => self::$name,
+            'output-folder' => self::$outputFolder,
+            'format' => self::$format,
+            'section' => self::$section,
+
+        ];
 
         // tileset colours and properties
         if (self::$tilesetFilename !== false) {
+            $tileset = new Tileset(array_merge(
+                $baseConfig,
+                [
+                    'tileset' => self::$tilesetFilename,
+                    'add-tileset-properties' => self::$addTilesetProperties
+                ]
+            ));
 
-            // xml format
-            if (strpos(self::$tilesetFilename, '.tsx') !== false) {
-                $tileset = new TilesetXML(self::$name);
-            }
-            // json format
-            else {
-                $tileset = new Tileset(self::$name);
-            }
-            $tileset->ProcessFile(self::$tilesetFilename);
+            $tileset->Process();
         }
 
         // process tileset graphics
         if (self::$graphicsFilename !== false) {
-            $graphics = new Graphics(self::$name);
-            $graphics->ProcessFile(self::$graphicsFilename);
+            $graphics = new Graphics(array_merge(
+                $baseConfig,
+                [
+                    'image' => self::$graphicsFilename
+                ]
+            ));
+
+            $graphics->Process();
         }
 
-        // blank data
+        // text
         if (self::$textFilename !== false) {
-            $datatype = new Text(self::$name);
-            $datatype->ProcessFile(self::$textFilename);
+            $datatype = new Text(array_merge(
+                $baseConfig,
+                [
+                    'text' => self::$textFilename
+                ]
+            ));
+            $datatype->Process();
         }
 
         // blank data
         if (self::$blankDataSize > 0) {
-            $datatype = new BlankData(self::$name);
-            $datatype->Process(self::$blankDataSize);
+            $datatype = new BlankData(array_merge(
+                $baseConfig,
+                [
+                    'size' => self::$blankDataSize
+                ]
+            ));
+            $datatype->Process();
         }
 
         // process tilemaps
         if (self::$mapFilename !== false) {
 
-            // xml tilemap
-            if (strpos(self::$mapFilename, '.tmx') !== false) {
-                $tilemap = new TilemapXML(self::$name);
-            }
-            // json tilemap
-            else {
-                $tilemap = new Tilemap(self::$name);
-            }
+            $tilemap = new Tilemap(array_merge($baseConfig, [
+                'map' => self::$mapFilename,
+                'add-dimensions' => self::$addDimensions,
+                'ignore-hidden-layers' => self::$ignoreHiddenLayers,
+                'object-types' => self::$objectTypesFilename,
+                'compression' => self::$compression,
+                'generate-paths' => self::$generatePaths,
+                'layer-types' => self::$layerType
+            ]));
 
-            $tilemap->ProcessFile(self::$mapFilename);
+            $tilemap->Process();
 
             // save binaries.lst
             if (self::$createBinariesLst === true) {
@@ -278,14 +285,14 @@ class ConfigurationCli
 
         // process sprite
         if (self::$spriteFilename !== false) {
-            $sprite = new Sprite(self::$name);
-            $sprite->Process(self::$spriteFilename, self::$maskFilename);
-        }
-
-        // display errors
-        if (self::$error === true) {
-            echo 'Errors (' . sizeof(self::$errorDetails) . '): ' . implode('. ', self::$errorDetails);
-            return false;
+            $sprite = new Sprite(array_merge(
+                $baseConfig,
+                [
+                    'image' => self::$spriteFilename,
+                    'mask' => self::$maskFilename
+                ]
+            ));
+            $sprite->Process();
         }
     }
 

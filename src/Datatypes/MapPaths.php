@@ -15,6 +15,11 @@ class MapPaths extends TileLayer
     public $ladderTiles = [7, 8];
     public $slopeTiles = [];
 
+    public function __construct($config)
+    {
+        parent::__construct($config);
+    }
+
     public function GetData()
     {
         $row = 0;

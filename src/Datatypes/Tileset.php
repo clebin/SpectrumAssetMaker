@@ -12,18 +12,35 @@ class Tileset extends Datatype
 {
     protected $tilesetIsSet = false;
     protected $addProperties = false;
+    protected $replaceFlashWithSolid = false;
 
     // array of tiles
     protected $tiles = [];
     public $large_tileset = false;
 
-    public function __construct($name)
+    public function __construct($config)
     {
-        parent::__construct($name);
+        parent::__construct($config);
 
-        if (App::$forceTilesetProperties === true) {
+        // set sprite image
+        if (isset($config['tileset'])) {
+            $filename = $config['tileset'];
+        } else {
+            $this->isValid = false;
+            return;
+        }
+
+        // solid
+        if (isset($config['replace-flash-with-solid']) && $config['replace-flash-with-solid'] == 'true') {
+            $this->replaceFlashWithSolid = true;
+        }
+
+        // properties
+        if (isset($config['add-tileset-properties']) && $config['add-tileset-properties'] == 'true') {
             $this->addProperties = true;
         }
+
+        $this->isValid = $this->ReadFile($filename);
     }
 
     /**
@@ -46,6 +63,7 @@ class Tileset extends Datatype
             return false;
         }
 
+        echo 'test';
         $json = file_get_contents($filename);
         $data = json_decode($json, true);
 
@@ -103,7 +121,7 @@ class Tileset extends Datatype
      */
     public function GetCodeAsm()
     {
-        $str = 'SECTION ' . App::GetCodeSection() . CR;
+        $str = 'SECTION ' . $this->codeSection . CR;
 
         $str .= CR;
         // tile info

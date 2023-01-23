@@ -37,8 +37,6 @@ abstract class Datatype
         // output folder
         if (isset($config['output-folder'])) {
             $this->outputFolder = rtrim($config['output-folder'], '/') . '/';
-        } else {
-            $this->outputFolder = Configuration::GetoutputFolder();
         }
     }
 
@@ -193,7 +191,7 @@ abstract class Datatype
      */
     public function Process()
     {
-        file_put_contents($this->GetOutputFilepath(), $this->GetCode());
+        $this->WriteFile();
     }
 
     /**

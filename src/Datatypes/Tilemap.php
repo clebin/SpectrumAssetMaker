@@ -158,7 +158,19 @@ class Tilemap extends Datatype
 
                 // generate open paths
                 if ($this->generatePaths === true) {
-                    $paths = new MapPaths($this, $this->numTileLayers, $layer['data'], $layer['width'], $layer['height']);
+                    $paths = new MapPaths(
+                        [
+                            'tilemap' => $this,
+                            'num' => $this->numTileLayers,
+                            'data' => $layer['data'],
+                            'width' => $layer['width'],
+                            'height' => $layer['height'],
+                            'add-dimensions' => $this->addDimensions,
+                            'compression' => $this->compression,
+                            'format' => $this->codeFormat,
+                            'output-folder' => $this->outputFolder
+                        ]
+                    );
                 }
 
                 $this->numTileLayers++;
