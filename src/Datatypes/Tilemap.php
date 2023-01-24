@@ -77,6 +77,10 @@ class Tilemap extends Datatype
         if (isset($config['map'])) {
             $this->isValid = $this->ReadFile($config['map']);
         }
+
+        // graphics
+        if (isset($config['graphics'])) {
+        }
     }
 
     /**
