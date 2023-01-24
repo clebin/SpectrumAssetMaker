@@ -3,19 +3,36 @@
 
 Utility to to create z88dk/Sp1 compatible screens, tilesets and sprites in assembly or C format from GIFs and Tiled source files.
 
-## Input file formats:
+## Output formats
 
-**Tilemap** - Tiled tilemap as JSON (.tmj) or XML (.tmx)
+* Spectrum graphics data
 
-**Tileset** - Tiled tileset as (.tsj) or XML (.tsx)
+* Masked and unmasked sprites (sp1 format)
+
+* Tilemaps - tile numbers, associated with a tileset
+
+* Tilesets - Includes attribute colours, solid properties. Associated with a set of graphics.
+
+* Object maps - object type, x, y, width, height
+
+* Text data
+
+* Blank (zeroed) data
+
+
+## Input formats:
+
+**Tilemap** - Tiled tilemap exported JSON (.tmj)
+
+**Tileset** - Tiled tileset exported as JSON (.tsj)
 
 **Object types** - Tiled Object Types XML file (.xml)
 
-**Tileset graphics** - Black and white GIF
+**Tileset graphics** - Black and white PNG or GIF (PNG recommended)
 
-**Sprite** - Black and white GIF
+**Sprite** - Black and white PNG or GIF (PNG recommended)
 
-**Sprite Mask** - Black and white GIF
+**Sprite Mask** - Black and white PNG or GIF (PNG recommended)
 
 **Text** - Plain text file
 
@@ -25,8 +42,18 @@ Utility to to create z88dk/Sp1 compatible screens, tilesets and sprites in assem
 
 Running the script without parameters will prompt for each setting.
 
+### Using a JSON configuration file
 
-### General Parameters:
+**--config=**=[path to JSON config file]
+
+The tool can be configured to generate all supported assets associated with a project - sprites, tilemaps, graphics etc - in one pass, simplifying the build process.
+
+Example JSON files are included in the 'sample' folder.
+
+
+### Command-line Parameters:
+
+Parameters can be pass directly to the tool to process a single asset of a small set of related assets.
 
 **--name**=[name for output - this option overrides layer names for tile/object maps]
 
@@ -56,6 +83,8 @@ Running the script without parameters will prompt for each setting.
 **--tileset**=[tileset filename]
 
 **--graphics**=[tileset graphics filename]
+
+**--paper-colour**=[black|blue|red|magenta|green|cyan|yellow|white] (colour to use as paper, everything else is taken as ink)
 
 **--add-dimensions** (add rows & columns, as the first two elements in the tilemap data arrays)
 
@@ -126,6 +155,7 @@ view the layer's properties and add the names for the properties required.
 On the objects themselves, add custom properties with the same names and set the required valuesgitr a.
 
 To add the width & height of objects, add a boolean 'add-dimensions' property to the appropriate layer and set to 'true'.
+
 ### RLE Compression Format
 
 1 byte for tilenum, 1 byte for run-length.
@@ -134,7 +164,7 @@ The data will be preceded by 2 bytes specifying the array length (hi/lo). This w
 
 ### Known Issues:
 
-* Don't leave gaps in the middle of tilesets as this will cause errors.
+* Leaving gaps in the middle of tilesets (ie. no paper/ink/bright properties) will cause errors.
 
 * This tool is work-in-progress and features are currently in flux.
 
