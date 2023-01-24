@@ -131,7 +131,7 @@ Each tile in your tileset should have the following custom properties set:
 
 ### Importing Tilemap layers ###
 
-If --layer-type is set to 'all' (default) or 'tilelayer', the tool will create code for each tilemap layer. The tool will ignore any layers that are not set to 'visible'.
+If --layer-type is set to 'all' (default) or 'tilelayer', the tool will create code for each tilemap layer. The tool will include hidden layers unless --ignore-hidden-layers is set to true.
 
 The layer name will be used for variable and file naming, unless --name is specified.
 
