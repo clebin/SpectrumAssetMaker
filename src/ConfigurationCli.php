@@ -194,7 +194,7 @@ class ConfigurationCli
             self::$compression = $options['compression'];
         }
 
-        if (self::$compression !== false && !in_array(self::$compression, self::$compressionSupported)) {
+        if (self::$compression !== false && !in_array(self::$compression, App::$compressionSupported)) {
             echo 'Error: Compression type not supported.' . CR;
             return false;
         }
@@ -230,13 +230,14 @@ class ConfigurationCli
 
         // process tileset graphics
         if (self::$graphicsFilename !== false) {
-            $graphics = new Graphics(array_merge(
-                $baseConfig,
-                [
-                    'image' => self::$graphicsFilename,
-                    'paper-colour' => self::$paperColour
-                ]
-            ));
+            $graphics = new Graphics([
+                'name' => self::$name . (self::$tilesetFilename !== false ? '-graphics' : ''),
+                'output-folder' => self::$outputFolder,
+                'format' => self::$format,
+                'section' => self::$section,
+                'image' => self::$graphicsFilename,
+                'paper-colour' => self::$paperColour
+            ]);
 
             $graphics->Process();
         }
