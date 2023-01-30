@@ -11,13 +11,24 @@ class MapPaths extends TileLayer
     const DIRECTION_LEFT = 2;
     const DIRECTION_RIGHT = 1;
 
-    public $spaceTiles = [35, 23, 24, 39, 40, 62, 63, 78, 79];
+    public $spaceTiles = [35, 23, 24, 39, 40, 43, 62, 63, 78, 79, 81, 82, 83, 84, 97, 98, 99, 100];
     public $ladderTiles = [7, 8];
     public $slopeTiles = [];
+    public $compression = false;
+    public $codeFormat = App::FORMAT_ASM;
+    public $addDimensions = true;
+    public $width;
+    public $height;
+    protected $addArrayLength = false;
 
     public function __construct($config)
     {
         parent::__construct($config);
+
+        $this->width = intval($config['width']);
+        $this->height = intval($config['height']);
+        $this->addDimensions = $config['add-dimensions'];
+        $this->compression = $config['compression'];
     }
 
     public function GetData()
@@ -27,8 +38,7 @@ class MapPaths extends TileLayer
         $moves = 0x0;
         $data = [];
 
-        echo 'Calculating paths for ' . $this->GetName() .
-            '(W:' . $this->width . ',H:' . $this->height . ')' . CR;
+        echo 'Calculating paths for ' . $this->GetName() . CR;
 
         for ($row = 0; $row < $this->height; $row++) {
             for ($col = 0; $col < $this->width; $col++) {
@@ -80,6 +90,28 @@ class MapPaths extends TileLayer
                 $data[] = $moves;
             }
         }
+
+        // compression
+        if ($this->compression === 'rle') {
+
+            if ($this->format == 'asm') {
+                $addLength = true;
+            } else {
+                $addLength = false;
+            }
+
+            $data = App::CompressArrayRLE(
+                $this->codeName,
+                $data,
+                $addLength,
+            );
+        }
+
+        // dimensions
+        if ($this->addDimensions === true) {
+            array_unshift($data, $this->height, $this->width);
+        }
+
         return $data;
     }
 
@@ -92,7 +124,6 @@ class MapPaths extends TileLayer
         }
         return false;
     }
-
     public function isSpace($row, $col)
     {
         $tileNum = $this->getTile($row, $col);
@@ -108,11 +139,6 @@ class MapPaths extends TileLayer
 
     public function GetTile($row, $col)
     {
-        $index = ($row * $this->width) + $col;
-        if (isset($this->data[$index]))
-            return $this->data[$index];
-
-        echo 'Index ' . $index . ' not found' . CR;
-        return false;
+        return $this->data[($row * $this->width) + $col];
     }
 }
