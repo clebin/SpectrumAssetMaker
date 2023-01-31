@@ -89,6 +89,17 @@ class Tileset extends Datatype
         return true;
     }
 
+    /**
+     * Return tile object for index
+     */
+    public function GetTile($index)
+    {
+        if (isset($this->tiles[$index]))
+            return $this->tiles[$index];
+
+        return false;
+    }
+
     public function TilesetIsSet()
     {
         return $this->tilesetIsSet;

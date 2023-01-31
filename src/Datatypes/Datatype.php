@@ -9,12 +9,11 @@ abstract class Datatype
     protected $data = [];
     protected $name;
     protected $codeName;
-    protected $codeFormat = 'asm';
+    protected $codeFormat = App::FORMAT_ASM;
     protected $defineName;
     protected $codeSection = 'rodata_user';
     protected $filename = false;
     protected $addArrayLength = true;
-    protected $outputFormat = App::FORMAT_ASM;
     protected $outputFolder = '';
     protected $isValid = false;
 

@@ -23,6 +23,7 @@ class Tile
     public $solid = false;
     public $lethal = false;
     public $platform = false;
+    public $ladder = false;
     public $custom = false;
 
     public function __construct($id, $properties, $replaceFlashWithSolid = false)
@@ -47,28 +48,28 @@ class Tile
                         $this->ink = intval($prop['value']);
                         break;
                     case 'bright':
-                        $this->bright = intval($prop['value']);
+                        $this->bright = $prop['value'];
                         break;
                     case 'flash':
-                        $this->flash = intval($prop['value']);
+                        $this->flash = $prop['value'];
                         break;
 
                         // game properties
                     case 'solid':
-                        $this->solid = intval($prop['value']);
+                        $this->solid = $prop['value'];
                         App::$saveGameProperties = true;
                         break;
                     case 'lethal':
-                        $this->lethal = intval($prop['value']);
-                        App::$saveGameProperties = true;
+                        $this->lethal = $prop['value'];
+                        break;
+                    case 'ladder':
+                        $this->ladder = $prop['value'];
                         break;
                     case 'platform':
-                        $this->platform = intval($prop['value']);
-                        App::$saveGameProperties = true;
+                        $this->platform = $prop['value'];
                         break;
                     case 'custom':
-                        $this->custom = intval($prop['value']);
-                        App::$saveGameProperties = true;
+                        $this->custom = $prop['value'];
                         break;
                 }
             }
@@ -94,7 +95,7 @@ class Tile
     /**
      * Return whether bright is set on tile
      */
-    public function GetBright()
+    public function isBright()
     {
         return $this->bright;
     }
@@ -102,7 +103,7 @@ class Tile
     /**
      * Return whether flash is set on tile
      */
-    public function GetFlash()
+    public function isFlash()
     {
         return $this->flash;
     }
@@ -110,7 +111,7 @@ class Tile
     /**
      * Return whether solid is set on tile
      */
-    public function GetSolid()
+    public function isSolid()
     {
         return $this->solid;
     }
@@ -118,7 +119,7 @@ class Tile
     /**
      * Return whether lethal is set on tile
      */
-    public function GetLethal()
+    public function isLethal()
     {
         return $this->lethal;
     }
@@ -126,15 +127,23 @@ class Tile
     /**
      * Return whether lethal is set on tile
      */
-    public function GetPlatform()
+    public function isPlatform()
     {
         return $this->platform;
     }
 
     /**
+     * Return whether ladder is set on tile
+     */
+    public function isLadder()
+    {
+        return $this->ladder;
+    }
+
+    /**
      * Return whether custom1 is set on tile
      */
-    public function GetCustom1()
+    public function isCustom1()
     {
         return $this->custom;
     }

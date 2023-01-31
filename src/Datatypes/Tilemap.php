@@ -25,6 +25,7 @@ class Tilemap extends Datatype
     public $generatePaths = false;
     public $compression = false;
     public $addDimensions = false;
+    public $tileset = false;
 
     // allowed properties on enemies, objects, etc.
     private $object_allowed_properties = [
@@ -73,6 +74,12 @@ class Tilemap extends Datatype
             $this->addDimensions = $config['add-dimensions'];
         }
 
+        // add associated tileset
+        if (isset($config['tileset']) && $config['tileset'] !== false) {
+
+            $this->ReadTileset($config['tileset']);
+        }
+
         // read tilemap
         if (isset($config['map'])) {
             $this->isValid = $this->ReadFile($config['map']);
@@ -81,6 +88,21 @@ class Tilemap extends Datatype
         // graphics
         if (isset($config['graphics'])) {
         }
+    }
+
+    /**
+     * Read an associated tileset
+     */
+    public function ReadTileset($tileset_config)
+    {
+        $this->tileset = new Tileset(array_merge([
+            'name' => $this->name,
+            'section' => $this->codeSection,
+            'format' => $this->codeFormat,
+            'output-folder' => $this->outputFolder
+        ], $tileset_config));
+
+        $this->tileset->Process();
     }
 
     /**
@@ -164,9 +186,11 @@ class Tilemap extends Datatype
 
                 // generate open paths
                 if ($this->generatePaths === true) {
+
                     $paths = new MapPaths(
                         [
                             'tilemap' => $this,
+                            'tileset_obj' => $this->tileset,
                             'num' => $this->numTileLayers,
                             'data' => $layer['data'],
                             'width' => $layer['width'],
