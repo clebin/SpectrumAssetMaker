@@ -225,7 +225,7 @@ The path-width and path-height settings are used to specify how many squares wid
 
 The 'path-map-style' property can be set to 'overhead' or 'platform'. In overhead mode, a character can move in all 4 directions if there's a space. In 'platform' mode, the character can only move up and down if the tiles have 'ladder' set to true.
 
-The byte format of a square in the path map is follows:
+The byte format of a square in the path map is as follows:
 
 [0][0][0][0][up][down][left][right]
 
