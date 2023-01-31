@@ -221,7 +221,7 @@ This will create a byte for each square on the map that specifies which directio
 
 This feature requires 'solid' (true/false) and optionally 'ladder' (true/false) to be set on tileset tiles in Tiled.
 
-The path-width and path-height settings are used to specify how many squares wide/height the path needs to be.
+The path-width and path-height settings are used to specify how many squares wide/high the path needs to be.
 
 The 'path-map-style' property can be set to 'overhead' or 'platform'. In overhead mode, a character can move in all 4 directions if there's a space. In 'platform' mode, the character can only move up and down if the tiles have 'ladder' set to true.
 
