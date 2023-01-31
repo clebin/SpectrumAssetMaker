@@ -164,6 +164,8 @@ Parameters can be pass directly to the tool to process a single asset of a small
 
 **--paper-colour**=[black|blue|red|magenta|green|cyan|yellow|white] (colour to use as paper, everything else is taken as ink)
 
+**--paper-colour**=[black|blue|red|magenta|green|cyan|yellow|white] (colour to use as paper, everything else is taken as ink)
+
 **--add-dimensions** (add rows & columns, as the first two elements in the tilemap data arrays)
 
 **--compression**=rle [enable RLE compression on tilemaps]
