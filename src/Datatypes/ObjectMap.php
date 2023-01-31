@@ -30,14 +30,14 @@ class ObjectMap extends Datatype
         $this->outputFolder = $config['output-folder'];
         $this->codeFormat = $config['format'];
 
-        // echo 'Reading object layer.' . CR;
-
         // custom properties
-        if (isset($layer['properties'])) {
-            foreach ($layer['properties'] as $prop) {
+        if (isset($this->layer['properties'])) {
+            foreach ($this->layer['properties'] as $prop) {
 
                 if ($prop['name'] == 'add-dimensions') {
+
                     if ($prop['value'] === true) {
+
                         $this->addObjectDimensions = true;
 
                         if (App::GetVerbosity() == App::VERBOSITY_VERBOSE) {
