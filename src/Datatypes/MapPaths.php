@@ -57,8 +57,8 @@ class MapPaths extends TileLayer
         }
 
         // map style - overhead or platform
-        if (isset($config['map-style']) && in_array($config['map-style'], $this->mapStyles)) {
-            $this->mapStyle = $config['map-style'];
+        if (isset($config['path-map-style']) && in_array($config['path-map-style'], $this->mapStyles)) {
+            $this->mapStyle = $config['path-map-style'];
         }
     }
 
