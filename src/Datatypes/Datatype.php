@@ -16,6 +16,7 @@ abstract class Datatype
     protected $addArrayLength = true;
     protected $outputFolder = '';
     protected $isValid = false;
+    protected $addToAssetsLst = true;
 
     public function __construct($config)
     {
@@ -182,6 +183,10 @@ abstract class Datatype
      */
     public function WriteFile()
     {
+        if ($this->addToAssetsLst === true) {
+            App::AddOutputFile($this->GetOutputFilepath()) . CR;
+        }
+
         file_put_contents($this->GetOutputFilepath(), $this->GetCode());
     }
 

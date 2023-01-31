@@ -77,7 +77,12 @@ class Tilemap extends Datatype
         // add associated tileset
         if (isset($config['tileset']) && $config['tileset'] !== false) {
 
-            $this->ReadTileset($config['tileset']);
+            if (is_array($config['tileset'])) {
+                $this->ReadTilesetWithConfig($config['tileset']);
+            } else {
+                $this->tileset = new Tileset($config);
+                $this->tileset->Process();
+            }
         }
 
         // read tilemap
@@ -93,7 +98,7 @@ class Tilemap extends Datatype
     /**
      * Read an associated tileset
      */
-    public function ReadTileset($tileset_config)
+    public function ReadTilesetWithConfig($tileset_config)
     {
         $this->tileset = new Tileset(array_merge([
             'name' => $this->name,
@@ -157,7 +162,10 @@ class Tilemap extends Datatype
 
             $map = false;
             $paths = false;
-            echo 'Reading layer "' . $layer['name'] . '" (' . $layer['type'] . ')' . CR;
+
+            if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
+                echo 'Tilemap:  Reading layer "' . $layer['name'] . '" (' . $layer['type'] . ')' . CR;
+            }
 
             // tilemap
             if ($this->ignoreHiddenLayers === true && $layer['hidden'] === true) {
@@ -235,7 +243,7 @@ class Tilemap extends Datatype
                 // add to maps array
                 $this->maps[] = $map;
             } else {
-                echo 'Error processing layer ' . $layer['name'] . '' . CR;
+                echo 'Error: Couldn\'t process layer ' . $layer['name'] . '' . CR;
             }
 
             // paths layer
@@ -250,8 +258,6 @@ class Tilemap extends Datatype
 
                     // add to maps array
                     $this->maps[] = $paths;
-                } else {
-                    echo 'Error processing paths ' . $layer['name'] . '' . CR;
                 }
             }
         }
@@ -292,18 +298,6 @@ class Tilemap extends Datatype
                     $str .= $this->GetCodeAsm($i);
                     break;
             }
-        }
-        return $str;
-    }
-
-    /**
-     * Get binaries.lst file with list of screen files
-     */
-    public function GetBinariesLst()
-    {
-        $str = '';
-        foreach ($this->maps as $map) {
-            $str .= $map->GetCodeName() . CR;
         }
         return $str;
     }

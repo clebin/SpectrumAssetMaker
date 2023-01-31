@@ -1,6 +1,6 @@
 {
     "settings": {
-        "create-binaries-lst": true,
+        "create-assets-list": true,
         "naming": "camelcase",
         "output-folder": "./assets"
     },

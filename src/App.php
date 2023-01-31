@@ -21,7 +21,7 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
  */
 class App
 {
-    const VERSION = '0.10';
+    const VERSION = '1.0b1';
 
     // constants
     const FORMAT_ASM = 'asm';
@@ -38,6 +38,10 @@ class App
     const COLOUR_CYAN = 'cyan';
     const COLOUR_YELLOW = 'yellow';
     const COLOUR_WHITE = 'white';
+
+    const VERBOSITY_SILENT = 0;
+    const VERBOSITY_NORMAL = 1;
+    const VERBOSITY_VERBOSE = 2;
 
     public static $coloursSupported = [
         self::COLOUR_BLACK,
@@ -70,12 +74,12 @@ class App
 
     public static $compressionSupported = ['rle'];
     public static $layerTypesSupported = ['all', 'objectgroup', 'tilelayer'];
-
-    // output
-    private static $output = '';
     public static $saveGameProperties = false;
-
     private static $stringDelimiter = CR;
+    public static $verbosity = self::VERBOSITY_NORMAL;
+
+    // list of output files - for binaries.lst
+    private static $outputFiles = [];
 
     // errors
     private static $error = false;
@@ -86,7 +90,7 @@ class App
      */
     public static function Run($options)
     {
-        self::OutputIntro();
+        echo CR . '------ Spectrum Asset Maker v' . self::VERSION . ' - C.Owen 2023 ----' . CR . CR;
 
         // use json config file
         if (isset($options['config'])) {
@@ -102,6 +106,8 @@ class App
             echo 'Errors (' . sizeof(self::$errorDetails) . '): ' . implode('. ', self::$errorDetails);
             return false;
         }
+
+        echo CR . CR . '--------- Asset Generation Complete ---------' . CR . CR;
     }
 
     /**
@@ -128,7 +134,6 @@ class App
         // png file
         else {
 
-            // echo $r . '-' . $g . '-' . $b . CR;
             $paper = self::$rgbColours[$paperColour];
 
             if ($r != $paper[0] || $g != $paper[1] || $b != $paper[2]) {
@@ -270,7 +275,9 @@ class App
             array_unshift($output, bindec(substr($bin, 0, 8)));
         }
 
-        echo 'Compressed ' . ($name !== false ? $name : 'array') . ': ' . $inputSize . 'b -> ' . $outputSize . 'b, saved ' . round((($inputSize - $outputSize) / $inputSize) * 100, 1) . '%' . CR;
+        if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
+            echo 'Tilemap:  Compressed "' . ($name !== false ? $name : 'array') . '" (' . $inputSize . ' -> ' . $outputSize . ' bytes. Saved ' . round((($inputSize - $outputSize) / $inputSize) * 100, 1) . '%)' . CR;
+        }
 
         return $output;
     }
@@ -354,14 +361,6 @@ class App
     }
 
     /**
-     * Output intro text on command line
-     */
-    public static function OutputIntro()
-    {
-        echo '** Spectrum Asset Maker v' . self::VERSION . ' - Chris Owen 2023 **' . CR . CR;
-    }
-
-    /**
      * Add to errors list
      */
     public static function AddError($error)
@@ -386,8 +385,39 @@ class App
         return self::$error;
     }
 
-    public static function objectToArray($object)
+    public static function AddOutputFile($path)
+    {
+        if (!in_array($path, self::$outputFiles))
+            self::$outputFiles[] = $path;
+    }
+
+    public static function ObjectToArray($object)
     {
         return @json_decode(@json_encode($object), 1);
+    }
+
+    /**
+     * Get binaries.lst file with list of screen files
+     */
+    public static function ProcessAssetsLst($binariesLstFolder = '')
+    {
+        $strBinaries = '';
+        $binariesLstFolder = rtrim($binariesLstFolder, '/') . '/';
+
+        sort(App::$outputFiles);
+
+        foreach (App::$outputFiles as $path) {
+            $strBinaries .= str_replace($binariesLstFolder, '', $path) . CR;
+        }
+
+        file_put_contents($binariesLstFolder . 'assets.lst', $strBinaries);
+    }
+
+    /**
+     * Return whether tool is in verbose mode
+     */
+    public static function GetVerbosity()
+    {
+        return self::$verbosity;
     }
 }

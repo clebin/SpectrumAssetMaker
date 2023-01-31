@@ -46,7 +46,7 @@ class CliTools
             $answer = self::GetAnswerPrompt($str_question, $default, $other_options, $strict_values);
 
             if ($answer === false) {
-                echo self::display_error('Value not allowed.');
+                echo 'Error: Value not allowed.';
             }
         }
 

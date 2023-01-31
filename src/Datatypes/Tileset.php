@@ -82,7 +82,7 @@ class Tileset extends Datatype
             $this->large_tileset = true;
         }
 
-        echo 'Tileset: added ' . $count . ' tiles.' . CR;
+        echo 'Tileset:  Added ' . $count . ' tiles.' . CR;
 
         $this->tilesetIsSet = true;
 
@@ -119,11 +119,6 @@ class Tileset extends Datatype
     public function TileExists($id)
     {
         return isset($this->tiles[$id]);
-    }
-
-    public function GetBinariesLst()
-    {
-        // return $this->GetOutputBaseFilename();
     }
 
     /**

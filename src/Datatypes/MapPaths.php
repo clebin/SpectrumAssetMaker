@@ -39,7 +39,9 @@ class MapPaths extends TileLayer
         $moves = 0x0;
         $data = [];
 
-        echo 'Calculating paths for ' . $this->GetName() . '.' . CR;
+        if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
+            echo 'Path map: Calculating paths for ' . $this->GetName() . '.' . CR;
+        }
 
         for ($row = 0; $row < $this->height; $row++) {
             for ($col = 0; $col < $this->width; $col++) {

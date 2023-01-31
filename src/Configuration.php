@@ -8,6 +8,7 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\Tileset;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Graphics;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Sprite;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\Screen;
 
 class Configuration
 {
@@ -75,8 +76,18 @@ class Configuration
             self::ReadBlankData($config['blank-data']);
         }
 
+        // screens
+        if (isset($config['screens'])) {
+            self::ReadScreens($config['screens']);
+        }
+
         // save in case we need it
         self::$config = $config;
+
+        // save binaries.lst
+        if (self::$createBinariesLst === true) {
+            App::ProcessAssetsLst(self::$outputFolder);
+        }
     }
 
     private static function ReadSprites($config)
@@ -111,6 +122,14 @@ class Configuration
         }
     }
 
+    private static function ReadScreens($config)
+    {
+        foreach ($config as $item) {
+            $screen = new Screen($item);
+            $screen->Process();
+        }
+    }
+
     private static function ReadBlankData($config)
     {
         foreach ($config as $item) {
@@ -129,13 +148,19 @@ class Configuration
 
     private static function ReadSettings($config)
     {
+        // verbose output
+        if (isset($config['verbose']) && $config['verbose'] === true) {
+            App::$isVerbose = true;
+        }
+
         // create binaries lst
-        if (isset($config['create-binaries-lst'])) {
-            self::$createBinariesLst = $config['create-binaries-lst'];
+        if (isset($config['create-assets-list'])) {
+            self::$createBinariesLst = $config['create-assets-list'];
         }
 
         // base output folder
         if (isset($config['output-folder'])) {
+            // self::$outputFolder = rtrim($config['output-folder'], '/');
             self::$outputFolder = $config['output-folder'];
         }
 

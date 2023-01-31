@@ -1,23 +1,44 @@
 # Spectrum Asset Maker
-## Chris Owen 2022
+## C.Owen 2023
 
 Utility to to create z88dk/Sp1 compatible screens, tilesets and sprites in assembly or C format from GIFs and Tiled source files.
 
-## Input file formats:
+## Output formats
 
-**Tilemap** - Tiled tilemap as JSON (.tmj) or XML (.tmx)
+* Spectrum graphics data
 
-**Tileset** - Tiled tileset as (.tsj) or XML (.tsx)
+* Masked and unmasked sprites (sp1 format)
+
+* .SCR files (eg. loading screen)
+
+* Tilemaps - tile numbers, associated with a tileset
+
+* Tilesets - Includes attribute colours, solid properties. Associated with a set of graphics.
+
+* Object maps - object type, x, y, width, height
+
+* Text data
+
+* Blank (zeroed) data
+
+
+## Input formats:
+
+**Tilemap** - Tiled tilemap exported JSON (.tmj)
+
+**Tileset** - Tiled tileset exported as JSON (.tsj)
 
 **Object types** - Tiled Object Types XML file (.xml)
 
-**Tileset graphics** - Black and white GIF
+**Tileset graphics** - Black and white PNG or GIF (PNG recommended)
 
-**Sprite** - Black and white GIF
+**Sprite** - Black and white PNG or GIF (PNG recommended)
 
-**Sprite Mask** - Black and white GIF
+**Sprite Mask** - Black and white PNG or GIF (PNG recommended)
 
 **Text** - Plain text file
+
+**SCR** - PNG file, 256 pixels by 192 pixels
 
 ## Usage:
 
@@ -25,8 +46,90 @@ Utility to to create z88dk/Sp1 compatible screens, tilesets and sprites in assem
 
 Running the script without parameters will prompt for each setting.
 
+### Using a JSON configuration file
 
-### General Parameters:
+**--config=**=[path to JSON config file]
+
+The tool can be configured to generate all supported assets associated with a project - sprites, tilemaps, graphics etc - in one pass, simplifying the build process.
+
+#### create-assets-list
+
+If the 'create-assets-list' settings, the tool will create an 'assets.lst' file in the specified output folder containing file-paths for all the generated assets. You can add this
+file to your project settings with '@output-folder/assets.lst' to include the assets as part of your build.
+
+Below is an example JSON configuration file. More JSON files are included in the 'sample' folder.
+
+``
+{
+    "settings": {
+        "create-assets-list": true,
+        "naming": "camelcase",
+        "output-folder": "./assets",
+        "object-types": "raw-assets/objects/objecttypes.xml"
+    },
+    "blank-data": [{
+        "name": "level-tilemap",
+        "size": 2208,
+        "output-folder": "./assets/blank-data"
+    }],
+    "tilemaps": [{
+        "map": "raw-assets/tilemaps/screens.tmj",
+        "output-folder": "./assets/levels",
+        "use-layer-names": true,
+        "generate-paths": true,
+        "format": "asm",
+        "compression": "rle",
+        "ignore-hidden-layers": false,
+        "section": "BANK_6",
+        "tileset": {
+            "name": "game-tiles",
+            "tileset": "raw-assets/tilesets/game-tileset.tsj",
+            "output-folder": "./assets/tilesets",
+            "replace-flash-with-solid": true,
+            "section": "BANK_4"
+        }
+    }],
+    "tilesets": [{
+        "name": "menu-tiles",
+        "tileset": "raw-assets/main-menu/menu-tiles.tsj",
+        "output-folder": "./assets/main-menu",
+        "section": "BANK_4"
+    }],
+    "sprites": [
+    {
+        "name": "player-sprite",
+        "image": "raw-assets/sprites/player-sprite.png",
+        "mask": "raw-assets/sprites/player-sprite-mask.png",
+        "paper-colour": "black",
+        "output-folder": "./assets/sprites",
+        "section": "BANK_0"
+    }],
+    "graphics": [{
+            "name": "font",
+            "image": "raw-assets/fonts/lander-bold.png",
+            "paper-colour": "white",
+            "output-folder": "./assets",
+            "section": "BANK_0"
+        }],
+    "screens": [
+        {
+            "name": "loading-screen",
+            "image": "raw-assets/loading-screen.png",
+            "output-folder": "./assets"
+        }
+    ],
+    "text": [{
+		"name": "intro-text",
+		"text": "raw-assets/intro.txt",
+		"output-folder": "./assets/text",
+	    "section": "BANK_0"
+    }]
+}
+``
+
+### Command-line Parameters:
+
+Parameters can be pass directly to the tool to process a single asset of a small set of related assets.
 
 **--name**=[name for output - this option overrides layer names for tile/object maps]
 
@@ -36,7 +139,12 @@ Running the script without parameters will prompt for each setting.
 
 **--section**=[assembly section to place code into, default: rodata_user]
 
-**--paper-colour**=['black','white','blue','red','magenta','green','cyan','yellow' or 'white', default: white] (when importing graphics, specify which colour to use as the paper colour. Everything else will be considered as ink. *PNG-24 files only.*)
+### Parameters for graphics data
+
+**--screen**=[path to png] (create a .scr file)
+
+**--graphics**=[tiled graphics filename] (create graphics laid out tile-by-tile)
+
 
 ### Parameters for Tilemap/Object Map/Tileset Processing:
 
@@ -46,8 +154,6 @@ Running the script without parameters will prompt for each setting.
 
 **--replace-flash-with-solid** (use the bit normally used for flash to denote a solid block)
 
-**--create-binaries-lst** (create a binaries.lst file all screens and tileset files included - ignored for sprite output)
-
 **--object-types**=[object types XML file] (this is required for processing object maps)
 
 **--object-props**=[path to object custom properties text file (see below for info)]
@@ -56,7 +162,7 @@ Running the script without parameters will prompt for each setting.
 
 **--tileset**=[tileset filename]
 
-**--graphics**=[tileset graphics filename]
+**--paper-colour**=[black|blue|red|magenta|green|cyan|yellow|white] (colour to use as paper, everything else is taken as ink)
 
 **--add-dimensions** (add rows & columns, as the first two elements in the tilemap data arrays)
 
@@ -103,7 +209,7 @@ Each tile in your tileset should have the following custom properties set:
 
 ### Importing Tilemap layers ###
 
-If --layer-type is set to 'all' (default) or 'tilelayer', the tool will create code for each tilemap layer. The tool will ignore any layers that are not set to 'visible'.
+If --layer-type is set to 'all' (default) or 'tilelayer', the tool will create code for each tilemap layer. The tool will include hidden layers unless --ignore-hidden-layers is set to true.
 
 The layer name will be used for variable and file naming, unless --name is specified.
 
@@ -136,8 +242,6 @@ The data will be preceded by 2 bytes specifying the array length (hi/lo). This w
 
 ### Known Issues:
 
-* Don't leave gaps in the middle of tilesets as this will cause errors.
+* Leaving gaps in the middle of tilesets (ie. no paper/ink/bright properties) will cause errors.
 
 * This tool is work-in-progress and features are currently in flux.
-
-* Each object custom property takes up a one byte regardless of how many bits are needed to store the information. The tool should allow a custom bit layout to store values more efficiently.

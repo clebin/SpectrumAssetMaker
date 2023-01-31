@@ -1,6 +1,6 @@
 {
     "settings": {
-        "create-binaries-lst": true,
+        "create-asets-list": true,
         "naming": "camelcase",
         "object-types": "raw-assets/objects/objecttypes.xml"
     },

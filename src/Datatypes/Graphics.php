@@ -57,10 +57,14 @@ class Graphics extends Datatype
         $this->numRows = $dimensions[1] / 8;
         $this->numTiles = $this->numColumns * $this->numRows;
 
-        echo 'Tileset graphics (' . $this->extension . '): ' .
-            $this->numColumns . ' x ' . $this->numRows .
-            ' attributes (' . $dimensions[0] . ' x ' . $dimensions[1] . 'px) = ' .
-            $this->numTiles . ' attributes. ' . CR;
+        if (App::GetVerbosity() != App::VERBOSITY_NORMAL) {
+            echo 'Graphics: Added' . $this->numTiles . ' attributes';
+        } else if (App::GetVerbosity() == App::VERBOSITY_VERBOSE) {
+            echo 'Graphics: Added' . $this->extension . ' - ' .
+                $this->numColumns . ' x ' . $this->numRows .
+                ' attributes (' . $dimensions[0] . ' x ' . $dimensions[1] . 'px) = ' .
+                $this->numTiles . ' attributes. ' . CR;
+        }
 
         // loop through rows of atttributes
         for ($row = 0; $row < $this->numRows; $row++) {
@@ -115,7 +119,7 @@ class Graphics extends Datatype
                 }
 
                 // transparent counts as paper, or black or white depending on setting
-                if (App::colourIsPaper($rgb, $this->paperColour, $this->extension) === true) {
+                if (App::ColourIsPaper($rgb, $this->paperColour, $this->extension) === true) {
                     $pixel = 0;
                 }
                 // anything else is ink

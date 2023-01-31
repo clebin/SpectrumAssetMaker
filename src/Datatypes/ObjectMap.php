@@ -30,7 +30,7 @@ class ObjectMap extends Datatype
         $this->outputFolder = $config['output-folder'];
         $this->codeFormat = $config['format'];
 
-        echo 'Reading layer.' . CR;
+        // echo 'Reading object layer.' . CR;
 
         // custom properties
         if (isset($layer['properties'])) {
@@ -39,15 +39,19 @@ class ObjectMap extends Datatype
                 if ($prop['name'] == 'add-dimensions') {
                     if ($prop['value'] === true) {
                         $this->addObjectDimensions = true;
-                        echo 'Adding object dimensions. ' . CR;
+
+                        if (App::GetVerbosity() == App::VERBOSITY_VERBOSE) {
+                            echo 'Adding object dimensions. ' . CR;
+                        }
                     }
                 } else {
                     $this->customProperties[] = $prop['name'];
                 }
             }
-            if (sizeof($this->customProperties) > 0) {
-                echo 'Adding ' . sizeof($this->customProperties) . ' custom properties (' . implode(',', $this->customProperties) . ')' . CR;
-            }
+
+            // if (sizeof($this->customProperties) > 0) {
+            //     echo 'Adding ' . sizeof($this->customProperties) . ' custom properties (' . implode(',', $this->customProperties) . ')' . CR;
+            // }
         }
 
         // read objects from layer
@@ -65,7 +69,9 @@ class ObjectMap extends Datatype
             // create new object
             $obj = new GameObject($json);
 
-            echo 'Found object "' . $json['name'] . '" (' . $obj->GetIndex() . ')' . CR;
+            if (App::GetVerbosity() == App::VERBOSITY_VERBOSE) {
+                echo 'Found object "' . $json['name'] . '" (' . $obj->GetIndex() . ')' . CR;
+            }
 
             // add to array
             $this->objects[] = $obj;

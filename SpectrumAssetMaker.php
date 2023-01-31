@@ -22,10 +22,12 @@ require("src/Datatypes/Graphics.php");
 require("src/Datatypes/Sprite.php");
 require("src/Datatypes/ObjectMap.php");
 require("src/Datatypes/Text.php");
+require("src/Datatypes/Screen.php");
 
 // read filenames from command line arguments
 $options = getopt('', [
     'help::',
+    'verbose::',
     'config::',
     'name::',
     'map::',
@@ -34,6 +36,7 @@ $options = getopt('', [
     'string-delimiter::',
     'tileset::',
     'graphics::',
+    'screen::',
     'paper-colour::',
     'format::',
     'sprite::',
@@ -42,7 +45,7 @@ $options = getopt('', [
     'compression::',
     'output-folder::',
     'use-layer-names::',
-    'create-binaries-lst::',
+    'create-asssets-list::',
     'replace-flash-with-solid::',
     'naming::',
     'add-dimensions::',

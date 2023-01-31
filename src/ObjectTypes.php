@@ -48,12 +48,17 @@ class ObjectTypes
                     $index = intval($val);
                 }
             }
-            echo 'Object type - ' . $name . ' (index ' . $index . ')' . CR;
+
+            if (App::GetVerbosity() == App::VERBOSITY_VERBOSE) {
+                echo 'Object type: ' . $name . ' (index ' . $index . ')' . CR;
+            }
 
             self::$objectMapping[$name] = $index;
         }
 
-        echo 'Read ' . sizeof(self::$objectMapping) . ' object types.' . CR;
+        if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
+            echo 'Objects:  Processed ' . sizeof(self::$objectMapping) . ' object types.' . CR;
+        }
     }
 
     public static function GetIndex($name)

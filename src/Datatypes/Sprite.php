@@ -65,7 +65,9 @@ class Sprite extends Datatype
         $this->height = imagesy($this->spriteImage);
         $this->numColumns = $this->width / 8;
 
-        echo 'Reading sprite: ' . $this->numColumns . ' columns (' . $this->width . ' x ' . $this->height . 'px)' . CR;
+        if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
+            echo 'Sprite:   Created sprite ' . $this->numColumns . ' columns (' . $this->width . ' x ' . $this->height . 'px)' . CR;
+        }
 
         // get raw pixel data
         $this->spriteData = $this->GetImageData($this->spriteImage);
@@ -144,7 +146,7 @@ class Sprite extends Datatype
                 $rgb = imagecolorat($image, $x, $y);
 
                 // transparent counts as paper, or black or white depending on setting
-                if (App::colourIsPaper($rgb, $this->paperColour, $extension) === true) {
+                if (App::ColourIsPaper($rgb, $this->paperColour, $extension) === true) {
                     $pixel = ($mask === true ? 1 : 0);
                 }
                 // anything else is ink

@@ -8,12 +8,13 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\Tileset;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Graphics;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Sprite;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\Screen;
 
 class ConfigurationCli
 {
     public static $format = App::FORMAT_ASM;
 
-    // set graphics paper colourcolourIsPaper
+    // set graphics paper colour
     public static $paperColour = App::COLOUR_WHITE;
 
     // naming
@@ -30,6 +31,7 @@ class ConfigurationCli
     private static $mapFilename = false;
     private static $tilesetFilename = false;
     private static $graphicsFilename = false;
+    private static $screenFilename = false;
 
     // tileset properties
     public static $addTilesetProperties = false;
@@ -53,7 +55,6 @@ class ConfigurationCli
     private static $addDimensions = false;
     private static $outputFilename = false;
     private static $spriteWidth = false;
-    private static $createBinariesLst = false;
 
     // assembly section
     public static $section = 'rodata_user';
@@ -87,18 +88,13 @@ class ConfigurationCli
             self::$generatePaths = true;
         }
 
-        // createbinaries.lst file
-        if (isset($options['create-binaries-lst'])) {
-            self::$createBinariesLst = true;
-        }
-
         // add dimensions
         if (isset($options['add-dimensions'])) {
             self::$addDimensions = true;
         }
 
         // layer type
-        if (isset($options['layer-type']) && in_array($options['layer-type'], self::$layerTypesSupported)) {
+        if (isset($options['layer-type']) && in_array($options['layer-type'], App::$layerTypesSupported)) {
             self::$layerType = $options['layer-type'];
         }
 
@@ -106,6 +102,7 @@ class ConfigurationCli
         if (isset($options['ignore-hidden-layers'])) {
             self::$ignoreHiddenLayers = true;
         }
+
         // tileset
         if (isset($options['tileset'])) {
             self::$tilesetFilename = $options['tileset'];
@@ -133,6 +130,11 @@ class ConfigurationCli
         // graphics
         if (isset($options['graphics'])) {
             self::$graphicsFilename = $options['graphics'];
+        }
+
+        // screen
+        if (isset($options['screen'])) {
+            self::$screenFilename = $options['screen'];
         }
 
         // paper colour
@@ -214,20 +216,6 @@ class ConfigurationCli
             'section' => self::$section,
         ];
 
-        // tileset colours and properties
-        if (self::$tilesetFilename !== false) {
-            $tileset = new Tileset(array_merge(
-                $baseConfig,
-                [
-                    'tileset' => self::$tilesetFilename,
-                    'add-tileset-properties' => self::$addTilesetProperties,
-                    'replace-flash-with-solid' => self::$replaceFlashWithSolid
-                ]
-            ));
-
-            $tileset->Process();
-        }
-
         // process tileset graphics
         if (self::$graphicsFilename !== false) {
             $graphics = new Graphics([
@@ -272,17 +260,26 @@ class ConfigurationCli
                 'add-dimensions' => self::$addDimensions,
                 'ignore-hidden-layers' => self::$ignoreHiddenLayers,
                 'object-types' => self::$objectTypesFilename,
+                'tileset' => self::$tilesetFilename,
                 'compression' => self::$compression,
                 'generate-paths' => self::$generatePaths,
                 'layer-types' => self::$layerType
             ]));
 
             $tilemap->Process();
+        }
+        // tileset not associated with tilemap
+        else if (self::$tilesetFilename !== false) {
+            $tileset = new Tileset(array_merge(
+                $baseConfig,
+                [
+                    'tileset' => self::$tilesetFilename,
+                    'add-tileset-properties' => self::$addTilesetProperties,
+                    'replace-flash-with-solid' => self::$replaceFlashWithSolid
+                ]
+            ));
 
-            // save binaries.lst
-            if (self::$createBinariesLst === true) {
-                App::ProcessBinariesLst();
-            }
+            $tileset->Process();
         }
 
         // process sprite
@@ -295,6 +292,17 @@ class ConfigurationCli
                 ]
             ));
             $sprite->Process();
+        }
+
+        // process screen
+        if (self::$screenFilename !== false) {
+            $screen = new Screen(array_merge(
+                $baseConfig,
+                [
+                    'image' => self::$screenFilename
+                ]
+            ));
+            $screen->Process();
         }
     }
 
@@ -312,20 +320,6 @@ class ConfigurationCli
     public static function GetLayerType()
     {
         return self::$layerType;
-    }
-
-    /**
-     * Process and save binaries.lst file (only for screens data)
-     */
-    private static function ProcessBinariesLst()
-    {
-        $strBinaries = '';
-        if (self::$tilesetFilename !== false) {
-            $strBinaries = Tileset::GetBinariesLst() . CR;
-        }
-        $strBinaries .= Tilemaps::GetBinariesLst();
-
-        file_put_contents(self::$outputFolder . 'binaries.lst', $strBinaries);
     }
 
     /**
