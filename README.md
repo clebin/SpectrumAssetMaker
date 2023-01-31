@@ -59,7 +59,7 @@ file to your project settings with '@output-folder/assets.lst' to include the as
 
 Below is an example JSON configuration file. More JSON files are included in the 'sample' folder.
 
-``
+```json
 {
     "settings": {
         "create-assets-list": true,
@@ -125,7 +125,7 @@ Below is an example JSON configuration file. More JSON files are included in the
 	    "section": "BANK_0"
     }]
 }
-``
+```
 
 ### Command-line Parameters:
 
