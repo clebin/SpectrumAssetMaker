@@ -11,6 +11,9 @@ class MapPaths extends TileLayer
     const DIRECTION_LEFT = 2;
     const DIRECTION_RIGHT = 1;
 
+    const MAP_STYLE_OVERHEAD = 'overhead';
+    const MAP_STYLE_PLATFORM = 'platform';
+
     public $spaceTiles = [35, 23, 24, 39, 40, 43, 62, 63, 78, 79, 81, 82, 83, 84, 97, 98, 99, 100];
     public $ladderTiles = [7, 8];
     public $slopeTiles = [];
@@ -21,6 +24,16 @@ class MapPaths extends TileLayer
     public $tilemap = false;
     public $tileset = false;
 
+    // number of characters wide a path needs to be
+    public $pathWidth = 2;
+    public $pathHeight = 2;
+
+    public $mapStyle = self::MAP_STYLE_PLATFORM;
+    public $mapStyles = [
+        self::MAP_STYLE_PLATFORM,
+        self::MAP_STYLE_OVERHEAD
+    ];
+
     public function __construct($config)
     {
         parent::__construct($config);
@@ -30,6 +43,23 @@ class MapPaths extends TileLayer
         $this->height = intval($config['height']);
         $this->addDimensions = $config['add-dimensions'];
         $this->compression = $config['compression'];
+
+        // path width
+        if (isset($config['path-width'])) {
+            $this->pathWidth = intval($config['path-width']);
+        }
+
+        // path height
+        if (isset($config['path-height'])) {
+            $this->pathHeight = intval($config['path-height']);
+        } else {
+            $this->pathHeight = $this->pathWidth;
+        }
+
+        // map style - overhead or platform
+        if (isset($config['map-style']) && in_array($config['map-style'], $this->mapStyles)) {
+            $this->mapStyle = $config['map-style'];
+        }
     }
 
     public function GetData()
@@ -51,13 +81,20 @@ class MapPaths extends TileLayer
                 // up
                 if ($row > 0  && $col < $this->width - 1) {
 
-                    $tileUp1 = $this->GetTile($row - 1, $col);
-                    $tileUp2 = $this->GetTile($row - 1, $col + 1);
+                    $canMove = true;
+                    for ($i = 0; $i < $this->pathWidth; $i++) {
 
-                    if (
-                        $tileUp1->isLadder() === true &&
-                        $tileUp2->isLadder() === true
-                    ) {
+                        $tile = $this->GetTile($row - 1, $col + $i);
+
+                        if (
+                            ($this->mapStyle == self::MAP_STYLE_PLATFORM && $tile->isLadder() === false) ||
+                            ($this->mapStyle == self::MAP_STYLE_OVERHEAD && $tile->isSolid() === true)
+                        ) {
+                            $canMove = false;
+                        }
+                    }
+
+                    if ($canMove === true) {
                         $moves += self::DIRECTION_UP;
                     }
                 }
@@ -65,13 +102,21 @@ class MapPaths extends TileLayer
                 // down
                 if ($row < $this->height - 2 && $col < $this->width - 1) {
 
-                    $tileDown1 = $this->GetTile($row + 2, $col);
-                    $tileDown2 = $this->GetTile($row + 2, $col + 1);
 
-                    if (
-                        $tileDown1->isLadder() === true &&
-                        $tileDown2->isLadder() === true
-                    ) {
+                    $canMove = true;
+                    for ($i = 0; $i < $this->pathWidth; $i++) {
+
+                        $tile = $this->GetTile($row + 2, $col + $i);
+
+                        if (
+                            ($this->mapStyle == self::MAP_STYLE_PLATFORM && $tile->isLadder() === false) ||
+                            ($this->mapStyle == self::MAP_STYLE_OVERHEAD && $tile->isSolid() === true)
+                        ) {
+                            $canMove = false;
+                        }
+                    }
+
+                    if ($canMove === true) {
                         $moves += self::DIRECTION_DOWN;
                     }
                 }
@@ -79,13 +124,16 @@ class MapPaths extends TileLayer
                 // left
                 if ($col > 0 && $row < $this->height - 1) {
 
-                    $tileLeft1 = $this->GetTile($row, $col - 1);
-                    $tileLeft2 = $this->GetTile($row + 1, $col - 1);
+                    $canMove = true;
+                    for ($i = 0; $i < $this->pathHeight; $i++) {
 
-                    if (
-                        $tileLeft1->isSolid() === false &&
-                        $tileLeft2->isSolid() === false
-                    ) {
+                        $tile = $this->GetTile($row + $i, $col - 1);
+
+                        if ($tile->isSolid() === true)
+                            $canMove = false;
+                    }
+
+                    if ($canMove === true) {
                         $moves += self::DIRECTION_LEFT;
                     }
                 }
@@ -93,13 +141,16 @@ class MapPaths extends TileLayer
                 // right
                 if ($col < $this->width - 2 && $row < $this->height - 1) {
 
-                    $tileRight1 = $this->GetTile($row, $col + 2);
-                    $tileRight2 = $this->GetTile($row + 1, $col + 2);
+                    $canMove = true;
+                    for ($i = 0; $i < $this->pathHeight; $i++) {
 
-                    if (
-                        $tileRight1->isSolid() === false &&
-                        $tileRight2->isSolid() === false
-                    ) {
+                        $tile = $this->GetTile($row + $i, $col + 2);
+
+                        if ($tile->isSolid() === true)
+                            $canMove = false;
+                    }
+
+                    if ($canMove === true) {
                         $moves += self::DIRECTION_RIGHT;
                     }
                 }
