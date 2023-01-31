@@ -1,5 +1,5 @@
 # Spectrum Asset Maker
-## C.Owen 2023
+## C. Owen 2023
 
 Utility to to create z88dk/Sp1 compatible screens, tilesets and sprites in assembly or C format from GIFs and Tiled source files.
 
