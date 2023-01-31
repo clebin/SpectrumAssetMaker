@@ -214,6 +214,21 @@ If --layer-type is set to 'all' (default) or 'tilelayer', the tool will create c
 
 The layer name will be used for variable and file naming, unless --name is specified.
 
+### Generating path maps
+
+'Path maps' can be pre-generated to speed up movement calculation in some situations, eg. for computer AI. 
+This will create a byte for each square on the map that specifies which directions a player/character may move from that square.
+
+This feature requires 'solid' (true/false) and optionally 'ladder' (true/false) to be set on tileset tiles in Tiled.
+
+The path-width and path-height settings are used to specify how many squares wide/height the path needs to be.
+
+The 'path-map-style' property can be set to 'overhead' or 'platform'. In overhead mode, a character can move in all 4 directions if there's a space. In 'platform' mode, the character can only move up and down if the tiles have 'ladder' set to true.
+
+The byte format of a square in the path map is follows:
+
+[0][0][0][0][up][down][left][right]
+
 ### Importing Object layers ###
 
 If --layer-type is set to 'all' (default) or 'objectgroup', the tool will create code for each objectgroup layer.
