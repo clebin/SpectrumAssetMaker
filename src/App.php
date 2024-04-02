@@ -92,6 +92,11 @@ class App
     {
         echo CR . '------ Spectrum Asset Maker v' . self::VERSION . ' - C.Owen 2023 ----' . CR . CR;
 
+        // verbosity
+        if (isset($options['verbosity'])) {
+            self::$verbosity = $options['verbosity'];
+        }
+
         // use json config file
         if (isset($options['config'])) {
             Configuration::Setup($options['config']);

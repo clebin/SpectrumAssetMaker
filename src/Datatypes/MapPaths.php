@@ -102,14 +102,12 @@ class MapPaths extends TileLayer
                 // down
                 if ($row < $this->height - 2 && $col < $this->width - 1) {
 
-
                     $canMove = true;
                     for ($i = 0; $i < $this->pathWidth; $i++) {
 
                         $tile = $this->GetTile($row + 2, $col + $i);
 
-                        if (
-                            ($this->mapStyle == self::MAP_STYLE_PLATFORM && $tile->isLadder() === false) ||
+                        if (($this->mapStyle == self::MAP_STYLE_PLATFORM && $tile->isLadder() === false) ||
                             ($this->mapStyle == self::MAP_STYLE_OVERHEAD && $tile->isSolid() === true)
                         ) {
                             $canMove = false;

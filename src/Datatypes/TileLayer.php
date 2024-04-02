@@ -40,7 +40,14 @@ class TileLayer extends Datatype
         $data = [];
         // data
         foreach ($layer as $tileNum) {
+
             $tileNum = intval($tileNum) - 1;
+
+            if ($tileNum < 0 || $tileNum > 255) {
+                echo 'Error: Probably invalid tile number (' . $tileNum . ')' . CR;
+                $tileNum = 0;
+            }
+
             $data[] = $tileNum;
         }
 

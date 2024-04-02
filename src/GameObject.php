@@ -85,9 +85,4 @@ class GameObject
         // return false if not set
         return 0;
     }
-
-    public function IsUsingDimensions()
-    {
-        return $this->addDimensions;
-    }
 }

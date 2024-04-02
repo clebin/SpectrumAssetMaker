@@ -94,10 +94,13 @@ class Tileset extends Datatype
      */
     public function GetTile($index)
     {
+        // tile found
         if (isset($this->tiles[$index]))
             return $this->tiles[$index];
 
-        return false;
+        // tile not found
+        echo 'Tile #' . $index . ' not found. Using tile 0.' . CR;
+        return $this->tiles[0];
     }
 
     public function TilesetIsSet()

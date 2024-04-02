@@ -148,11 +148,6 @@ class Configuration
 
     private static function ReadSettings($config)
     {
-        // verbose output
-        if (isset($config['verbose']) && $config['verbose'] === true) {
-            App::$isVerbose = true;
-        }
-
         // create binaries lst
         if (isset($config['create-assets-list'])) {
             self::$createBinariesLst = $config['create-assets-list'];

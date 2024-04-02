@@ -27,7 +27,7 @@ require("src/Datatypes/Screen.php");
 // read filenames from command line arguments
 $options = getopt('', [
     'help::',
-    'verbose::',
+    'verbosity::',
     'config::',
     'name::',
     'map::',
