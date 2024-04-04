@@ -48,7 +48,7 @@ Install PHP with your favourite package manager:
 > apt install php
 etc.
 
-## Usage without parameters:
+## Usage without parameters
 
 On the command line, run:
 
@@ -56,7 +56,9 @@ On the command line, run:
 
 Running the script without parameters will prompt for each setting.
 
-### Usage with command-line Parameters:
+## Usage with command-line parameters
+
+### Basic parameters:
 
 Parameters can be pass directly to the tool to process a single asset of a small set of related assets.
 
@@ -119,7 +121,7 @@ Parameters can be pass directly to the tool to process a single asset of a small
 
 **--sprite-width**=[sprite width in 8 pixel columns]
 
-### Usage with a JSON configuration file:
+## Usage with a JSON configuration file:
 
 **--config=**=[path to JSON config file]
 
