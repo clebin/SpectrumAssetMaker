@@ -1,7 +1,7 @@
 # Spectrum Asset Maker
 ## C. Owen 2024
 
-Utility for the creation of a wide range of ZX Spectrum assets for use with z88dk and sp1. Intended to be a one-stop shop for creation of game assets. Configurable by command line or with a JSON config file.
+Command-line utility for the creation of a wide range of ZX Spectrum assets for use with z88dk and sp1. Intended to be a one-stop shop for all your game assets.
 
 ## Output formats
 
@@ -40,13 +40,86 @@ Utility for the creation of a wide range of ZX Spectrum assets for use with z88d
 
 **SCR** - PNG file, 256 pixels by 192 pixels
 
-## Usage:
+## Installation:
+
+Install PHP with your favourite package manager:
+
+> brew install php
+> apt install php
+etc.
+
+## Usage without parameters:
+
+On the command line, run:
 
 > php SpectrumAssetMaker.php
 
 Running the script without parameters will prompt for each setting.
 
-### Using a JSON configuration file
+### Usage with command-line Parameters:
+
+Parameters can be pass directly to the tool to process a single asset of a small set of related assets.
+
+**--name**=[name for output - this option overrides layer names for tile/object maps]
+
+**--output-folder**=[folder path to place generated files]
+
+**--format**=['c' or 'asm', default: asm]
+
+**--section**=[assembly section to place code into, default: rodata_user]
+
+### Parameters for graphics data
+
+**--screen**=[path to png] (create a .scr file)
+
+**--graphics**=[tiled graphics filename] (create graphics laid out tile-by-tile)
+
+
+### Parameters for Tilemap/Object Map/Tileset Processing:
+
+**--ignore-hidden-layers** (don't process hidden layers. Hidden layers are processed by default)
+
+**--layer-type**=['all', 'objectgroup' or 'tilelayer'] (set which type of Tiled layers to process)
+
+**--replace-flash-with-solid** (use the bit normally used for flash to denote a solid block)
+
+**--object-types**=[object types XML file] (this is required for processing object maps)
+
+**--object-props**=[path to object custom properties text file (see below for info)]
+
+**--map**=[tilemap filename]
+
+**--tileset**=[tileset filename]
+
+**--paper-colour**=[black|blue|red|magenta|green|cyan|yellow|white] (colour to use as paper, everything else is taken as ink)
+
+**--paper-colour**=[black|blue|red|magenta|green|cyan|yellow|white] (colour to use as paper, everything else is taken as ink)
+
+**--add-dimensions** (add rows & columns, as the first two elements in the tilemap data arrays)
+
+**--compression**=rle [enable RLE compression on tilemaps]
+
+
+### Parameters for blank data
+
+**--blank-data**=[size in bytes] (create blank data of a specified size)
+
+### Parameters for text processing
+
+**--text**=[text filename] (convert text into assembly or C array)
+
+**--string-delimiter**=[character] (character to use for splitting strings into C arrays)
+
+
+### Parameters for Sprite Processing:
+
+**--sprite**=[sprite filename]
+
+**--mask**=[sprite mask filename]
+
+**--sprite-width**=[sprite width in 8 pixel columns]
+
+### Usage with a JSON configuration file:
 
 **--config=**=[path to JSON config file]
 
@@ -129,70 +202,6 @@ Below is an example JSON configuration file. More JSON files are included in the
     }]
 }
 ```
-
-### Command-line Parameters:
-
-Parameters can be pass directly to the tool to process a single asset of a small set of related assets.
-
-**--name**=[name for output - this option overrides layer names for tile/object maps]
-
-**--output-folder**=[folder path to place generated files]
-
-**--format**=['c' or 'asm', default: asm]
-
-**--section**=[assembly section to place code into, default: rodata_user]
-
-### Parameters for graphics data
-
-**--screen**=[path to png] (create a .scr file)
-
-**--graphics**=[tiled graphics filename] (create graphics laid out tile-by-tile)
-
-
-### Parameters for Tilemap/Object Map/Tileset Processing:
-
-**--ignore-hidden-layers** (don't process hidden layers. Hidden layers are processed by default)
-
-**--layer-type**=['all', 'objectgroup' or 'tilelayer'] (set which type of Tiled layers to process)
-
-**--replace-flash-with-solid** (use the bit normally used for flash to denote a solid block)
-
-**--object-types**=[object types XML file] (this is required for processing object maps)
-
-**--object-props**=[path to object custom properties text file (see below for info)]
-
-**--map**=[tilemap filename]
-
-**--tileset**=[tileset filename]
-
-**--paper-colour**=[black|blue|red|magenta|green|cyan|yellow|white] (colour to use as paper, everything else is taken as ink)
-
-**--paper-colour**=[black|blue|red|magenta|green|cyan|yellow|white] (colour to use as paper, everything else is taken as ink)
-
-**--add-dimensions** (add rows & columns, as the first two elements in the tilemap data arrays)
-
-**--compression**=rle [enable RLE compression on tilemaps]
-
-
-### Parameters for blank data
-
-**--blank-data**=[size in bytes] (create blank data of a specified size)
-
-### Parameters for text processing
-
-**--text**=[text filename] (convert text into assembly or C array)
-
-**--string-delimiter**=[character] (character to use for splitting strings into C arrays)
-
-
-### Parameters for Sprite Processing:
-
-**--sprite**=[sprite filename]
-
-**--mask**=[sprite mask filename]
-
-**--sprite-width**=[sprite width in 8 pixel columns]
-
 
 ### Tileset format ###
 
