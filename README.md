@@ -1,7 +1,7 @@
 # Spectrum Asset Maker
-## C. Owen 2023
+## C. Owen 2024
 
-Utility to to create z88dk/Sp1 compatible screens, tilesets and sprites in assembly or C format from GIFs and Tiled source files.
+Utility for the creation of a wide range of ZX Spectrum assets for use with z88dk and sp1. Intended to be a one-stop shop for creation of game assets. Configurable by command line or with a JSON config file.
 
 ## Output formats
 
@@ -257,8 +257,10 @@ Export the objecttypes.xml and specify the path using the --object-types paramet
 
 The data will be preceded by 2 bytes specifying the array length (hi/lo). This will appear after rows and columns if --add-dimensions is specified.
 
+### Planned Features
+
+* Creation of ZX Spectrum Next graphics
+
 ### Known Issues:
 
 * Leaving gaps in the middle of tilesets (ie. no paper/ink/bright properties) will cause errors.
-
-* This tool is work-in-progress and features are currently in flux.
