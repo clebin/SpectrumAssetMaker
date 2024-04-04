@@ -54,7 +54,7 @@ class ArkosTracker extends Datatype
             return false;
         }
 
-        $command = '"' . $this->arkosCommandPath . '" "' . $filename . '" "' . $this->GetOutputFilepath() . '"';
+        $command = '"' . $this->arkosCommandPath . '" "' . $filename . '" "' . $this->GetOutputFilepath() . '" >/dev/null 2>&1';
 
         echo 'Running command: ' . $command . CR;
 

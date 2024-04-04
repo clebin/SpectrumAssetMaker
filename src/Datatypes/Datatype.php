@@ -16,7 +16,7 @@ abstract class Datatype
     protected $addArrayLength = true;
 
     protected $requireInputFile = true;
-    protected $inputFile = false;
+    protected $inputFilepath = false;
 
     protected $outputFolder = '';
     protected $isValid = false;
