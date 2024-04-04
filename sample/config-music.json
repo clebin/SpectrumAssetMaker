@@ -1,0 +1,16 @@
+{
+    "settings": {
+        "create-assets-list": true,
+        "naming": "camelcase",
+        "output-folder": "./output/asm/music"
+    },
+    "arkos": [
+        {
+            "name": "song",
+            "arkos-path": "/Applications/Arkos Tracker 2",
+            "input": "./raw-assets/kangaroo.aks",
+            "output-folder": "./output/asm/music",
+            "section": "BANK_1"
+        }
+    ]
+}

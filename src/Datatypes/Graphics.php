@@ -23,8 +23,8 @@ class Graphics extends Datatype
         }
 
         // set input file
-        if (isset($config['image'])) {
-            $this->isValid = $this->ReadFile($config['image']);
+        if ($this->inputFilepath !== false) {
+            $this->isValid = $this->ReadFile($this->inputFilepath);
         }
     }
 
@@ -185,11 +185,8 @@ class Graphics extends Datatype
     public function GetCodeAsm()
     {
         $str = 'SECTION ' . $this->codeSection . CR . CR;
-
         $str .= 'PUBLIC _' . $this->codeName . CR . CR;
-
         $str .= '._' . $this->codeName . CR;
-
 
         foreach ($this->data as $attribute) {
 

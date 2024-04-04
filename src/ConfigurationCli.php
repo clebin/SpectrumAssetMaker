@@ -9,6 +9,7 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\Graphics;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Sprite;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Screen;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\ArkosTracker;
 
 class ConfigurationCli
 {
@@ -38,6 +39,7 @@ class ConfigurationCli
 
     // text
     private static $textFilename = false;
+    private static $stringDelimiter;
 
     // tilemap layers
     private static $ignoreHiddenLayers = false;
@@ -49,6 +51,10 @@ class ConfigurationCli
 
     // object types
     private static $objectTypesFilename = false;
+
+    // arkos
+    private static $arkosFilename = false;
+    private static $arkosCommand;
 
     // more settngs
     private static $outputFolder = '.';
@@ -94,7 +100,10 @@ class ConfigurationCli
         }
 
         // layer type
-        if (isset($options['layer-type']) && in_array($options['layer-type'], App::$layerTypesSupported)) {
+        if (
+            isset($options['layer-type']) &&
+            in_array($options['layer-type'], App::$layerTypesSupported)
+        ) {
             self::$layerType = $options['layer-type'];
         }
 
@@ -150,6 +159,15 @@ class ConfigurationCli
         // object types
         if (isset($options['object-types'])) {
             ObjectTypes::ProcessFile($options['object-types']);
+        }
+
+        // arkos
+        if (isset($options['arkos'])) {
+            self::$arkosFilename = $options['arkos'];
+
+            if (isset($options['arkos_command'])) {
+                self::$arkosCommand = $options['arkos_command'];
+            }
         }
 
         // format
@@ -223,7 +241,7 @@ class ConfigurationCli
                 'output-folder' => self::$outputFolder,
                 'format' => self::$format,
                 'section' => self::$section,
-                'image' => self::$graphicsFilename,
+                'input' => self::$graphicsFilename,
                 'paper-colour' => self::$paperColour
             ]);
 
@@ -232,10 +250,11 @@ class ConfigurationCli
 
         // text
         if (self::$textFilename !== false) {
+
             $datatype = new Text(array_merge(
                 $baseConfig,
                 [
-                    'text' => self::$textFilename
+                    'input' => self::$textFilename
                 ]
             ));
             $datatype->Process();
@@ -256,7 +275,7 @@ class ConfigurationCli
         if (self::$mapFilename !== false) {
 
             $tilemap = new Tilemap(array_merge($baseConfig, [
-                'map' => self::$mapFilename,
+                'input' => self::$mapFilename,
                 'add-dimensions' => self::$addDimensions,
                 'ignore-hidden-layers' => self::$ignoreHiddenLayers,
                 'object-types' => self::$objectTypesFilename,
@@ -273,7 +292,7 @@ class ConfigurationCli
             $tileset = new Tileset(array_merge(
                 $baseConfig,
                 [
-                    'tileset' => self::$tilesetFilename,
+                    'input' => self::$tilesetFilename,
                     'add-tileset-properties' => self::$addTilesetProperties,
                     'replace-flash-with-solid' => self::$replaceFlashWithSolid
                 ]
@@ -287,7 +306,7 @@ class ConfigurationCli
             $sprite = new Sprite(array_merge(
                 $baseConfig,
                 [
-                    'image' => self::$spriteFilename,
+                    'input' => self::$spriteFilename,
                     'mask' => self::$maskFilename
                 ]
             ));
@@ -299,10 +318,22 @@ class ConfigurationCli
             $screen = new Screen(array_merge(
                 $baseConfig,
                 [
-                    'image' => self::$screenFilename
+                    'input' => self::$screenFilename
                 ]
             ));
             $screen->Process();
+        }
+
+        // process arkos
+        if (self::$arkosFilename !== false) {
+            $arkos = new ArkosTracker(array_merge(
+                $baseConfig,
+                [
+                    'input' => self::$arkosFilename,
+                    'command' => self::$arkosCommand
+                ]
+            ));
+            $arkos->Process();
         }
     }
 
@@ -328,30 +359,6 @@ class ConfigurationCli
     public static function GetIgnoreHiddenLayers()
     {
         return self::$ignoreHiddenLayers;
-    }
-
-    /**
-     * Get output filename using a suffix
-     */
-    public static function GetOutputFilename($suffix = false)
-    {
-        $outputFilename = self::$outputFolder;
-
-        // output filename
-        if (self::$name !== false) {
-            $outputFilename .= App::GetConvertedFilename(self::$name);
-            if ($suffix !== false) {
-                $outputFilename .= '-' . $suffix;
-            }
-        } else if ($suffix !== false) {
-            $outputFilename .= $suffix;
-        } else {
-            $outputFilename .= 'data';
-        }
-
-        $outputFilename .= '.' . App::GetOutputFileExtension();
-
-        return $outputFilename;
     }
 
     /**

@@ -14,12 +14,29 @@ abstract class Datatype
     protected $codeSection = 'rodata_user';
     protected $filename = false;
     protected $addArrayLength = true;
+
+    protected $requireInputFile = true;
+    protected $inputFile = false;
+
     protected $outputFolder = '';
     protected $isValid = false;
     protected $addToAssetsLst = true;
 
     public function __construct($config)
     {
+        // input filename
+        if (isset($config['input'])) {
+            $this->inputFilepath = $config['input'];
+
+            if (!file_exists($this->inputFilepath)) {
+                $this->isValid = false;
+            }
+        }
+        // input filename not set, but required
+        else if ($this->requireInputFile === true) {
+            $this->isValid = false;
+        }
+
         // set name, including code name, define name, etc
         if (isset($config['name']))
             $this->SetName($config['name']);
@@ -37,6 +54,8 @@ abstract class Datatype
         // output folder
         if (isset($config['output-folder'])) {
             $this->outputFolder = rtrim($config['output-folder'], '/') . '/';
+        } else {
+            $this->outputFolder = '';
         }
     }
 

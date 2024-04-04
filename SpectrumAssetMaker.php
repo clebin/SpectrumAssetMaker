@@ -23,6 +23,7 @@ require("src/Datatypes/Sprite.php");
 require("src/Datatypes/ObjectMap.php");
 require("src/Datatypes/Text.php");
 require("src/Datatypes/Screen.php");
+require("src/Datatypes/ArkosTracker.php");
 
 // read filenames from command line arguments
 $options = getopt('', [
@@ -33,6 +34,7 @@ $options = getopt('', [
     'map::',
     'blank-data::',
     'text::',
+    'arkos::',
     'string-delimiter::',
     'tileset::',
     'graphics::',

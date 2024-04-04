@@ -24,9 +24,7 @@ class Sprite extends Datatype
         parent::__construct($config);
 
         // set sprite image
-        if (isset($config['image'])) {
-            $spriteFile = $config['image'];
-        } else {
+        if ($this->inputFilepath === false) {
             $this->isValid = false;
             return;
         }
@@ -41,7 +39,10 @@ class Sprite extends Datatype
             $maskFile = $config['mask'];
         }
 
-        $this->isValid = $this->ReadFiles($spriteFile, $maskFile);
+        // input file
+        if ($this->inputFilepath !== false) {
+            $this->isValid = $this->ReadFiles($this->inputFilepath, $maskFile);
+        }
     }
 
     /**

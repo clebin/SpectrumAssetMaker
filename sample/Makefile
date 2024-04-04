@@ -29,11 +29,14 @@ config-text:
 config-tilemaps:
 	php $(TOOLPATH) --config=./config-tilemaps.json
 
+config-music:
+	php $(TOOLPATH) --config=./config-music.json
+
 text-asm:
 	php $(TOOLPATH) \
 		--name=sample-text \
 		--text=./raw-assets/text.txt \
-		--output-folder=./output/asm \
+		--output-folder=./output/asm/text \
 		--format=asm
 
 text-c:

@@ -39,8 +39,8 @@ class Screen extends Datatype
         parent::__construct($config);
 
         // set input file
-        if (isset($config['image'])) {
-            $this->isValid = $this->ReadFile($config['image']);
+        if ($this->inputFilepath !== false) {
+            $this->isValid = $this->ReadFile($this->inputFilepath);
         }
     }
 

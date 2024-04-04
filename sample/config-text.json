@@ -2,12 +2,12 @@
     "settings": {
         "create-assets-list": true,
         "naming": "camelcase",
-        "output-folder": "./assets"
+        "output-folder": "./output"
     },
     "text": [
         {
             "name": "sample-text",
-            "text": "./raw-assets/sample-text.txt",
+            "input": "./raw-assets/sample-text.txt",
             "output-folder": "./output/asm/text",
             "section": "BANK_6"
         }

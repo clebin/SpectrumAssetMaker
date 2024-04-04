@@ -9,6 +9,7 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\Graphics;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Sprite;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Screen;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\ArkosTracker;
 
 class Configuration
 {
@@ -81,6 +82,11 @@ class Configuration
             self::ReadScreens($config['screens']);
         }
 
+        // arkos
+        if (isset($config['arkos'])) {
+            self::ReadArkos($config['arkos']);
+        }
+
         // save in case we need it
         self::$config = $config;
 
@@ -146,6 +152,14 @@ class Configuration
         }
     }
 
+    private static function ReadArkos($config)
+    {
+        foreach ($config as $item) {
+            $textObj = new ArkosTracker($item);
+            $textObj->Process();
+        }
+    }
+
     private static function ReadSettings($config)
     {
         // create binaries lst
@@ -155,7 +169,6 @@ class Configuration
 
         // base output folder
         if (isset($config['output-folder'])) {
-            // self::$outputFolder = rtrim($config['output-folder'], '/');
             self::$outputFolder = $config['output-folder'];
         }
 
