@@ -129,9 +129,8 @@ class Tileset extends Datatype
      */
     public function GetCodeAsm()
     {
-        $str = 'SECTION ' . $this->codeSection . CR;
+        $str = $this->GetHeaderAsm();
 
-        $str .= CR;
         // tile info
         $colours = [];
         $properties = [];

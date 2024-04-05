@@ -71,12 +71,9 @@ class ArkosTracker extends Datatype
      */
     public function GetCode()
     {
-        $str = 'SECTION ' . $this->codeSection . CR;
-        $str .= 'public ' . $this->codeName . CR;
-        $str .= $this->codeName . ':' . CR;
-
-        $str .= file_get_contents($this->GetOutputFilepath());
-
-        return $str;
+        return $this->GetHeaderAsm() . CR .
+            'public ' . $this->codeName . CR .
+            $this->codeName . ':' . CR .
+            file_get_contents($this->GetOutputFilepath());
     }
 }

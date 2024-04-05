@@ -180,8 +180,8 @@ class Sprite extends Datatype
      */
     public function GetCodeAsm()
     {
-        $str = 'SECTION ' . $this->codeSection . CR;
-        $str .= 'PUBLIC ' . $this->codeName . CR . CR;
+        $str = $this->GetHeaderAsm();
+        $str .= 'public ' . $this->codeName . CR . CR;
 
         // front padding
         for ($line = 0; $line < 7; $line++) {

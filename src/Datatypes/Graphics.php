@@ -184,8 +184,8 @@ class Graphics extends Datatype
      */
     public function GetCodeAsm()
     {
-        $str .= 'SECTION ' . $this->codeSection . CR . CR;
-        $str .= 'PUBLIC ' . $this->codeName . CR . CR;
+        $str = $this->GetHeaderAsm();
+        $str .= 'public ' . $this->codeName . CR . CR;
         $str .= '.' . $this->codeName . CR;
 
         foreach ($this->data as $attribute) {

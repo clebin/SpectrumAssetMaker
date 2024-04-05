@@ -78,7 +78,8 @@ class Text extends Datatype
 
     public function GetCodeC()
     {
-        $output = 'char *' . $this->codeName . '[] = {' . CR;
+        $output = $this->GetHeaderC();
+        $output .= 'char *' . $this->codeName . '[] = {' . CR;
 
         for ($i = 0; $i < sizeof($this->data); $i++) {
             $output .= '    "' . $this->data[$i] . '"';
