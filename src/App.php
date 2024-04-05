@@ -21,7 +21,7 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
  */
 class App
 {
-    const VERSION = '1.0b1';
+    const VERSION = '1.0b2';
 
     // constants
     const FORMAT_ASM = 'asm';
