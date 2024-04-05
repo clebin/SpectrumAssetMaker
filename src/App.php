@@ -11,7 +11,7 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
 
 /**
  * Spectrum Asset Maker
- * Chris Owen 2022
+ * Chris Owen 2024
  * 
  * Read Tiled map and tileset and save screen data for use on the Spectrum.
  * Load PNG/GIF graphics data and save as graphics data
