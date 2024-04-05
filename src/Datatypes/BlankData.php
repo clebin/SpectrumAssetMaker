@@ -16,15 +16,9 @@ class BlankData extends Datatype
         $this->size = intval($config['size']);
         $this->addArrayLength = false;
 
-        if ($this->size > 0)
+        if ($this->size > 0) {
             $this->isValid = true;
-    }
-
-    public function Process()
-    {
-        if ($this->isValid === true) {
             $this->data = array_fill(0, $this->size, 0);
-            $this->WriteFile();
         }
     }
 }

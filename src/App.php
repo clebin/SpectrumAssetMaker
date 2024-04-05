@@ -205,11 +205,11 @@ class App
         $str = '';
 
         if ($public === true) {
-            $str .= CR . 'PUBLIC _' . $name . CR;
+            $str .= CR . 'PUBLIC ' . $name . CR;
         }
 
         // output paper/ink/bright/flash
-        $str .= CR . '._' . $name;
+        $str .= CR . '.' . $name;
 
         $count = 0;
         foreach ($values as $val) {
@@ -311,18 +311,25 @@ class App
     /**
      * Convert a regular name into a camel-case variable name to be used in code
      */
-    public static function GetConvertedCodeName($source_name)
+    public static function GetConvertedCodeName($source_name, $format)
     {
+        $name = '';
         switch (self::$namingConvention) {
             case 'underscores':
-                return self::GetConvertedCodeNameUnderscores($source_name);
+                $name = self::GetConvertedCodeNameUnderscores($source_name);
                 break;
             case 'titlecase';
-                return self::GetConvertedCodeNameTitleCase($source_name);
+                $name = self::GetConvertedCodeNameTitleCase($source_name);
             default:
-                return self::GetConvertedCodeNameCamelCase($source_name);
+                $name = self::GetConvertedCodeNameCamelCase($source_name);
                 break;
         }
+
+        if ($format == App::FORMAT_ASM) {
+            $name = '_' . $name;
+        }
+
+        return $name;
     }
 
     /**

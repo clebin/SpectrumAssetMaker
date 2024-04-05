@@ -290,7 +290,7 @@ class Tilemap extends Datatype
 
         for ($i = 0; $i < sizeof($this->maps); $i++) {
 
-            switch ($this->codeFormat()) {
+            switch ($this->codeFormat) {
                 case 'c':
                     $str .= $this->GetCodeC($i);
                     break;

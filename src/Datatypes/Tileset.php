@@ -49,7 +49,7 @@ class Tileset extends Datatype
     public function SetName($name)
     {
         $this->name = $name;
-        $this->codeName = App::GetConvertedCodeName($name);
+        $this->codeName = App::GetConvertedCodeName($name, $this->codeFormat);
         $this->filename = App::GetConvertedFilename($name . '-properties');
         $this->defineName = App::GetConvertedConstantName($name . '-len');
     }

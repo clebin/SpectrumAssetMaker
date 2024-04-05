@@ -181,8 +181,7 @@ class Sprite extends Datatype
     public function GetCodeAsm()
     {
         $str = 'SECTION ' . $this->codeSection . CR;
-
-        $str .= 'PUBLIC _' . $this->codeName . CR . CR;
+        $str .= 'PUBLIC ' . $this->codeName . CR . CR;
 
         // front padding
         for ($line = 0; $line < 7; $line++) {
@@ -193,7 +192,7 @@ class Sprite extends Datatype
             }
         }
 
-        $str .= CR . '._' . $this->codeName . CR;
+        $str .= CR . '.' . $this->codeName . CR;
 
         for ($col = 0; $col < $this->numColumns; $col++) {
 
@@ -234,12 +233,5 @@ class Sprite extends Datatype
         }
 
         return $str;
-    }
-
-    public function Process()
-    {
-        if ($this->isValid === true) {
-            $this->WriteFile();
-        }
     }
 }

@@ -9,7 +9,14 @@ abstract class Datatype
     protected $data = [];
     protected $name;
     protected $codeName;
+
+    // code format - asm or c
     protected $codeFormat = App::FORMAT_ASM;
+    protected static $formatsSupported = [
+        App::FORMAT_ASM,
+        App::FORMAT_C
+    ];
+
     protected $defineName;
     protected $codeSection = 'rodata_user';
     protected $filename = false;
@@ -69,10 +76,13 @@ abstract class Datatype
      */
     public function SetName($name)
     {
+        echo $name . CR . '---------------------' . $name . ' - ' . $this->codeFormat;
         $this->name = $name;
-        $this->codeName = App::GetConvertedCodeName($name);
+        $this->codeName = App::GetConvertedCodeName($name, $this->codeFormat);
         $this->filename = App::GetConvertedFilename($name);
         $this->defineName = App::GetConvertedConstantName($name . '-len');
+
+        echo ' - ' . $this->codeName . CR . CR;
     }
 
     /**
@@ -137,9 +147,19 @@ abstract class Datatype
      */
     public function SetFormat($format)
     {
-        if (in_array($format, App::$formatsSupported)) {
+        if (in_array($format, self::$formatsSupported)) {
             $this->codeFormat = $format;
+        } else {
+            $this->codeFormat = self::$formatsSupported[0];
         }
+    }
+
+    /**
+     * Get codename
+     */
+    public function GetCodeName()
+    {
+        return $this->codeName;
     }
 
     /**
@@ -210,25 +230,11 @@ abstract class Datatype
     }
 
     /**
-     * 
+     * Process the file
      */
     public function Process()
     {
-        $this->WriteFile();
-    }
-
-    /**
-     * Process input file
-     */
-    public function ProcessFile($filename)
-    {
-        // read tileset graphics
-        if ($filename === false) {
-            return false;
-        }
-        $success = $this->ReadFile($filename);
-
-        if ($success === true) {
+        if ($this->isValid === true) {
             $this->WriteFile();
         }
     }

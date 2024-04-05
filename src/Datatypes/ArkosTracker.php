@@ -15,6 +15,10 @@ class ArkosTracker extends Datatype
         'SongToSoundEffects'
     ];
 
+    protected static $formatsSupported = [
+        App::FORMAT_ASM
+    ];
+
     protected $arkosPath = false;
     protected $arkosCommand = 'SongToAkg';
     protected $arkosCommandPath = 'SongToAkg';
@@ -67,7 +71,7 @@ class ArkosTracker extends Datatype
      */
     public function GetCode()
     {
-        $str = 'section ' . $this->codeSection . CR;
+        $str = 'SECTION ' . $this->codeSection . CR;
         $str .= 'public ' . $this->codeName . CR;
         $str .= $this->codeName . ':' . CR;
 
