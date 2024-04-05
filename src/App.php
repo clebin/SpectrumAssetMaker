@@ -138,7 +138,7 @@ class App
             return false;
         }
 
-        echo CR . CR . '' . self::GetTerminalStripes() .
+        echo CR . '' . self::GetTerminalStripes() .
             ' Asset Generation Complete' . CR . CR;
     }
 
@@ -477,7 +477,7 @@ class App
             self::TERMINAL_WHITE . ' [' .
             self::TERMINAL_MAGENTA . $name .
             self::TERMINAL_WHITE . '] ' .
-            self::TERMINAL_YELLOW . ltrim($message, '.') .
+            self::TERMINAL_YELLOW . rtrim($message, '.') .
             self::TERMINAL_WHITE . '.' . CR;
     }
 
