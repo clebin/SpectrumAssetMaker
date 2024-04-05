@@ -9,6 +9,7 @@ class ObjectTypes
 {
     private static $objectMapping = [];
     public static $isValid = false;
+    public static $filepath = false;
 
     public static function ProcessFile($mapFilename)
     {
@@ -19,15 +20,17 @@ class ObjectTypes
     /**
      * Read the object-types XML file.
      */
-    public static function ReadFile($filename)
+    public static function ReadFile($filepath)
     {
-        if (!file_exists($filename)) {
-            echo 'Error: Object types file ' . $filename . ' not found' . CR;
+        if (!file_exists($filepath)) {
+            echo 'Error: Object types file ' . $filepath . ' not found' . CR;
             return false;
         }
 
+        self::$filepath = $filepath;
+
         // object types
-        $xml = file_get_contents($filename);
+        $xml = file_get_contents($filepath);
         $data = simplexml_load_string($xml);
 
         self::$isValid = self::ProcessData($data);
@@ -57,7 +60,7 @@ class ObjectTypes
         }
 
         if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
-            echo 'Objects:  Processed ' . sizeof(self::$objectMapping) . ' object types.' . CR;
+            App::OutputMessage('Objects', self::$filepath, 'Processed ' . sizeof(self::$objectMapping) . ' object types.');
         }
     }
 

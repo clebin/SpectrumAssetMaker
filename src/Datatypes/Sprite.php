@@ -67,7 +67,7 @@ class Sprite extends Datatype
         $this->numColumns = $this->width / 8;
 
         if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
-            echo 'Sprite:   Created sprite ' . $this->numColumns . ' columns (' . $this->width . ' x ' . $this->height . 'px)' . CR;
+            App::OutputMessage('Sprite', $this->name, 'Created ' . $this->numColumns . ' columns (' . $this->width . ' x ' . $this->height . 'px)');
         }
 
         // get raw pixel data

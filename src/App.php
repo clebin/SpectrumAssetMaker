@@ -21,13 +21,26 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
  */
 class App
 {
-    const VERSION = '1.0b2';
+    const VERSION = '1.0b3';
+    const RELEASE_YEAR = '2024';
 
     // constants
     const FORMAT_ASM = 'asm';
     const FORMAT_C = 'c';
     const NAMING_CAMELCASE = 'camelcase';
     const NAMING_UNDERSCORES = 'underscores';
+
+    // terminal colours
+    const TERMINAL_BOLD = "\033[1m";
+    const TERMINAL_BG_BLACK = "\033[40m";
+    const TERMINAL_BG_MAGENTA = "\033[105m";
+    const TERMINAL_BLUE = "\033[34m";
+    const TERMINAL_RED = "\033[31m";
+    const TERMINAL_MAGENTA = "\033[95m"; // 35m
+    const TERMINAL_GREEN = "\033[32m";
+    const TERMINAL_CYAN = "\033[96m"; // 34m
+    const TERMINAL_YELLOW = "\033[33m";
+    const TERMINAL_WHITE = "\033[0m";
 
     // colour constants
     const COLOUR_BLACK = 'black';
@@ -70,10 +83,18 @@ class App
     public static $formatsSupported = ['asm', 'c'];
 
     public static $namingConvention = self::NAMING_CAMELCASE;
-    public static $namingConventionsSupported = ['camelcase', 'underscores', 'titlecase'];
+    public static $namingConventionsSupported = [
+        'camelcase',
+        'underscores',
+        'titlecase'
+    ];
 
     public static $compressionSupported = ['rle'];
-    public static $layerTypesSupported = ['all', 'objectgroup', 'tilelayer'];
+    public static $layerTypesSupported = [
+        'all',
+        'objectgroup',
+        'tilelayer'
+    ];
     public static $saveGameProperties = false;
     private static $stringDelimiter = CR;
     public static $verbosity = self::VERBOSITY_NORMAL;
@@ -90,7 +111,12 @@ class App
      */
     public static function Run($options)
     {
-        echo CR . '------ Spectrum Asset Maker v' . self::VERSION . ' - C.Owen 2023 ----' . CR . CR;
+        echo CR . '' .
+            self::GetTerminalStripes() .
+            ' Spectrum Asset Maker ' .
+            self::TERMINAL_GREEN . '[v' . self::VERSION . ', ' .
+            self::TERMINAL_GREEN . 'Chris Owen ' . self::RELEASE_YEAR . ']' .
+            self::TERMINAL_WHITE . '' . CR . CR;
 
         // verbosity
         if (isset($options['verbosity'])) {
@@ -112,7 +138,20 @@ class App
             return false;
         }
 
-        echo CR . CR . '--------- Asset Generation Complete ---------' . CR . CR;
+        echo CR . CR . '' . self::GetTerminalStripes() .
+            ' Asset Generation Complete' . CR . CR;
+    }
+
+    /**
+     * Get Speccy style stripes for the terminal output
+     */
+    public static function GetTerminalStripes()
+    {
+        return self::TERMINAL_RED . '/' .
+            self::TERMINAL_YELLOW . '/' .
+            self::TERMINAL_GREEN . '/' .
+            self::TERMINAL_CYAN . '/' .
+            self::TERMINAL_WHITE;
     }
 
     /**
@@ -281,7 +320,11 @@ class App
         }
 
         if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
-            echo 'Tilemap:  Compressed "' . ($name !== false ? $name : 'array') . '" (' . $inputSize . ' -> ' . $outputSize . ' bytes. Saved ' . round((($inputSize - $outputSize) / $inputSize) * 100, 1) . '%)' . CR;
+            App::OutputMessage(
+                'Tilemap',
+                ($name !== false ? $name : 'array'),
+                'Compression ' . $inputSize . ' -> ' . $outputSize . ' bytes. Saved ' . round((($inputSize - $outputSize) / $inputSize) * 100, 1) . '%)'
+            );
         }
 
         return $output;
@@ -423,6 +466,19 @@ class App
         }
 
         file_put_contents($binariesLstFolder . 'assets.lst', $strBinaries);
+    }
+
+    /**
+     * Return output message in a standard format
+     */
+    public static function OutputMessage($module, $name, $message)
+    {
+        echo self::TERMINAL_CYAN . $module .
+            self::TERMINAL_WHITE . ' [' .
+            self::TERMINAL_MAGENTA . $name .
+            self::TERMINAL_WHITE . '] ' .
+            self::TERMINAL_YELLOW . ltrim($message, '.') .
+            self::TERMINAL_WHITE . '.' . CR;
     }
 
     /**

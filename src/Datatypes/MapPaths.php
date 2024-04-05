@@ -70,7 +70,7 @@ class MapPaths extends TileLayer
         $data = [];
 
         if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
-            echo 'Path map: Calculating paths for ' . $this->GetName() . '.' . CR;
+            App::OutputMessage('Path map', $this->name, 'Calculating paths.');
         }
 
         for ($row = 0; $row < $this->height; $row++) {
@@ -168,7 +168,7 @@ class MapPaths extends TileLayer
             }
 
             $data = App::CompressArrayRLE(
-                $this->codeName,
+                $this->name,
                 $data,
                 $addLength,
             );

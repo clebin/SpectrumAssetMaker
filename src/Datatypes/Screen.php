@@ -330,7 +330,7 @@ class Screen extends Datatype
                 $count++;
             }
 
-            echo 'SCR file: wrote ' . $count . ' bytes.';
+            App::OutputMessage('scr file', $this->name, 'Wrote ' . $count . ' bytes.');
 
             fclose($fp);
         }

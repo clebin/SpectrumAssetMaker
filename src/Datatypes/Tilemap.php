@@ -164,7 +164,7 @@ class Tilemap extends Datatype
             $paths = false;
 
             if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
-                echo 'Tilemap:  Reading layer "' . $layer['name'] . '" (' . $layer['type'] . ')' . CR;
+                App::OutputMessage('Map layer', $layer['name'], 'Reading ' . $layer['type']);
             }
 
             // tilemap

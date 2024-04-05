@@ -82,7 +82,7 @@ class TileLayer extends Datatype
             }
 
             $data = App::CompressArrayRLE(
-                $this->codeName,
+                $this->name,
                 $this->data,
                 $add_length,
             );

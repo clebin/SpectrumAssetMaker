@@ -82,7 +82,7 @@ class Tileset extends Datatype
             $this->large_tileset = true;
         }
 
-        echo 'Tileset:  Added ' . $count . ' tiles.' . CR;
+        App::OutputMessage('Tileset', $this->name, 'Added ' . $count . ' tiles.');
 
         $this->tilesetIsSet = true;
 
