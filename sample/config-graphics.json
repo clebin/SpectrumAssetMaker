@@ -2,7 +2,7 @@
     "settings": {
         "create-assets-list": true,
         "naming": "camelcase",
-        "output-folder": "./assets"
+        "output-folder": "./output"
     },
     "graphics": [
         {

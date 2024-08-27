@@ -1,1 +1,4 @@
-asm/text/sample-text.asm
+./assets/blank-data/level-paths.asm
+./assets/blank-data/level-tilemap.asm
+./assets/blank-data/tileset-colours.asm
+./assets/blank-data/tileset.asm

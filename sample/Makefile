@@ -14,6 +14,9 @@ clean:
 asm: tilemap-asm font-asm screens-asm masked-sprite-asm \
 	unmasked-sprite-asm object-map-asm blank-data-asm xml-tileset-asm
 
+config-all:
+	php $(TOOLPATH) --config=./config-all.json
+
 config-blank-data:
 	php $(TOOLPATH) --config=./config-blank-data.json
 
