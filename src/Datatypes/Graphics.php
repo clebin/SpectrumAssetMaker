@@ -50,6 +50,10 @@ class Graphics extends Datatype
             return false;
         }
 
+        if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
+            App::OutputMessage('Graphics', $this->name, 'Reading ' . $this->extension . ' file');
+        }
+
         // divide width and height into 8x8 pixel attributes      
         $dimensions = getimagesize($filename);
 

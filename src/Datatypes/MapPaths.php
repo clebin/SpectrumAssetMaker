@@ -159,7 +159,7 @@ class MapPaths extends TileLayer
         }
 
         // compression
-        if ($this->compression === 'rle') {
+        if ($this->compression === App::COMPRESSION_RLE) {
 
             if ($this->codeFormat == 'asm') {
                 $addLength = true;

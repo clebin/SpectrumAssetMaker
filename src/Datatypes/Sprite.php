@@ -28,7 +28,6 @@ class Sprite extends Datatype
             $this->isValid = false;
             return;
         }
-
         // paper colour
         if (isset($config['paper-colour']) && in_array($config['paper-colour'], App::$coloursSupported)) {
             $this->paperColour = $config['paper-colour'];

@@ -23,7 +23,6 @@ class Tilemap extends Datatype
     public $ignoreHiddenLayers = false;
     public $layerTypes = 'all';
     public $generatePaths = false;
-    public $compression = false;
     public $addDimensions = false;
     public $tileset = false;
 
@@ -52,11 +51,6 @@ class Tilemap extends Datatype
         // object types
         if (isset($config['object-types'])) {
             $this->objectTypes = $config['object-types'];
-        }
-
-        // compression
-        if (isset($config['compression']) && in_array($config['compression'], App::$compressionSupported)) {
-            $this->compression = $config['compression'];
         }
 
         // generate paths

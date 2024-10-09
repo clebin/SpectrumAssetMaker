@@ -73,7 +73,7 @@ class TileLayer extends Datatype
     public function GetData()
     {
         // compression
-        if ($this->compression === 'rle') {
+        if ($this->compression === App::COMPRESSION_RLE) {
 
             if ($this->codeFormat == 'asm') {
                 $add_length = true;

@@ -7,30 +7,15 @@
     },
     "blank-data": [
         {
-            "name": "level-tilemap",
-            "size": 2208,
-            "output-folder": "./output/asm/blank-data"
-        },
-        {
-            "name": "level-paths",
-            "size": 2208,
-            "output-folder": "./output/asm/blank-data"
-        },
-        {
             "name": "tileset",
             "size": 1280,
-            "output-folder": "./output/asm/blank-data"
-        },
-        {
-            "name": "tileset-colours",
-            "size": 160,
             "output-folder": "./output/asm/blank-data"
         }
     ],
     "tilemaps": [
         {
             "map": "raw-assets/tilemaps/screens.tmj",
-            "output-folder": "./output/asm/levels",
+            "output-folder": "./output/asm/tilemaps",
             "use-layer-names": true,
             "generate-paths": true,
             "format": "asm",
@@ -44,47 +29,6 @@
                 "replace-flash-with-solid": true,
                 "section": "BANK_4"
             }
-        },
-        {
-            "map": "raw-assets/tilemaps/screens-ice.tmj",
-            "output-folder": "./output/asm/levels",
-            "use-layer-names": true,
-            "generate-paths": true,
-            "format": "asm",
-            "compression": "rle",
-            "ignore-hidden-layers": false,
-            "section": "BANK_6",
-            "tileset": {
-                "name": "game-tiles-ice",
-                "tileset": "raw-assets/tilesets/game-tileset-ice.tsj",
-                "output-folder": "./output/asm/tilesets",
-                "replace-flash-with-solid": true,
-                "section": "BANK_4"
-            }
-        },
-        {
-            "map": "raw-assets/tilemaps/screens-cave.tmj",
-            "output-folder": "./output/asm/levels",
-            "use-layer-names": true,
-            "generate-paths": true,
-            "format": "asm",
-            "compression": "rle",
-            "ignore-hidden-layers": false,
-            "section": "BANK_6",
-            "tileset": {
-                "name": "game-tiles-cave",
-                "tileset": "raw-assets/tilesets/game-tileset-cave.tsj",
-                "output-folder": "./output/asm/tilesets",
-                "replace-flash-with-solid": true,
-                "section": "BANK_4"
-            }
-        },
-        {
-            "name": "menu-tiles",
-            "map": "raw-assets/main-menu/main-menu.tmj",
-            "paper-colour": "white",
-            "output-folder": "./output/asm/main-menu",
-            "section": "BANK_4"
         }
     ],
     "tilesets": [
@@ -98,48 +42,8 @@
     "sprites": [
         {
             "name": "player-sprite",
-            "image": "raw-assets/sprites/player-sprite.png",
+            "input": "raw-assets/sprites/player-sprite.png",
             "mask": "raw-assets/sprites/player-sprite-mask.png",
-            "paper-colour": "black",
-            "output-folder": "./output/asm/sprites",
-            "section": "BANK_0"
-        },
-        {
-            "name": "bandit-sprite",
-            "image": "raw-assets/sprites/bandit-sprite.png",
-            "mask": "raw-assets/sprites/bandit-sprite-mask.png",
-            "paper-colour": "black",
-            "output-folder": "./output/asm/sprites",
-            "section": "BANK_0"
-        },
-        {
-            "name": "wheelbarrow-sprite",
-            "image": "raw-assets/sprites/wheelbarrow.png",
-            "mask": "raw-assets/sprites/wheelbarrow-mask.png",
-            "paper-colour": "black",
-            "output-folder": "./output/asm/sprites",
-            "section": "BANK_0"
-        },
-        {
-            "name": "minecart-sprite",
-            "image": "raw-assets/sprites/minecart.png",
-            "mask": "raw-assets/sprites/minecart-mask.png",
-            "paper-colour": "black",
-            "output-folder": "./output/asm/sprites",
-            "section": "BANK_0"
-        },
-        {
-            "name": "moneybag-sprite",
-            "image": "raw-assets/sprites/moneybag.png",
-            "mask": "raw-assets/sprites/moneybag-mask.png",
-            "paper-colour": "black",
-            "output-folder": "./output/asm/sprites",
-            "section": "BANK_0"
-        },
-        {
-            "name": "lift-sprite",
-            "image": "raw-assets/sprites/lift.png",
-            "mask": "raw-assets/sprites/lift-mask.png",
             "paper-colour": "black",
             "output-folder": "./output/asm/sprites",
             "section": "BANK_0"
@@ -148,42 +52,24 @@
     "graphics": [
         {
             "name": "font",
-            "image": "raw-assets/fonts/lander-bold.png",
+            "input": "raw-assets/graphics/lander-bold.png",
             "paper-colour": "white",
-            "output-folder": "./output/asm",
+            "output-folder": "./output/asm/graphics",
             "section": "BANK_0"
         },
         {
-            "name": "menu-tiles-graphics",
-            "image": "raw-assets/main-menu/menu-tiles-bw.png",
+            "name": "font-compressed",
+            "input": "raw-assets/graphics/lander-bold.png",
             "paper-colour": "white",
-            "output-folder": "./output/asm/main-menu",
-            "section": "BANK_4"
-        },
-        {
-            "name": "game-tiles-graphics",
-            "image": "raw-assets/tilesets/game-tileset-bw.png",
-            "paper-colour": "black",
-            "output-folder": "./output/asm/tilesets",
-            "replace-flash-with-solid": true,
-            "section": "BANK_4"
-        },
-        {
-            "name": "game-tiles-ice-graphics",
-            "image": "raw-assets/tilesets/game-tileset-ice-bw.png",
-            "paper-colour": "black",
-            "output-folder": "./output/asm/tilesets",
-            "replace-flash-with-solid": true,
-            "section": "BANK_4"
-        },
-        {
-            "name": "game-tiles-cave-graphics",
-            "image": "raw-assets/tilesets/game-tileset-cave-bw.png",
-            "paper-colour": "black",
-            "output-folder": "./output/asm/tilesets",
-            "replace-flash-with-solid": true,
-            "section": "BANK_4"
+            "output-folder": "./output/asm/graphics",
+            "section": "BANK_0",
+            "compression": "zx0"
         }
     ],
-    "text": []
+    "text": [
+        {
+            "name": "sample-text",
+            "input": "raw-assets/text/sample-text.txt"
+        }
+    ]
 }

@@ -30,6 +30,11 @@ class App
     const NAMING_CAMELCASE = 'camelcase';
     const NAMING_UNDERSCORES = 'underscores';
 
+    // compression
+    const COMPRESSION_NONE = false;
+    const COMPRESSION_RLE = 'rle';
+    const COMPRESSION_ZX0 = 'zx0';
+
     // terminal colours
     const TERMINAL_BOLD = "\033[1m";
     const TERMINAL_BG_BLACK = "\033[40m";
@@ -89,7 +94,11 @@ class App
         'titlecase'
     ];
 
-    public static $compressionSupported = ['rle'];
+    public static $compressionSupported = [
+        self::COMPRESSION_RLE,
+        self::COMPRESSION_ZX0
+    ];
+
     public static $layerTypesSupported = [
         'all',
         'objectgroup',
@@ -287,6 +296,17 @@ class App
             $count++;
         }
         return $str;
+    }
+
+    /**
+     * Compress data array using ZX0 (requires Java)
+     */
+    public static function CompressArrayZX0($filename)
+    {
+        $zx0_path = dirname(dirname(__FILE__)) . '/ext/zx0/zx0.jar';
+
+        // compress it
+        shell_exec('java -jar ' . $zx0_path . ' ' . $filename);
     }
 
     /**

@@ -17,6 +17,9 @@ abstract class Datatype
         App::FORMAT_C
     ];
 
+
+    public $compression = App::COMPRESSION_NONE;
+
     protected $defineName;
     protected $codeSection = 'rodata_user';
     protected $filename = false;
@@ -63,6 +66,11 @@ abstract class Datatype
             $this->outputFolder = rtrim($config['output-folder'], '/') . '/';
         } else {
             $this->outputFolder = '';
+        }
+
+        // compression
+        if (isset($config['compression']) && in_array($config['compression'], App::$compressionSupported)) {
+            $this->compression = $config['compression'];
         }
     }
 
@@ -226,6 +234,16 @@ abstract class Datatype
             App::AddOutputFile($this->GetOutputFilepath()) . CR;
         }
         file_put_contents($this->GetOutputFilepath(), $this->GetCode());
+
+        // compress with zx0
+        if ($this->compression == App::COMPRESSION_ZX0) {
+
+            echo 'Compressing "' . $this->GetOutputFilePath() . '" with ZX0.' . CR;
+
+            App::CompressArrayZX0(
+                $this->GetOutputFilepath()
+            );
+        }
     }
 
     public function GetHeader()

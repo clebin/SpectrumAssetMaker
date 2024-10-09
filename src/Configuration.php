@@ -37,10 +37,17 @@ class Configuration
             return;
         }
 
+        echo 'Reading config file: ' . $configPath . CR;
+
         // read config file
         $json = file_get_contents($configPath);
 
-        $config = json_decode($json, true);
+        try {
+            $config = json_decode($json, true);
+        } catch (\Exception $e) {
+            echo 'Error reading JSON:' . $e;
+            exit();
+        }
 
         // settings
         if (isset($config['settings'])) {

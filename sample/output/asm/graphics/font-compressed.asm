@@ -2,9 +2,9 @@
 ; https://github.com/clebin/SpectrumAssetMaker
 
 section BANK_0
-public _font
+public _fontCompressed
 
-._font
+._fontCompressed
 defb @00000000
 defb @00000000
 defb @00000000

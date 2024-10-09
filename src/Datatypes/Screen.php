@@ -313,7 +313,6 @@ class Screen extends Datatype
         return $this->filename . '.scr';
     }
 
-
     public function WriteFile()
     {
         $data = $this->GetData();
