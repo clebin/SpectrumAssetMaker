@@ -24,21 +24,16 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets for 
 
 ## Input formats:
 
-**Tilemap** - Tiled tilemap exported JSON (.tmj)
-
-**Tileset** - Tiled tileset exported as JSON (.tsj)
-
-**Object types** - Tiled Object Types XML file (.xml)
-
-**Tileset graphics** - Black and white PNG or GIF (PNG recommended)
-
-**Sprite** - Black and white PNG or GIF (PNG recommended)
-
-**Sprite Mask** - Black and white PNG or GIF (PNG recommended)
-
-**Text** - Plain text file
-
-**SCR** - PNG file, 256 pixels by 192 pixels
+|Type|File expected|
+|---|---|
+|**Tilemap**|Tiled tilemap exported JSON (.tmj)||
+|**Tileset**|Tiled tileset exported as JSON (.tsj)|
+|**Object types**|Tiled Object Types XML file (.xml)|
+|**Tileset graphics**|Black and white PNG or GIF (PNG recommended)|
+|**Sprite**|Black and white PNG or GIF (PNG recommended)|
+|**Sprite Mask**|Black and white PNG or GIF (PNG recommended)|
+|**Text**|Plain text file|
+|**SCR**|PNG file, 256 pixels by 192 pixels|
 
 ## Installation:
 
@@ -176,7 +171,7 @@ Below is an example JSON configuration file. More JSON files are included in the
     "sprites": [
     {
         "name": "player-sprite",
-        "image": "raw-assets/sprites/player-sprite.png",
+        "input": "raw-assets/sprites/player-sprite.png",
         "mask": "raw-assets/sprites/player-sprite-mask.png",
         "paper-colour": "black",
         "output-folder": "./assets/sprites",
@@ -184,7 +179,7 @@ Below is an example JSON configuration file. More JSON files are included in the
     }],
     "graphics": [{
             "name": "font",
-            "image": "raw-assets/fonts/lander-bold.png",
+            "input": "raw-assets/fonts/lander-bold.png",
             "paper-colour": "white",
             "output-folder": "./assets",
             "section": "BANK_0"
@@ -192,13 +187,13 @@ Below is an example JSON configuration file. More JSON files are included in the
     "screens": [
         {
             "name": "loading-screen",
-            "image": "raw-assets/loading-screen.png",
+            "input": "raw-assets/loading-screen.png",
             "output-folder": "./assets"
         }
     ],
     "text": [{
 		"name": "intro-text",
-		"text": "raw-assets/intro.txt",
+		"input": "raw-assets/intro.txt",
 		"output-folder": "./assets/text",
 	    "section": "BANK_0"
     }]
