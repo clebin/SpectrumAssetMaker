@@ -316,23 +316,6 @@ class Screen extends Datatype
 
     public function WriteFile()
     {
-        $data = $this->GetData();
-
-        // clear file
-        file_put_contents($this->GetOutputFilepath(), '');
-
-        // add data
-        if ($fp = fopen($this->GetOutputFilepath(), 'a')) {
-
-            $count = 0;
-            foreach ($data as $byte) {
-                fwrite($fp, pack("C", $byte));
-                $count++;
-            }
-
-            App::OutputMessage($this->datatypeName, $this->name, 'Wrote ' . $count . ' bytes.');
-
-            fclose($fp);
-        }
+        $this->WriteBinaryFile($this->GetOutputFilepath());
     }
 }

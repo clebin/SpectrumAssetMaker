@@ -21,12 +21,16 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
  */
 class App
 {
-    const VERSION = '1.0';
+    // app details
+    const VERSION = '1.0b4';
     const RELEASE_YEAR = '2024';
 
-    // constants
+    // output formats
     const FORMAT_ASM = 'asm';
     const FORMAT_C = 'c';
+    const FORMAT_BINARY = 'binary';
+
+    // naming
     const NAMING_CAMELCASE = 'camelcase';
     const NAMING_UNDERSCORES = 'underscores';
 
@@ -57,6 +61,7 @@ class App
     const COLOUR_YELLOW = 'yellow';
     const COLOUR_WHITE = 'white';
 
+    // verbosity
     const VERBOSITY_SILENT = 0;
     const VERBOSITY_NORMAL = 1;
     const VERBOSITY_VERBOSE = 2;
@@ -314,10 +319,25 @@ class App
      */
     public static function CompressArrayZX0($filename)
     {
-        $zx0_path = dirname(dirname(__FILE__)) . '/ext/zx0/zx0.jar';
+        $zx0_path = getenv('ZX0_PATH');
 
-        // compress it
-        shell_exec('java -jar ' . $zx0_path . ' ' . $filename);
+        if ($zx0_path === false) {
+            App::AddError('To use ZX0 compression you must set \'ZX0_PATH\' local environment variable pointing to the ZX0 executable or jarfile.');
+        }
+
+        // remove old file if necessary
+        if (file_exists($filename . '.zx0')) {
+            unlink($filename . '.zx0');
+        }
+
+        // java version
+        if (strpos($zx0_path, '.jar') > 0) {
+            shell_exec('java -jar ' . $zx0_path . ' ' . $filename);
+        }
+        // exe version
+        else {
+            shell_exec($zx0_path . ' ' . $filename);
+        }
     }
 
     /**
