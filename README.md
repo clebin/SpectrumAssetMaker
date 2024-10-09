@@ -5,17 +5,19 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets for 
 
 ## Output formats
 
-* Spectrum graphics data
+* Graphics data
 
-* Masked and unmasked sprites (sp1 format)
+* Masked/Unmasked Sprite (sp1 format)
 
-* .SCR files (eg. loading screen)
+* .SCR file (eg. loading screen)
 
-* Tilemaps - tile numbers, associated with a tileset
+* Tilemap - tile numbers, associated with a tileset
 
-* Tilesets - Includes attribute colours, solid properties. Associated with a set of graphics.
+* Path Map - an array showing exits up/down/left/right for each square. Can be used to speed up pathfinding for complex AI.
 
-* Object maps - object type, x, y, width, height
+* Tileset - Includes attribute colours, solid properties. Associated with a set of graphics.
+
+* Object Map - object type, x, y, width, height
 
 * Text data
 
