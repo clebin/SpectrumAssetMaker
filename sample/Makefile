@@ -4,14 +4,23 @@ all: asm c
 
 clean:
 	-rm ./output/asm/blank-data/*.asm
+	-rm ./output/asm/blank-data/*.zx0
 	-rm ./output/asm/graphics/*.asm
+	-rm ./output/asm/graphics/*.zx0
 	-rm ./output/asm/music/*.asm
+	-rm ./output/asm/music/*.zx0
 	-rm ./output/asm/object-maps/*.asm
+	-rm ./output/asm/object-maps/*.zx0
 	-rm ./output/asm/sprites/*.asm
+	-rm ./output/asm/sprites/*.zx0
 	-rm ./output/asm/text/*.asm
+	-rm ./output/asm/text/*.zx0
 	-rm ./output/asm/tilemaps/*.asm
+	-rm ./output/asm/tilemaps/*.zx0
 	-rm ./output/asm/tilesets/*.asm
+	-rm ./output/asm/tilesets/*.zx0
 	-rm ./output/asm/*.asm
+	-rm ./output/asm/*.zx0
 	-rm ./output/c/blank-data/*.c
 	-rm ./output/c/graphics/*.c
 	-rm ./output/c/music/*.c
