@@ -235,7 +235,15 @@ The 'path-map-style' property can be set to 'overhead' or 'platform'. In overhea
 
 The byte format of a square in the path map is as follows:
 
+```
 [0][0][0][0][up][down][left][right]
+```
+
+For example, a square with exits in all 4 directions would be represented as:
+
+```
+00001111
+```
 
 ### Importing Object layers ###
 
@@ -265,9 +273,11 @@ Export the objecttypes.xml and specify the path using the --object-types paramet
 
 The data will be preceded by 2 bytes specifying the array length (hi/lo). This will appear after rows and columns if --add-dimensions is specified.
 
+
 ### Planned Features
 
-* Creation of ZX Spectrum Next graphics
+* Support for ZX0 compression (ZX0 data compressor by Einar Sukas)
+* Creation of ZX Spectrum Next assets (possible)
 
 ### Known Issues:
 
