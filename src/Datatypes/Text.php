@@ -6,6 +6,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class Text extends Datatype
 {
+    public $datatypeName = 'Text';
     protected $linefeed = 13;
     protected $sourceDelimiter = CR;
     protected $asmDelimiter = 0;
@@ -111,6 +112,12 @@ class Text extends Datatype
     {
         parent::__construct($config);
 
+        if ($this->inputFilepath === false) {
+            $this->isValid = false;
+            App::AddError($this->datatypeName . ': No input specified for "' . $this->name . '"');
+            return;
+        }
+
         $this->isValid = $this->ReadFile($this->inputFilepath);
     }
 
@@ -119,11 +126,12 @@ class Text extends Datatype
         // check if filename exists
         if (!file_exists($filename)) {
             App::AddError('Text file (' . $filename . ') not found');
+            $this->isValid = false;
             return false;
         }
 
         if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
-            App::OutputMessage('Text', $this->name, 'Reading text file');
+            App::OutputMessage($this->datatypeName, $this->name, 'Reading text file');
         }
 
         // get contents

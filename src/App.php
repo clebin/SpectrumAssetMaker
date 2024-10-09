@@ -142,13 +142,24 @@ class App
         }
 
         // display errors
-        if (self::$error === true) {
-            echo 'Errors (' . sizeof(self::$errorDetails) . '): ' . implode('. ', self::$errorDetails);
-            return false;
-        }
+        self::ShowErrors();
 
         echo CR . '' . self::GetTerminalStripes() .
             ' Asset Generation Complete' . CR . CR;
+    }
+
+    /**
+     * Output errors that have occurred during asset generation
+     */
+    public static function ShowErrors()
+    {
+        if (self::$error === true) {
+            echo CR . self::TERMINAL_RED . 'Errors (' . sizeof(self::$errorDetails) . '): ' . CR;
+            echo self::TERMINAL_WHITE . implode(CR, self::$errorDetails);
+            echo CR;
+
+            return false;
+        }
     }
 
     /**

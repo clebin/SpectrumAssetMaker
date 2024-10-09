@@ -9,6 +9,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
  */
 class TileLayer extends Datatype
 {
+    public $datatypeName = 'Tile Layer';
     public $num = 0;
     public $width = false;
     public $height = false;

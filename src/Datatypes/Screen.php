@@ -26,6 +26,7 @@ This simple program illustrates the layout of the screen display by filling it w
 
 class Screen extends Datatype
 {
+    public $datatypeName = 'Screen';
     protected $image = false;
     public $extension = 'png';
     public $attributes = [];
@@ -329,7 +330,7 @@ class Screen extends Datatype
                 $count++;
             }
 
-            App::OutputMessage('scr file', $this->name, 'Wrote ' . $count . ' bytes.');
+            App::OutputMessage($this->datatypeName, $this->name, 'Wrote ' . $count . ' bytes.');
 
             fclose($fp);
         }

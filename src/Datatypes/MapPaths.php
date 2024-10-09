@@ -6,6 +6,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class MapPaths extends TileLayer
 {
+    public $datatypeName = 'Map Paths';
     const DIRECTION_UP = 8;
     const DIRECTION_DOWN = 4;
     const DIRECTION_LEFT = 2;
@@ -70,7 +71,7 @@ class MapPaths extends TileLayer
         $data = [];
 
         if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
-            App::OutputMessage('Path map', $this->name, 'Calculating paths.');
+            App::OutputMessage($this->datatypeName, $this->name, 'Calculating paths.');
         }
 
         for ($row = 0; $row < $this->height; $row++) {

@@ -64,6 +64,13 @@
             "output-folder": "./output/asm/graphics",
             "section": "BANK_0",
             "compression": "zx0"
+        },
+        {
+            "name": "force-error-1""output-folder": "./output/asm/graphics"
+        },
+        {
+            "name": "force-error-2",
+            "output-folder": "./output/asm/graphics"
         }
     ],
     "text": [

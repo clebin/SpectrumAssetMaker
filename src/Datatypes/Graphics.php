@@ -6,6 +6,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class Graphics extends Datatype
 {
+    public $datatypeName = 'Graphics';
     protected $image = false;
     public $numColumns = 0;
     public $numRows = 0;
@@ -23,9 +24,14 @@ class Graphics extends Datatype
         }
 
         // set input file
-        if ($this->inputFilepath !== false) {
-            $this->isValid = $this->ReadFile($this->inputFilepath);
+        if ($this->inputFilepath === false) {
+
+            $this->isValid = false;
+            App::AddError($this->datatypeName . ': No input specified for "' . $this->name . '"');
+            return;
         }
+
+        $this->isValid = $this->ReadFile($this->inputFilepath);
     }
 
     /**
@@ -51,7 +57,7 @@ class Graphics extends Datatype
         }
 
         if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
-            App::OutputMessage('Graphics', $this->name, 'Reading ' . $this->extension . ' file');
+            App::OutputMessage($this->datatypeName, $this->name, 'Reading ' . $this->extension . ' file');
         }
 
         // divide width and height into 8x8 pixel attributes      

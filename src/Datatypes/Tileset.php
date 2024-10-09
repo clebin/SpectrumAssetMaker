@@ -10,6 +10,7 @@ use \ClebinGames\SpectrumAssetMaker\Tile;
  */
 class Tileset extends Datatype
 {
+    public $datatypeName = 'Tileset';
     protected $tilesetIsSet = false;
     protected $addProperties = false;
     protected $replaceFlashWithSolid = false;
@@ -82,7 +83,7 @@ class Tileset extends Datatype
             $this->large_tileset = true;
         }
 
-        App::OutputMessage('Tileset', $this->name, 'Added ' . $count . ' tiles');
+        App::OutputMessage($this->datatypeName, $this->name, 'Added ' . $count . ' tiles');
 
         $this->tilesetIsSet = true;
 

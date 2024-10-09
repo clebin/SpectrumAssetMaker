@@ -6,6 +6,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class Sprite extends Datatype
 {
+    public $datatypeName = 'Sprite';
     private $spriteImage = false;
     private $maskImage = false;
 
@@ -25,9 +26,11 @@ class Sprite extends Datatype
 
         // set sprite image
         if ($this->inputFilepath === false) {
+            App::AddError($this->datatypeName . ': No input specified for "' . $this->name . '"');
             $this->isValid = false;
             return;
         }
+
         // paper colour
         if (isset($config['paper-colour']) && in_array($config['paper-colour'], App::$coloursSupported)) {
             $this->paperColour = $config['paper-colour'];
@@ -66,7 +69,7 @@ class Sprite extends Datatype
         $this->numColumns = $this->width / 8;
 
         if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
-            App::OutputMessage('Sprite', $this->name, 'Created ' . $this->numColumns . ' columns (' . $this->width . ' x ' . $this->height . 'px)');
+            App::OutputMessage($this->datatypeName, $this->name, 'Created ' . $this->numColumns . ' columns (' . $this->width . ' x ' . $this->height . 'px)');
         }
 
         // get raw pixel data

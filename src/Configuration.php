@@ -49,6 +49,11 @@ class Configuration
             exit();
         }
 
+        // check if json was parsed
+        if (sizeof((array) $config) == 0) {
+            App::AddError('JSON configuration couldn\'t be parsed correctly.');
+        }
+
         // settings
         if (isset($config['settings'])) {
             self::ReadSettings($config['settings']);
