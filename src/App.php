@@ -21,7 +21,7 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
  */
 class App
 {
-    const VERSION = '1.0b3';
+    const VERSION = '1.0';
     const RELEASE_YEAR = '2024';
 
     // constants
