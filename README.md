@@ -5,17 +5,19 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets for 
 
 ## Output formats
 
-* Spectrum graphics data
+* Graphics data
 
-* Masked and unmasked sprites (sp1 format)
+* Masked/Unmasked Sprite (sp1 format)
 
-* .SCR files (eg. loading screen)
+* .SCR file (eg. loading screen)
 
-* Tilemaps - tile numbers, associated with a tileset
+* Tilemap - tile numbers, associated with a tileset
 
-* Tilesets - Includes attribute colours, solid properties. Associated with a set of graphics.
+* Path Map - an array showing exits up/down/left/right for each square. Can be used to speed up pathfinding for complex AI.
 
-* Object maps - object type, x, y, width, height
+* Tileset - Includes attribute colours, solid properties. Associated with a set of graphics.
+
+* Object Map - object type, x, y, width, height
 
 * Text data
 
@@ -24,21 +26,16 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets for 
 
 ## Input formats:
 
-**Tilemap** - Tiled tilemap exported JSON (.tmj)
-
-**Tileset** - Tiled tileset exported as JSON (.tsj)
-
-**Object types** - Tiled Object Types XML file (.xml)
-
-**Tileset graphics** - Black and white PNG or GIF (PNG recommended)
-
-**Sprite** - Black and white PNG or GIF (PNG recommended)
-
-**Sprite Mask** - Black and white PNG or GIF (PNG recommended)
-
-**Text** - Plain text file
-
-**SCR** - PNG file, 256 pixels by 192 pixels
+|Type|File expected|
+|---|---|
+|**Tilemap**|Tiled tilemap exported JSON (.tmj)||
+|**Tileset**|Tiled tileset exported as JSON (.tsj)|
+|**Object types**|Tiled Object Types XML file (.xml)|
+|**Tileset graphics**|Black and white PNG or GIF (PNG recommended)|
+|**Sprite**|Black and white PNG or GIF (PNG recommended)|
+|**Sprite Mask**|Black and white PNG or GIF (PNG recommended)|
+|**Text**|Plain text file|
+|**SCR**|PNG file, 256 pixels by 192 pixels|
 
 ## Installation:
 
@@ -176,7 +173,7 @@ Below is an example JSON configuration file. More JSON files are included in the
     "sprites": [
     {
         "name": "player-sprite",
-        "image": "raw-assets/sprites/player-sprite.png",
+        "input": "raw-assets/sprites/player-sprite.png",
         "mask": "raw-assets/sprites/player-sprite-mask.png",
         "paper-colour": "black",
         "output-folder": "./assets/sprites",
@@ -184,7 +181,7 @@ Below is an example JSON configuration file. More JSON files are included in the
     }],
     "graphics": [{
             "name": "font",
-            "image": "raw-assets/fonts/lander-bold.png",
+            "input": "raw-assets/fonts/lander-bold.png",
             "paper-colour": "white",
             "output-folder": "./assets",
             "section": "BANK_0"
@@ -192,13 +189,13 @@ Below is an example JSON configuration file. More JSON files are included in the
     "screens": [
         {
             "name": "loading-screen",
-            "image": "raw-assets/loading-screen.png",
+            "input": "raw-assets/loading-screen.png",
             "output-folder": "./assets"
         }
     ],
     "text": [{
 		"name": "intro-text",
-		"text": "raw-assets/intro.txt",
+		"input": "raw-assets/intro.txt",
 		"output-folder": "./assets/text",
 	    "section": "BANK_0"
     }]
@@ -238,7 +235,15 @@ The 'path-map-style' property can be set to 'overhead' or 'platform'. In overhea
 
 The byte format of a square in the path map is as follows:
 
+```
 [0][0][0][0][up][down][left][right]
+```
+
+For example, a square with exits in all 4 directions would be represented as:
+
+```
+00001111
+```
 
 ### Importing Object layers ###
 
@@ -268,9 +273,11 @@ Export the objecttypes.xml and specify the path using the --object-types paramet
 
 The data will be preceded by 2 bytes specifying the array length (hi/lo). This will appear after rows and columns if --add-dimensions is specified.
 
+
 ### Planned Features
 
-* Creation of ZX Spectrum Next graphics
+* Support for ZX0 compression (ZX0 data compressor by Einar Sukas)
+* Creation of ZX Spectrum Next assets (possible)
 
 ### Known Issues:
 
