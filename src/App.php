@@ -332,11 +332,11 @@ class App
 
         // java version
         if (strpos($zx0_path, '.jar') > 0) {
-            shell_exec('java -jar ' . $zx0_path . ' ' . $filename);
+            shell_exec('java -jar ' . $zx0_path . ' -c ' . $filename);
         }
         // exe version
         else {
-            shell_exec($zx0_path . ' ' . $filename);
+            shell_exec($zx0_path . ' -c ' . $filename);
         }
     }
 
