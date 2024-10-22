@@ -14,7 +14,7 @@ class Text extends Datatype
     protected $addArrayLength = false;
     protected $filename = '';
 
-    protected $charset = [
+    protected static $charset = [
         ' ',
         '!',
         '"',
@@ -149,8 +149,8 @@ class Text extends Datatype
             for ($i = 0; $i < strlen($strData); $i++) {
 
                 // regular charset
-                if (in_array($strData[$i], $this->charset)) {
-                    $this->data[] = $this->charsetStart + array_search($strData[$i], $this->charset);
+                if (in_array($strData[$i], self::$charset)) {
+                    $this->data[] = $this->charsetStart + array_search($strData[$i], self::$charset);
                 }
                 // delimiter (default is line-feed)
                 else if ($strData[$i] == $this->sourceDelimiter) {

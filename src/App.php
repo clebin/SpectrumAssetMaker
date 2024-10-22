@@ -119,6 +119,10 @@ class App
     // errors
     private static $error = false;
     private static $errorDetails = [];
+    
+    // configuration
+    public static $configFile;
+    public static $sectionsInUse = [];
 
     /**
      * Start the tool
@@ -137,14 +141,17 @@ class App
             self::$verbosity = $options['verbosity'];
         }
 
-        // use json config file
+        // specify json config file
         if (isset($options['config'])) {
-            Configuration::Setup($options['config']);
+            self::$configFile = $options['config'];
         }
-        // use command line args
-        else {
-            ConfigurationCli::Setup($options);
+        
+        // specify datatypes to use
+        if( isset($options['section'])) {
+            self::$sectionsInUse = explode(',', $options['section']);
         }
+
+        Configuration::Process(self::$configFile, self::$sectionsInUse);
 
         // display errors
         self::ShowErrors();

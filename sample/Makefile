@@ -1,6 +1,6 @@
 TOOLPATH = ../SpectrumAssetMaker.php
 
-all: config-all
+all: clean config-all
 
 clean:
 	-rm ./output/asm/blank-data/*.asm
@@ -30,27 +30,21 @@ clean:
 	-rm ./output/c/tilesets/*.c
 	-rm ./output/c/*.c
 
-# assembly output
-asm: tilemap-asm font-asm screens-asm masked-sprite-asm \
-	unmasked-sprite-asm object-map-asm blank-data-asm xml-tileset-asm
-
 config-all:
-	php $(TOOLPATH) --config=./config-all.json
+	php $(TOOLPATH) --config=./config.json
 
-config-blank-data:
-	php $(TOOLPATH) --config=./config-blank-data.json
+blank-data:
+	php $(TOOLPATH) --config=./config.json --datatype=blank-data
 
-config-sprites:
-	php $(TOOLPATH) --config=./config-sprites.json
+sprites:
+	php $(TOOLPATH) --config=./config.json --section=sprites
 
-config-graphics:
-	php $(TOOLPATH) --config=./config-graphics.json
+graphics:
+	php $(TOOLPATH) --config=./config.json --section=graphics
 
-config-text:
-	php $(TOOLPATH) --config=./config-text.json
+text:
+	php $(TOOLPATH) --config=./config.json --section=text
 
-config-tilemaps:
-	php $(TOOLPATH) --config=./config-tilemaps.json
+tilemaps:
+	php $(TOOLPATH) --config=./config.json --section=tilemaps
 
-config-music:
-	php $(TOOLPATH) --config=./config-music.json

@@ -23,6 +23,8 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets for 
 
 * Blank (zeroed) data
 
+* Arrays of data taken from a JSON config file
+
 
 ## Input formats:
 
@@ -51,74 +53,7 @@ On the command line, run:
 
 > php SpectrumAssetMaker.php
 
-Running the script without parameters will prompt for each setting.
-
-## Usage with command-line parameters
-
-### Basic parameters:
-
-Parameters can be pass directly to the tool to process a single asset of a small set of related assets.
-
-**--name**=[name for output - this option overrides layer names for tile/object maps]
-
-**--output-folder**=[folder path to place generated files]
-
-**--format**=['c' or 'asm', default: asm]
-
-**--section**=[assembly section to place code into, default: rodata_user]
-
-### Parameters for graphics data
-
-**--screen**=[path to png] (create a .scr file)
-
-**--graphics**=[tiled graphics filename] (create graphics laid out tile-by-tile)
-
-
-### Parameters for Tilemap/Object Map/Tileset Processing:
-
-**--ignore-hidden-layers** (don't process hidden layers. Hidden layers are processed by default)
-
-**--layer-type**=['all', 'objectgroup' or 'tilelayer'] (set which type of Tiled layers to process)
-
-**--replace-flash-with-solid** (use the bit normally used for flash to denote a solid block)
-
-**--object-types**=[object types XML file] (this is required for processing object maps)
-
-**--object-props**=[path to object custom properties text file (see below for info)]
-
-**--map**=[tilemap filename]
-
-**--tileset**=[tileset filename]
-
-**--paper-colour**=[black|blue|red|magenta|green|cyan|yellow|white] (colour to use as paper, everything else is taken as ink)
-
-**--paper-colour**=[black|blue|red|magenta|green|cyan|yellow|white] (colour to use as paper, everything else is taken as ink)
-
-**--add-dimensions** (add rows & columns, as the first two elements in the tilemap data arrays)
-
-**--compression**=rle [enable RLE compression on tilemaps]
-
-
-### Parameters for blank data
-
-**--blank-data**=[size in bytes] (create blank data of a specified size)
-
-### Parameters for text processing
-
-**--text**=[text filename] (convert text into assembly or C array)
-
-**--string-delimiter**=[character] (character to use for splitting strings into C arrays)
-
-
-### Parameters for Sprite Processing:
-
-**--sprite**=[sprite filename]
-
-**--mask**=[sprite mask filename]
-
-**--sprite-width**=[sprite width in 8 pixel columns]
-
-## Usage with a JSON configuration file:
+## Read a JSON configuration file:
 
 **--config=**=[path to JSON config file]
 
@@ -272,12 +207,6 @@ Export the objecttypes.xml and specify the path using the --object-types paramet
 1 byte for tilenum, 1 byte for run-length.
 
 The data will be preceded by 2 bytes specifying the array length (hi/lo). This will appear after rows and columns if --add-dimensions is specified.
-
-
-### Planned Features
-
-* Support for ZX0 compression (ZX0 data compressor by Einar Sukas)
-* Creation of ZX Spectrum Next assets (possible)
 
 ### Known Issues:
 

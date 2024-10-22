@@ -9,27 +9,31 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\Graphics;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Sprite;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Screen;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\ArkosTracker;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\ArrayData;
 
 class Configuration
 {
     private static $configPath = '';
     private static $config = [];
+    private static $settings = [];
 
     // default settings
     public static $createBinariesLst = false;
     public static $outputFolder = "./assets";
 
-    // data types
-    private static $settings = [];
-    private static $sprites = [];
-    private static $tilemaps = [];
-    private static $tilesets = [];
-    private static $graphics = [];
-    private static $blankData = [];
-    private static $text = [];
+    // map config sections to datatype
+    private static $sectionDatatypeMapping = [
+        "sprites" => Sprite::class,
+        "tilemaps" => Tilemap::class,
+        "tileset" => Tileset::class,
+        "graphics" => Graphics::class,
+        "text" => Text::class,
+        "Screen" => Screen::class,
+        "blank-data" => BlankData::class,
+        "array-data" => ArrayData::class
+    ];
 
-    public static function Setup($configPath)
+    public static function Process($configPath, $sectionsInUse = [])
     {
         if (!file_exists($configPath)) {
 
@@ -59,44 +63,13 @@ class Configuration
             self::ReadSettings($config['settings']);
         }
 
-        // sprites
-        if (isset($config['sprites'])) {
-            self::ReadSprites($config['sprites']);
-        }
+        // sections
+        foreach(self::$sectionDatatypeMapping as $name => $class) {
 
-        // tilemaps
-        if (isset($config['tilemaps'])) {
-            self::ReadTilemaps($config['tilemaps']);
-        }
-
-        // tilesets
-        if (isset($config['tilesets'])) {
-            self::ReadTilesets($config['tilesets']);
-        }
-
-        // graphics
-        if (isset($config['graphics'])) {
-            self::ReadGraphics($config['graphics']);
-        }
-
-        // text
-        if (isset($config['text'])) {
-            self::ReadText($config['text']);
-        }
-
-        // blank data
-        if (isset($config['blank-data'])) {
-            self::ReadBlankData($config['blank-data']);
-        }
-
-        // screens
-        if (isset($config['screens'])) {
-            self::ReadScreens($config['screens']);
-        }
-
-        // arkos
-        if (isset($config['arkos'])) {
-            self::ReadArkos($config['arkos']);
+            // if section is set and we're doing all datatypes or datatype is specified
+            if( isset($config[$name]) && (sizeof($sectionsInUse) == 0 || in_array($name, $sectionsInUse))) {
+                self::ReadSection($class, $config[$name]);
+            }
         }
 
         // save in case we need it
@@ -108,67 +81,12 @@ class Configuration
         }
     }
 
-    private static function ReadSprites($config)
+    private static function ReadSection($datatypeName, $config)
     {
-        foreach ($config as $item) {
-            $sprite = new Sprite($item);
-            $sprite->Process();
-        }
-    }
-
-    private static function ReadTilemaps($config)
-    {
-        foreach ($config as $item) {
-            $tilemapObj = new Tilemap($item);
-            $tilemapObj->Process();
-        }
-    }
-
-    private static function ReadTilesets($config)
-    {
-        foreach ($config as $item) {
-            $tilesetObj = new Tileset($item);
-            $tilesetObj->Process();
-        }
-    }
-
-    private static function ReadGraphics($config)
-    {
-        foreach ($config as $item) {
-            $graphics = new Graphics($item);
-            $graphics->Process();
-        }
-    }
-
-    private static function ReadScreens($config)
-    {
-        foreach ($config as $item) {
-            $screen = new Screen($item);
-            $screen->Process();
-        }
-    }
-
-    private static function ReadBlankData($config)
-    {
-        foreach ($config as $item) {
-            $blankDataObj = new BlankData($item);
-            $blankDataObj->Process();
-        }
-    }
-
-    private static function ReadText($config)
-    {
-        foreach ($config as $item) {
-            $textObj = new Text($item);
-            $textObj->Process();
-        }
-    }
-
-    private static function ReadArkos($config)
-    {
-        foreach ($config as $item) {
-            $textObj = new ArkosTracker($item);
-            $textObj->Process();
+        foreach($config as $item)
+        {
+            $datatype = new $datatypeName($item);
+            $datatype->Process();
         }
     }
 
