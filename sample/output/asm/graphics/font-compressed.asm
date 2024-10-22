@@ -5,4 +5,4 @@ section BANK_0
 
 public _fontCompressed
        _fontCompressed:
-            BINARY "font-compressed.asm.zx0"
+            BINARY "./output/asm/graphics/font-compressed.data.asm.zx0"

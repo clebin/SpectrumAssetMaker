@@ -1,0 +1,43 @@
+{
+    "configuration": {
+        "fields": {
+            "carModelName": {
+                "type": "string",
+                "arrayName": "carModelNames"
+            },
+            "yearStart": {
+                "type": "uint8_t"
+            },
+            "yearEnd": {
+                "type": "uint8_t"
+            },
+            "launchPrice": {
+                "type": "uint16_t"
+            },
+            "depreciation": {
+                "type": "uint8_t"
+            }
+        },
+        "arrayName": "carModels",
+        "order": {
+            "field": "carModel",
+            "direction": "ascending"
+        }
+    },
+    "data": [
+        [
+            "Austin Allegro",
+            73,
+            82,
+            1159,
+            15
+        ],
+        [
+            "Ford Cortina",
+            62,
+            84,
+            1000,
+            10
+        ]
+    ]
+}
