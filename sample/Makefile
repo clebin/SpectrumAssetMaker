@@ -48,3 +48,5 @@ text:
 tilemaps:
 	php $(TOOLPATH) --config=./config.json --section=tilemaps
 
+array-data:
+	php $(TOOLPATH) --config=./config.json --section=array-data

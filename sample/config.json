@@ -79,5 +79,38 @@
             "name": "sample-text",
             "input": "raw-assets/text/sample-text.txt"
         }
+    ],
+    "array-data": [
+        {
+            "name": "carModels",
+            "input": "raw-assets/array-data/cars.txt",
+            "fields": [
+                {
+                    "name": "carModelNames",
+                    "type": "string"
+                },
+                {
+                    "name": "yearStart",
+                    "type": "uint8_t"   
+                },
+                {
+                    "name": "yearEnd",
+                    "type": "uint8_t"   
+                },
+                {
+                    "name": "launchPrice",
+                    "type": "uint16_t"   
+                },
+                {
+                    "name": "depreciation",
+                    "type": "uint8_t"   
+                }
+            ],
+            "order": {
+                "field": "carModel",
+                "direction": "ascending"
+            },
+            "createStruct": true
+        }
     ]
 }
