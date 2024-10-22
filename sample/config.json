@@ -82,11 +82,12 @@
     ],
     "array-data": [
         {
-            "name": "carModels",
+            "name": "car-models",
             "input": "raw-assets/array-data/cars.txt",
+            "output-folder": "./output/asm/array-data",
             "fields": [
                 {
-                    "name": "carModelNames",
+                    "name": "car-model-names",
                     "type": "string"
                 },
                 {
