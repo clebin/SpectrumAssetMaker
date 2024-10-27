@@ -14,111 +14,32 @@ class Text extends Datatype
     protected $addArrayLength = false;
     protected $filename = '';
 
-    protected static $charset = [
-        ' ',
-        '!',
-        '"',
-        '#',
-        '$',
-        '%',
-        '&',
-        '\'',
-        '(',
-        ')',
-        '*',
-        '+',
-        ',',
-        '-',
-        '.',
-        '/',
-        '0',
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        ':',
-        ';',
-        '<',
-        '=',
-        '>',
-        '?',
-        '@',
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-        'G',
-        'H',
-        'I',
-        'J',
-        'K',
-        'L',
-        'M',
-        'N',
-        'O',
-        'P',
-        'Q',
-        'R',
-        'S',
-        'T',
-        'U',
-        'V',
-        'W',
-        'X',
-        'Y',
-        'Z',
-        '[',
-        ']',
-        '\\',
-        '^',
-        '_',
-        '£',
-        'a',
-        'b',
-        'c',
-        'd',
-        'e',
-        'f',
-        'g',
-        'h',
-        'i',
-        'j',
-        'k',
-        'l',
-        'm',
-        'n',
-        'o',
-        'p',
-        'q',
-        'r',
-        's',
-        't',
-        'u',
-        'v',
-        'w',
-        'x',
-        'y',
-        'z'
-    ];
-
-    public function __construct($config)
+    public function __construct($config, $data = false)
     {
         parent::__construct($config);
 
-        if ($this->inputFilepath === false) {
-            $this->isValid = false;
-            App::AddError($this->datatypeName . ': No input specified for "' . $this->name . '"');
-            return;
+        // use array passed to the block
+        if( $data !== false )
+        {
+            $this->data = $data;
+            $this->isValid = true;
+        }
+        // read from file
+        else {
+            
+            if ($this->inputFilepath === false) {
+                $this->isValid = false;
+                App::AddError($this->datatypeName . ': No input specified for "' . $this->name . '"');
+                return;
+            }
+
+            $this->isValid = $this->ReadFile($this->inputFilepath);
         }
 
-        $this->isValid = $this->ReadFile($this->inputFilepath);
+        // asm?
+        if( $this->codeFormat == App::FORMAT_ASM ) {
+            $this->SetAsmData();
+        }
     }
 
     public function ReadFile($filename)
@@ -140,35 +61,29 @@ class Text extends Datatype
         // delimiter
         $this->sourceDelimiter = App::GetStringDelimiter();
 
-        // c
-        if ($this->codeFormat == App::FORMAT_C) {
-            $this->data = explode($this->sourceDelimiter, $strData);
-        }
-        // assembly
-        else {
-            for ($i = 0; $i < strlen($strData); $i++) {
+        $this->data = explode($this->sourceDelimiter, $strData);
+ 
+        return true;
+    }
+
+    public function SetAsmData()
+    {
+        $asmData = [];
+
+        foreach($this->data as $string) {
+
+            for( $i = 0;$i<strlen($string);$i++) {
 
                 // regular charset
-                if (in_array($strData[$i], self::$charset)) {
-                    $this->data[] = $this->charsetStart + array_search($strData[$i], self::$charset);
-                }
-                // delimiter (default is line-feed)
-                else if ($strData[$i] == $this->sourceDelimiter) {
-                    $this->data[] = $this->asmDelimiter; // add \0
-                }
-                // line-feed (when not used as delimiter)
-                else if ($strData[$i] == CR) {
-                    $this->data[] = $this->linefeed;
+                if (in_array($string[$i], App::$charset)) {
+                    $asmData[] = $this->charsetStart + array_search($string[$i], App::$charset);
                 }
             }
+
+            $asmData[] = $this->asmDelimiter;  
         }
 
-        // add delimiter to the end
-        if ($this->data[sizeof($this->data) - 1] != $this->asmDelimiter) {
-            $this->data[] = $this->asmDelimiter;
-        }
-
-        return true;
+        $this->data = $asmData;
     }
 
     public function GetCodeC()

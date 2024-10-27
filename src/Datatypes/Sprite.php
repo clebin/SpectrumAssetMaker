@@ -39,6 +39,8 @@ class Sprite extends Datatype
         // set mask image
         if (isset($config['mask'])) {
             $maskFile = $config['mask'];
+        } else {
+            $maskFile = false;
         }
 
         // input file

@@ -18,7 +18,6 @@ abstract class Datatype
         App::FORMAT_C
     ];
 
-
     public $compression = App::COMPRESSION_NONE;
 
     protected $defineName;
