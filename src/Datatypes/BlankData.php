@@ -23,7 +23,7 @@ class BlankData extends Datatype
         }
 
         if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
-            App::OutputMessage($this->datatypeName, $this->name, 'Create size '.$this->size.' bytes');
+            App::OutputMessage($this->datatypeName, $this->name, 'Allocating size '.$this->size.' bytes');
         }
 
     }
