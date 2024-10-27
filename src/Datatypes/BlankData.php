@@ -21,5 +21,10 @@ class BlankData extends Datatype
             $this->isValid = true;
             $this->data = array_fill(0, $this->size, 0);
         }
+
+        if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
+            App::OutputMessage($this->datatypeName, $this->name, 'Create size '.$this->size.' bytes');
+        }
+
     }
 }
