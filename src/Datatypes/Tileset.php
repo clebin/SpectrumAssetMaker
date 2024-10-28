@@ -41,10 +41,6 @@ class Tileset extends Datatype
             $this->addProperties = true;
         }
 
-        if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
-            App::OutputMessage($this->datatypeName, $this->name, 'Creating tileset');
-        }
-
         $this->isValid = $this->ReadFile($filename);
     }
 
