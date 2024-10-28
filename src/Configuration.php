@@ -25,7 +25,7 @@ class Configuration
     private static $sectionDatatypeMapping = [
         "sprites" => Sprite::class,
         "tilemaps" => Tilemap::class,
-        "tileset" => Tileset::class,
+        "tilesets" => Tileset::class,
         "graphics" => Graphics::class,
         "text" => Text::class,
         "Screen" => Screen::class,
