@@ -28,7 +28,7 @@ class Configuration
         "tilesets" => Tileset::class,
         "graphics" => Graphics::class,
         "text" => Text::class,
-        "Screen" => Screen::class,
+        "screen" => Screen::class,
         "blank-data" => BlankData::class,
         "array-data" => ArrayData::class
     ];
