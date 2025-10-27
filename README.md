@@ -1,5 +1,5 @@
 # Spectrum Asset Maker
-## C. Owen 2024
+## Chris Owen 2025
 
 Command-line utility for the creation of a wide range of ZX Spectrum assets for use with z88dk and sp1. Intended to be a one-stop shop for all your game assets.
 
