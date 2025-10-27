@@ -57,7 +57,7 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets (Cla
 
 ## Input formats:
 
-|Type|File expected|
+|Type|File format expected|
 |---|---|
 |**Tilemap**|Tiled tilemap exported JSON (.tmj)||
 |**Tileset**|Tiled tileset exported as JSON (.tsj)|
@@ -67,8 +67,10 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets (Cla
 |**Next Palette**|Indexed PNG or GIF (PNG recommended)|
 |**Classic Sprite**|Black and white PNG or GIF (PNG recommended)|
 |**Classic Sprite Mask**|Black and white PNG or GIF (PNG recommended)|
+|**Next Sprite**|Indexed PNG or GIF (PNG recommended)|
 |**Text**|Plain text file|
 |**Classic SCR**|PNG file, 256 pixels by 192 pixels|
+|**Next Layer2 screen**|Indexed PNG file, 256 pixels by 192 pixels|
 
 ## Installation:
 
