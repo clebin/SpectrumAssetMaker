@@ -70,9 +70,13 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets for 
 
 Install PHP with your favourite package manager:
 
-Mac:
+Mac with Homebrew:
 
 > brew install php
+
+Mac without Homebrew
+
+Use installer from PHP.net
 
 Linux - Debian/Ubuntu/Mint:
 
@@ -95,7 +99,7 @@ On the command line, run:
 
 ## Read a JSON configuration file:
 
-**--config=**=[path to JSON config file]
+**--config=**[path to JSON config file]
 
 The tool can be configured to generate all supported assets associated with a project - sprites, tilemaps, graphics etc - in one pass, simplifying the build process.
 
