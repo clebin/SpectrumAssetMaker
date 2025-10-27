@@ -53,7 +53,7 @@
         {
             "name": "gunsight-4bit",
             "input": "raw-assets/graphics/gunsight.png",
-            "format": "asm",
+            "format": "binary",
             "num-colours": 16,
             "output-folder": "./output/binary/sprites-next"
         }
@@ -62,7 +62,7 @@
         {
             "name": "gunsight-8bit",
             "input": "raw-assets/graphics/gunsight.png",
-            "format": "asm",
+            "format": "binary",
             "num-colours": 16,
             "output-folder": "./output/binary/sprites-next"
         }
