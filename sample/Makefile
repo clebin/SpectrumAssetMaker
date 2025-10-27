@@ -45,6 +45,12 @@ graphics:
 graphics-next:
 	php $(TOOLPATH) --config=./config.json --section=graphics-next
 
+palettes-next-one-byte:
+	php $(TOOLPATH) --config=./config.json --section=palettes-next-one-byte
+
+palettes-next-two-bytes:
+	php $(TOOLPATH) --config=./config.json --section=palettes-next-two-bytes
+
 text:
 	php $(TOOLPATH) --config=./config.json --section=text
 

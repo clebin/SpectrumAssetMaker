@@ -78,6 +78,24 @@
             "output-folder": "./output/asm/graphics-next"
         }
     ],
+    "palettes-next-one-byte": [
+        {
+            "name": "palette1",
+            "input": "raw-assets/graphics/gunsight.png",
+            "format": "asm",
+            "num-colours": 16,
+            "output-folder": "./output/asm/palettes-next"
+        }
+    ],
+    "palettes-next-two-bytes": [
+        {
+            "name": "palette2",
+            "input": "raw-assets/graphics/gunsight.png",
+            "format": "asm",
+            "num-colours": 16,
+            "output-folder": "./output/asm/palettes-next"
+        }
+    ],
     "text": [
         {
             "name": "sample-text",

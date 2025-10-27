@@ -13,7 +13,7 @@ abstract class Graphics extends Datatype
     public int $numTiles = 0;
     public string $extension = App::FILE_EXTENSION_PNG;
 
-    protected $image;
+    protected \GdImage $image;
     
     public function __construct($config)
     {

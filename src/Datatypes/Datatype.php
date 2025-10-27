@@ -106,6 +106,23 @@ abstract class Datatype
         }
     }
 
+    public function GetImageFromFile($filename) : \GdImage|false
+    {
+        // read image file
+        $file_extension = substr($filename, -3);
+
+        if ($file_extension == App::FILE_EXTENSION_PNG) {
+            $image = imagecreatefrompng($filename);
+        } else if ($file_extension == App::FILE_EXTENSION_GIF) {
+            $image = imagecreatefromgif($filename);
+        } else {
+            App::AddError('Filetype (' . $file_extension . ') not supported');
+            return false;
+        }
+
+        return $image;
+    }
+
     public function GetName() : string
     {
         return $this->name;
