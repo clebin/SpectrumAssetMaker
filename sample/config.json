@@ -66,12 +66,18 @@
             "compression": "zx0"
         },
         {
-            "name": "force-error-1",
+            "name": "test-error-handling",
             "output-folder": "./output/asm/graphics"
-        },
+        }
+    ],
+    "graphics-next": [
         {
-            "name": "force-error-2",
-            "output-folder": "./output/asm/graphics"
+            "name": "gunsight",
+            "input": "raw-assets/graphics/gunsight.png",
+            "transparent-index": 0,
+            "format": "binary",
+            "output-folder": "./output/asm/graphics",
+            "section": "BANK_0"
         }
     ],
     "text": [

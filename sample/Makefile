@@ -42,6 +42,9 @@ sprites:
 graphics:
 	php $(TOOLPATH) --config=./config.json --section=graphics
 
+graphics-next:
+	php $(TOOLPATH) --config=./config.json --section=graphics-next
+
 text:
 	php $(TOOLPATH) --config=./config.json --section=text
 

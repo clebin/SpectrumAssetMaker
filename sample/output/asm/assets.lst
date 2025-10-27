@@ -1,16 +1,1 @@
-array-data/car-model-names.asm
-array-data/car-models.asm
-blank-data/tileset.asm
-graphics/font-compressed.asm
-graphics/font.asm
-sprites/player-sprite.asm
-tilemaps/level-1-bandits.asm
-tilemaps/level-1-collectables.asm
-tilemaps/level-1-lifts.asm
-tilemaps/level-1-minecarts.asm
-tilemaps/level-1-player.asm
-tilemaps/level-1-slopes.asm
-tilemaps/level-1-tilemap-paths.asm
-tilemaps/level-1-tilemap.asm
-tilesets/game-tiles-properties.asm
-sample-text.asm
+graphics/gunsight.nxt
