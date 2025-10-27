@@ -8,13 +8,15 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\Tileset;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\GraphicsClassic;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\GraphicsNext;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Sprite;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\SpriteNext;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\SpriteNext4Bit;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\SpriteNext8Bit;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Screen;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\PaletteNextOneByte;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\PaletteNextTwoBytes;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\BitmapNext;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\ArrayData;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\TileGraphicsNext;
 
 class Configuration
 {
@@ -29,11 +31,13 @@ class Configuration
     // map config sections to datatype
     private static array $sectionDatatypeMapping = [
         "sprites" => Sprite::class,
-        "sprites-next" => SpriteNext::class,
+        "sprites-next-4bit" => SpriteNext4Bit::class,
+        "sprites-next-8bit" => SpriteNext8Bit::class,
         "tilemaps" => Tilemap::class,
         "tilesets" => Tileset::class,
         "graphics" => GraphicsClassic::class,
         "graphics-next" => GraphicsNext::class,
+        "tile-graphics-next" => TileGraphicsNext::class,
         "text" => Text::class,
         "screen" => Screen::class,
         "bitmap-next" => BitmapNext::class,

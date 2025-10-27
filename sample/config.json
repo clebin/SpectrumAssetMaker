@@ -96,6 +96,24 @@
             "output-folder": "./output/asm/palettes-next"
         }
     ],
+    "sprites-next-4bit": [
+        {
+            "name": "gunsight-4bit",
+            "input": "raw-assets/graphics/gunsight.png",
+            "format": "asm",
+            "num-colours": 16,
+            "output-folder": "./output/asm/sprites-next"
+        }
+    ],
+    "sprites-next-8bit": [
+        {
+            "name": "gunsight-8bit",
+            "input": "raw-assets/graphics/gunsight.png",
+            "format": "asm",
+            "num-colours": 16,
+            "output-folder": "./output/asm/sprites-next"
+        }
+    ],
     "text": [
         {
             "name": "sample-text",

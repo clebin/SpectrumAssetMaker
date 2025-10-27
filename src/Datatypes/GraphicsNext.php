@@ -4,7 +4,7 @@ namespace ClebinGames\SpectrumAssetMaker\Datatypes;
 
 use \ClebinGames\SpectrumAssetMaker\App;
 
-class GraphicsNext extends Graphics
+abstract class GraphicsNext extends Graphics
 {
     public string $datatypeName = 'Next Graphics';
 
@@ -36,23 +36,58 @@ class GraphicsNext extends Graphics
         return $data;
     }
 
+    abstract function ReadAttribute($col, $row) : array;
 
     /**
-     * Read an individual attribute (or tile)
+     * Read an individual attribute (or tile) - using 8 bits per pixel
      */
-    public function ReadAttribute($col, $row) : array
+    public function ReadAttribute8Bit($col, $row) : array
     {
         // starting values for x & y
-        $startx = $col * 8;
-        $starty = $row * 8;
+        $startx = $col * $this->tileWidth;
+        $starty = $row * $this->tileHeight;
 
         $attribute = [];
 
         // rows
-        for ($y = $starty; $y < $starty + 8; $y++) {
+        for ($y = $starty; $y < $starty + $this->tileHeight; $y++) {
             
             // cols
-            for ($x = $startx; $x < $startx + 8; $x++) {
+            for ($x = $startx; $x < $startx + $this->tileWidth; $x++) {
+
+                $value = imagecolorat($this->image, $x, $y);
+                
+                if( $value < 0 || $value >= 256) {
+                    $value = 0;
+                }
+
+                // $bin_val = str_pad(decbin($value), 8, '0', STR_PAD_LEFT);
+                // echo '('.$x.','.$y.') '.$value.' ('.$bin_val.')'.CR;
+
+                // add row of data
+                $attribute[] = $value;
+            }
+        }
+
+        return $attribute;
+    }
+
+    /**
+     * Read an individual attribute (or tile) - using 4 bits per pixel
+     */
+    public function ReadAttribute4Bit($col, $row) : array
+    {
+        // starting values for x & y
+        $startx = $col * $this->tileWidth;
+        $starty = $row * $this->tileHeight;
+
+        $attribute = [];
+
+        // rows
+        for ($y = $starty; $y < $starty + $this->tileHeight; $y++) {
+            
+            // cols
+            for ($x = $startx; $x < $startx + $this->tileWidth; $x++) {
 
                 $pixelColour1 = imagecolorat($this->image, $x, $y);
                 
@@ -73,12 +108,13 @@ class GraphicsNext extends Graphics
                 }
 
                 // combine the two into one byte
-                $pixelColour = $pixelColour1 | $pixelColour2;
+                $value = $pixelColour1 | $pixelColour2;
                 
-                // echo $pixelColour1.' | '.$pixelColour2.' = '.$pixelColour.' ('.decbin($pixelColour).')'.CR;
+                // $bin_val = str_pad(decbin($value), 8, '0', STR_PAD_LEFT);
+                // echo '('.$x.','.$y.') '.$pixelColour1.' | '.$pixelColour2.' = '.$value.' ('.$bin_val.')'.CR;
 
                 // add row of data
-                $attribute[] = $pixelColour;
+                $attribute[] = $value;
             }
         }
 

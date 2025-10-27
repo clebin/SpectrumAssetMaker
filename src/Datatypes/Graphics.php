@@ -13,6 +13,9 @@ abstract class Graphics extends Datatype
     public int $numTiles = 0;
     public string $extension = App::FILE_EXTENSION_PNG;
 
+    public int $tileWidth = 8;
+    public int $tileHeight = 8;
+
     protected \GdImage $image;
     
     public function __construct($config)
@@ -56,11 +59,11 @@ abstract class Graphics extends Datatype
             App::OutputMessage($this->datatypeName, $this->name, 'Reading ' . $this->extension . ' file');
         }
 
-        // divide width and height into 8x8 pixel attributes      
+        // divide width and height into 8x8 (or 16x16) pixel attributes      
         $dimensions = getimagesize($filename);
 
-        $this->numColumns = $dimensions[0] / 8;
-        $this->numRows = $dimensions[1] / 8;
+        $this->numColumns = $dimensions[0] / $this->tileWidth;
+        $this->numRows = $dimensions[1] / $this->tileHeight;
         $this->numTiles = $this->numColumns * $this->numRows;
 
         if (App::GetVerbosity() != App::VERBOSITY_NORMAL) {

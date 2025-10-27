@@ -39,6 +39,12 @@ blank-data:
 sprites:
 	php $(TOOLPATH) --config=./config.json --section=sprites
 
+sprites-next-4bit:
+	php $(TOOLPATH) --config=./config.json --section=sprites-next-4bit
+
+sprites-next-8bit:
+	php $(TOOLPATH) --config=./config.json --section=sprites-next-8bit
+
 graphics:
 	php $(TOOLPATH) --config=./config.json --section=graphics
 
