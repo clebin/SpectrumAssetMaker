@@ -123,41 +123,6 @@ Below is an example JSON configuration file. More JSON files are included in the
         "size": 2208,
         "output-folder": "./assets/blank-data"
     }],
-    "tilemap": [{
-        "map": "raw-assets/tilemaps/screens.tmj",
-        "output-folder": "./assets/levels",
-        "use-layer-names": true,
-        "generate-paths": true,
-        "path-width": 2,
-        "path-height": 2,
-        "path-map-style": "platform",
-        "format": "asm",
-        "compression": "rle",
-        "ignore-hidden-layers": false,
-        "section": "BANK_6",
-        "tileset": {
-            "name": "game-tiles",
-            "tileset": "raw-assets/tilesets/game-tileset.tsj",
-            "output-folder": "./assets/tilesets",
-            "replace-flash-with-solid": true,
-            "section": "BANK_4"
-        }
-    }],
-    "tileset": [{
-        "name": "menu-tiles",
-        "tileset": "raw-assets/main-menu/menu-tiles.tsj",
-        "output-folder": "./assets/main-menu",
-        "section": "BANK_4"
-    }],
-    "sprite": [
-    {
-        "name": "player-sprite",
-        "input": "raw-assets/sprites/player-sprite.png",
-        "mask": "raw-assets/sprites/player-sprite-mask.png",
-        "paper-colour": "black",
-        "output-folder": "./assets/sprites",
-        "section": "BANK_0"
-    }],
     "graphics": [{
             "name": "font",
             "input": "raw-assets/fonts/lander-bold.png",
@@ -165,12 +130,6 @@ Below is an example JSON configuration file. More JSON files are included in the
             "output-folder": "./assets",
             "section": "BANK_0"
         }],
-    "tile-graphics-next": [{
-        "name": "next-font",
-        "input": "raw-assets/fonts/lander-bold-next.png",
-        "output-folder": "./assets",
-        "format": "binary"
-    }],
     "palette-next-one-byte": [{
         "name": "next-font",
         "input": "raw-assets/fonts/lander-bold-next.png",
@@ -198,12 +157,65 @@ Below is an example JSON configuration file. More JSON files are included in the
             "add-palette": true
         }
     ],
+    "sprite": [
+    {
+        "name": "player-sprite",
+        "input": "raw-assets/sprites/player-sprite.png",
+        "mask": "raw-assets/sprites/player-sprite-mask.png",
+        "paper-colour": "black",
+        "output-folder": "./assets/sprites",
+        "section": "BANK_0"
+    }],
+    "sprite-next-4bit": [
+    {
+        "name": "player-sprite",
+        "input": "raw-assets/sprites/player-sprite.png",
+        "output-folder": "./assets/sprites",
+    }],
+    "sprite-next-8bit": [
+    {
+        "name": "player-sprite",
+        "input": "raw-assets/sprites/player-sprite.png",
+        "output-folder": "./assets/sprites",
+    }],
     "text": [{
 		"name": "intro-text",
 		"input": "raw-assets/intro.txt",
 		"output-folder": "./assets/text",
 	    "section": "BANK_0"
-    }]
+    }],
+    "tile-graphics-next": [{
+        "name": "next-font",
+        "input": "raw-assets/fonts/lander-bold-next.png",
+        "output-folder": "./assets",
+        "format": "binary"
+    },
+    "tilemap": [{
+        "map": "raw-assets/tilemaps/screens.tmj",
+        "output-folder": "./assets/levels",
+        "use-layer-names": true,
+        "generate-paths": true,
+        "path-width": 2,
+        "path-height": 2,
+        "path-map-style": "platform",
+        "format": "asm",
+        "compression": "rle",
+        "ignore-hidden-layers": false,
+        "section": "BANK_6",
+        "tileset": {
+            "name": "game-tiles",
+            "tileset": "raw-assets/tilesets/game-tileset.tsj",
+            "output-folder": "./assets/tilesets",
+            "replace-flash-with-solid": true,
+            "section": "BANK_4"
+        }
+    }],
+    "tileset": [{
+        "name": "menu-tiles",
+        "tileset": "raw-assets/main-menu/menu-tiles.tsj",
+        "output-folder": "./assets/main-menu",
+        "section": "BANK_4"
+    }]]
 }
 ```
 
