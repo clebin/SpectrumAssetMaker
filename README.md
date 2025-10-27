@@ -161,7 +161,7 @@ Below is an example JSON configuration file. More JSON files are included in the
             "output-folder": "./assets",
             "section": "BANK_0"
         }],
-    "graphics-next": [{
+    "tile-graphics-next": [{
         "name": "next-font",
         "input": "raw-assets/fonts/lander-bold-next.png",
         "output-folder": "./assets",
