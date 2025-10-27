@@ -6,7 +6,6 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\BlankData;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Tilemap;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Tileset;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\GraphicsClassic;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\GraphicsNext;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Sprite;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\SpriteNext4Bit;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\SpriteNext8Bit;
@@ -36,7 +35,6 @@ class Configuration
         "tilemaps" => Tilemap::class,
         "tilesets" => Tileset::class,
         "graphics" => GraphicsClassic::class,
-        "graphics-next" => GraphicsNext::class,
         "tile-graphics-next" => TileGraphicsNext::class,
         "text" => Text::class,
         "screen" => Screen::class,

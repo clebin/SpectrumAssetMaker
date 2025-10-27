@@ -49,7 +49,7 @@ graphics:
 	php $(TOOLPATH) --config=./config.json --section=graphics
 
 graphics-next:
-	php $(TOOLPATH) --config=./config.json --section=graphics-next
+	php $(TOOLPATH) --config=./config.json --section=tile-graphics-next
 
 palettes-next-one-byte:
 	php $(TOOLPATH) --config=./config.json --section=palettes-next-one-byte

@@ -70,7 +70,7 @@
             "output-folder": "./output/asm/graphics"
         }
     ],
-    "graphics-next": [
+    "tile-graphics-next": [
         {
             "name": "gunsight",
             "input": "raw-assets/graphics/gunsight.png",
