@@ -41,13 +41,13 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets (Cla
 
 * Palette - extended format, 2-bytes per entry
 
-* 4-bit Sprites
+* 4-bit Sprite
 
-* 8-bit Sprites
+* 8-bit Sprite
 
-* Next Layer 2 Screen
+* Layer 2 Screen (256x192)
 
-* Next Layer 2 Screen with embedded palette
+* Layer 2 Screen (256x192) with embedded palette
 
 ## Future Output Formats
 
@@ -123,7 +123,7 @@ Below is an example JSON configuration file. More JSON files are included in the
         "size": 2208,
         "output-folder": "./assets/blank-data"
     }],
-    "tilemaps": [{
+    "tilemap": [{
         "map": "raw-assets/tilemaps/screens.tmj",
         "output-folder": "./assets/levels",
         "use-layer-names": true,
@@ -143,13 +143,13 @@ Below is an example JSON configuration file. More JSON files are included in the
             "section": "BANK_4"
         }
     }],
-    "tilesets": [{
+    "tileset": [{
         "name": "menu-tiles",
         "tileset": "raw-assets/main-menu/menu-tiles.tsj",
         "output-folder": "./assets/main-menu",
         "section": "BANK_4"
     }],
-    "sprites": [
+    "sprite": [
     {
         "name": "player-sprite",
         "input": "raw-assets/sprites/player-sprite.png",
@@ -183,11 +183,19 @@ Below is an example JSON configuration file. More JSON files are included in the
         "output-folder": "./assets",
         "format": "binary"
     }],
-    "screens": [
+    "screen": [
         {
             "name": "loading-screen",
             "input": "raw-assets/loading-screen.png",
             "output-folder": "./assets"
+        }
+    ],
+    "screen-next-layer2": [
+        {
+            "name": "background-screen",
+            "input": "raw-assets/background-screen.png",
+            "output-folder": "./assets",
+            "add-palette": true
         }
     ],
     "text": [{
