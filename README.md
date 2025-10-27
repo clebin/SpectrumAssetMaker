@@ -74,10 +74,6 @@ Mac with Homebrew:
 
 > brew install php
 
-Mac without Homebrew
-
-Use installer from PHP.net
-
 Linux - Debian/Ubuntu/Mint:
 
 > sudo apt install php
@@ -86,9 +82,9 @@ Linux - Fedora/RedHat:
 
 > sudo dnf install -y php
 
-Windows:
+Windows/Mac without Homebrew:
 
-Use installer from PHP.net
+> (use installer from PHP.net)
 
 
 ## Usage without parameters
