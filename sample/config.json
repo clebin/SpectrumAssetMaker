@@ -49,16 +49,34 @@
             "section": "BANK_0"
         }
     ],
+    "sprite-next-4bit": [
+        {
+            "name": "gunsight-4bit",
+            "input": "raw-assets/graphics/gunsight.png",
+            "format": "asm",
+            "num-colours": 16,
+            "output-folder": "./output/binary/sprites-next"
+        }
+    ],
+    "sprite-next-8bit": [
+        {
+            "name": "gunsight-8bit",
+            "input": "raw-assets/graphics/gunsight.png",
+            "format": "asm",
+            "num-colours": 16,
+            "output-folder": "./output/binary/sprites-next"
+        }
+    ],
     "screen-next-layer2": [
         {
             "name": "canal",
             "input": "raw-assets/graphics/canal-next-256x192.png",
-            "output-folder": "./output/asm/graphics"
+            "output-folder": "./output/binary/graphics"
         },
         {
             "name": "canal-with-palette",
             "input": "raw-assets/graphics/canal-next-256x192.png",
-            "output-folder": "./output/asm/graphics",
+            "output-folder": "./output/binary/graphics",
             "add-palette": true
         }
     ],
@@ -104,27 +122,9 @@
         {
             "name": "palette2",
             "input": "raw-assets/graphics/gunsight.png",
-            "format": "asm",
+            "format": "binary",
             "num-colours": 16,
-            "output-folder": "./output/asm/palettes-next"
-        }
-    ],
-    "sprite-next-4bit": [
-        {
-            "name": "gunsight-4bit",
-            "input": "raw-assets/graphics/gunsight.png",
-            "format": "asm",
-            "num-colours": 16,
-            "output-folder": "./output/asm/sprites-next"
-        }
-    ],
-    "sprite-next-8bit": [
-        {
-            "name": "gunsight-8bit",
-            "input": "raw-assets/graphics/gunsight.png",
-            "format": "asm",
-            "num-colours": 16,
-            "output-folder": "./output/asm/sprites-next"
+            "output-folder": "./output/binary/palettes-next"
         }
     ],
     "text": [

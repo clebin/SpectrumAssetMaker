@@ -33,21 +33,17 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets (Cla
 
 ## Output Formats for Spectrum Next
 
-* Tile/Attribute Graphics
+* Tile/Attribute Graphics (nxt)
 
-* Next tilemap - short format, 1-byte per tile
+* Next tilemap (nxt) - short format, 1-byte per tile
 
-* Palette - short format, 1-byte per entry
+* Palette (pal) - short format, 1-byte per entry
 
-* Palette - extended format, 2-bytes per entry
+* Palette (pal) - extended format, 2-bytes per entry
 
-* 4-bit Sprite
+* Sprite (spr) - 4-bit or 8-bit format
 
-* 8-bit Sprite
-
-* Layer 2 Screen (256x192)
-
-* Layer 2 Screen (256x192) with embedded palette
+* Layer 2 Screen (nxi) - 256x192 with or without embedded palette
 
 ## Future Output Formats
 
