@@ -16,7 +16,7 @@ class ObjectMap extends Datatype
     protected array $customProperties = [];
     protected bool $addObjectDimensions = false;
     protected bool $addArrayLength = true;
-    protected array $objectTypes = [];
+    protected array|false $objectTypes = [];
     protected array $layer = [];
 
     protected $tilemap;

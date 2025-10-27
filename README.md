@@ -223,7 +223,7 @@ Below is an example JSON configuration file. More JSON files are included in the
 
 ### Tileset format ###
 
-Each tile in your tileset should have the following custom properties set:
+For classic Spectrum, each tile in your tileset should have the following custom properties set:
 
 * flash (boolean)
 

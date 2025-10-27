@@ -16,7 +16,7 @@ abstract class Datatype
     protected array $data = [];
 
     // output name
-    protected string $name;
+    protected string $name = '';
 
     // output name for code
     protected string $codeName;

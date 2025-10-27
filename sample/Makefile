@@ -1,6 +1,6 @@
 TOOLPATH = ../SpectrumAssetMaker.php
 
-all: clean config-all
+all: config-all
 
 clean:
 	-rm ./output/asm/blank-data/*.asm

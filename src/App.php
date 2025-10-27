@@ -68,6 +68,9 @@ class App
     public const LAYER_TYPE_TILELAYER = 'tilelayer';
     public const LAYER_TYPE_OBJECTGROUP = 'objectgroup';
 
+    // options
+    public static $options = [];
+    
     // classic colours
     public static $coloursSupported = [
         self::COLOUR_BLACK,
@@ -230,6 +233,8 @@ class App
      */
     public static function Run($options)
     {
+        self::$options = $options;
+
         echo CR . '' .
             self::GetTerminalStripes() .
             ' Spectrum Asset Maker ' .
