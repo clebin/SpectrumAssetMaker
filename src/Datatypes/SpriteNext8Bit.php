@@ -6,6 +6,8 @@ class SpriteNext8Bit extends GraphicsNext
 {
     public string $datatypeName = 'Next Sprite 8-bit';
 
+    public string $binaryFileExtension = 'spr';
+    
     public int $tileWidth = 16;
     public int $tileHeight = 16;
 

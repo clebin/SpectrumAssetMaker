@@ -11,6 +11,7 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\SpriteNext4Bit;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\SpriteNext8Bit;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Screen;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\ScreenNextLayer2;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\PaletteNextOneByte;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\PaletteNextTwoBytes;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\BitmapNext;
@@ -29,18 +30,19 @@ class Configuration
 
     // map config sections to datatype
     private static array $sectionDatatypeMapping = [
-        "sprites" => Sprite::class,
-        "sprites-next-4bit" => SpriteNext4Bit::class,
-        "sprites-next-8bit" => SpriteNext8Bit::class,
-        "tilemaps" => Tilemap::class,
-        "tilesets" => Tileset::class,
+        "sprite" => Sprite::class,
+        "sprite-next-4bit" => SpriteNext4Bit::class,
+        "sprite-next-8bit" => SpriteNext8Bit::class,
+        "tilemap" => Tilemap::class,
+        "tileset" => Tileset::class,
         "graphics" => GraphicsClassic::class,
         "tile-graphics-next" => TileGraphicsNext::class,
         "text" => Text::class,
         "screen" => Screen::class,
+        "screen-next-layer2" => ScreenNextLayer2::class,
         "bitmap-next" => BitmapNext::class,
-        "palettes-next-one-byte" => PaletteNextOneByte::class,
-        "palettes-next-two-bytes" => PaletteNextTwoBytes::class,
+        "palette-next-one-byte" => PaletteNextOneByte::class,
+        "palette-next-two-bytes" => PaletteNextTwoBytes::class,
         "blank-data" => BlankData::class,
         "array-data" => ArrayData::class
     ];

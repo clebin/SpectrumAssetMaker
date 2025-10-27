@@ -125,33 +125,6 @@ class GraphicsClassic extends Graphics
     }
 
     /**
-     * Write out data in binary file
-     */
-    public function WriteBinaryFile($filename) : void
-    {
-        $data = $this->GetData();
-
-        // clear file
-        file_put_contents($filename, '');
-
-        // add data
-        if ($fp = fopen($filename, 'a')) {
-
-            $count = 0;
-            foreach ($data as $attribute) {
-
-                foreach ($attribute as $datarow) {
-                    $byte = intval(implode('', $datarow));
-                    fwrite($fp, pack("C", $byte));
-                }
-                $count++;
-            }
-
-            App::OutputMessage($this->datatypeName, $this->name, 'Wrote ' . $count . ' bytes to binary file.');
-        }
-    }
-
-    /**
      * Return graphics in assembly format
      */
     public function GetCodeAsm()

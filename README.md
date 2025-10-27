@@ -45,12 +45,15 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets (Cla
 
 * 8-bit Sprites
 
+* Next Layer 2 Screen
+
+* Next Layer 2 Screen with embedded palette
 
 ## Future Output Formats
 
 * Next tilemap - extended format, 2-bytes per tile
 
-* Next bitmaps
+* Next bitmap
 
 ## Input formats:
 

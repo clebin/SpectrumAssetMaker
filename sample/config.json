@@ -12,7 +12,7 @@
             "output-folder": "./output/asm/blank-data"
         }
     ],
-    "tilemaps": [
+    "tilemap": [
         {
             "map": "raw-assets/tilemaps/screens.tmj",
             "output-folder": "./output/asm/tilemaps",
@@ -31,7 +31,7 @@
             }
         }
     ],
-    "tilesets": [
+    "tileset": [
         {
             "name": "menu-tiles",
             "tileset": "raw-assets/main-menu/menu-tiles.tsj",
@@ -39,7 +39,7 @@
             "section": "BANK_4"
         }
     ],
-    "sprites": [
+    "sprite": [
         {
             "name": "player-sprite",
             "input": "raw-assets/sprites/player-sprite.png",
@@ -47,6 +47,19 @@
             "paper-colour": "black",
             "output-folder": "./output/asm/sprites",
             "section": "BANK_0"
+        }
+    ],
+    "screen-next-layer2": [
+        {
+            "name": "canal",
+            "input": "raw-assets/graphics/canal-next-256x192.png",
+            "output-folder": "./output/asm/graphics"
+        },
+        {
+            "name": "canal-with-palette",
+            "input": "raw-assets/graphics/canal-next-256x192.png",
+            "output-folder": "./output/asm/graphics",
+            "add-palette": true
         }
     ],
     "graphics": [
@@ -61,7 +74,7 @@
             "name": "font-compressed",
             "input": "raw-assets/graphics/lander-bold.png",
             "paper-colour": "white",
-            "output-folder": "./output/asm/graphics",
+            "output-folder": "./output/binary/graphics",
             "section": "BANK_0",
             "compression": "zx0"
         },
@@ -78,7 +91,7 @@
             "output-folder": "./output/asm/graphics-next"
         }
     ],
-    "palettes-next-one-byte": [
+    "palette-next-one-byte": [
         {
             "name": "palette1",
             "input": "raw-assets/graphics/gunsight.png",
@@ -87,7 +100,7 @@
             "output-folder": "./output/asm/palettes-next"
         }
     ],
-    "palettes-next-two-bytes": [
+    "palette-next-two-bytes": [
         {
             "name": "palette2",
             "input": "raw-assets/graphics/gunsight.png",
@@ -96,7 +109,7 @@
             "output-folder": "./output/asm/palettes-next"
         }
     ],
-    "sprites-next-4bit": [
+    "sprite-next-4bit": [
         {
             "name": "gunsight-4bit",
             "input": "raw-assets/graphics/gunsight.png",
@@ -105,7 +118,7 @@
             "output-folder": "./output/asm/sprites-next"
         }
     ],
-    "sprites-next-8bit": [
+    "sprite-next-8bit": [
         {
             "name": "gunsight-8bit",
             "input": "raw-assets/graphics/gunsight.png",

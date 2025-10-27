@@ -120,33 +120,4 @@ abstract class GraphicsNext extends Graphics
 
         return $attribute;
     }
-
-    /**
-     * Write out data in binary file
-     */
-    public function WriteBinaryFile($filename) : void
-    {
-        $data = $this->GetData();
-
-        // clear file
-        file_put_contents($filename, '');
-
-        // add data
-        if ($fp = fopen($filename, 'a')) {
-
-            $count = 0;
-            foreach ($data as $attribute) {
-
-                foreach ($attribute as $pixel) {
-
-                    $pixel = intval($pixel);
-                    fwrite($fp, pack("C", $pixel));
-
-                }
-                $count++;
-            }
-
-            App::OutputMessage($this->datatypeName, $this->name, 'Wrote ' . $count . ' bytes to binary file.');
-        }
-    }
 }

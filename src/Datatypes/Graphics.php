@@ -34,7 +34,7 @@ abstract class Graphics extends Datatype
     }
 
     /**
-     * Read a black & white PNG or GIF file
+     * Read a PNG or GIF file
      */
     public function ReadFile($filename): bool
     {

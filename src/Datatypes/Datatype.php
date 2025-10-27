@@ -9,6 +9,9 @@ abstract class Datatype
     // datatype friendly name
     public string $datatypeName = 'Datatype';
 
+    // config
+    public array $config = [];
+
     // data
     protected array $data = [];
 
@@ -63,6 +66,8 @@ abstract class Datatype
 
     public function __construct($config)
     {
+        $this->config = $config;
+
         // input filename
         if (isset($config['input'])) {
             $this->inputFilepath = $config['input'];
@@ -273,13 +278,32 @@ abstract class Datatype
         if ($fp = fopen($filename, 'a')) {
 
             $count = 0;
-            foreach ($data as $byte) {
-                fwrite($fp, pack("C", $byte));
-                $count++;
+
+            // loop throguh data
+            foreach ($data as $value) {
+
+                // value is an array - eg. array split into attributes
+                if( is_array($value)) {
+
+                    // loop through array
+                    foreach($value as $datarow) {
+
+                        $byte = intval(implode('', $datarow));
+                        fwrite($fp, pack("C", $byte));
+                        $count++;
+                    }
+                }
+                // write value
+                else {
+                    fwrite($fp, pack("C", $value));
+                    $count++;
+                }
+
             }
             App::OutputMessage($this->datatypeName, $this->name, 'Wrote ' . $count . ' bytes to binary file.');
         }
     }
+    
 
     /**
      * Get code in assembly format

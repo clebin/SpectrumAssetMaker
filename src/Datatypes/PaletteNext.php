@@ -7,7 +7,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 abstract class PaletteNext extends Datatype
 {
     public string $datatypeName = 'Next Palette';
-    public string $binaryFileExtension = 'nxp';
+    public string $binaryFileExtension = 'pal';
 
     public int $numColours = 256;
     public array $colours = [];
@@ -17,7 +17,9 @@ abstract class PaletteNext extends Datatype
     {
         parent::__construct($config);
 
-        if( isset($config['num-colours']) && intval($config['num-colours']) > 0) {
+        if( isset($config['num-colours']) && 
+            intval($config['num-colours']) > 0 &&
+            intval($config['num-colours']) <= 256 ) {
             $this->numColours = intval($config['num-colours']);
         }
 

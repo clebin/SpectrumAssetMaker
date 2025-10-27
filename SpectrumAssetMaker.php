@@ -32,6 +32,7 @@ require("src/Datatypes/SpriteNext8Bit.php");
 require("src/Datatypes/ObjectMap.php");
 require("src/Datatypes/Text.php");
 require("src/Datatypes/Screen.php");
+require("src/Datatypes/ScreenNextLayer2.php");
 require("src/Datatypes/BitmapNext.php");
 
 // read filenames from command line arguments
