@@ -70,9 +70,22 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets for 
 
 Install PHP with your favourite package manager:
 
+Mac:
+
 > brew install php
-> apt install php
-etc.
+
+Linux - Debian/Ubuntu/Mint:
+
+> sudo apt install php
+
+Linux - Fedora/RedHat:
+
+> sudo dnf install -y php
+
+Windows:
+
+Use installer from PHP.net
+
 
 ## Usage without parameters
 
