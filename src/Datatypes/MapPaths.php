@@ -6,31 +6,29 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class MapPaths extends TileLayer
 {
-    public $datatypeName = 'Map Paths';
-    const DIRECTION_UP = 8;
-    const DIRECTION_DOWN = 4;
-    const DIRECTION_LEFT = 2;
-    const DIRECTION_RIGHT = 1;
+    public string $datatypeName = 'Map Paths';
 
-    const MAP_STYLE_OVERHEAD = 'overhead';
-    const MAP_STYLE_PLATFORM = 'platform';
+    const int DIRECTION_UP = 8;
+    const int DIRECTION_DOWN = 4;
+    const int DIRECTION_LEFT = 2;
+    const int DIRECTION_RIGHT = 1;
 
-    public $spaceTiles = [35, 23, 24, 39, 40, 43, 62, 63, 78, 79, 81, 82, 83, 84, 97, 98, 99, 100];
-    public $ladderTiles = [7, 8];
-    public $slopeTiles = [];
-    public $compression = false;
-    public $addDimensions = true;
-    public $width;
-    public $height;
+    const string MAP_STYLE_OVERHEAD = 'overhead';
+    const string MAP_STYLE_PLATFORM = 'platform';
+
+    public array $slopeTiles = [];
+    public string|false $compression = false;
+    public bool $addDimensions = true;
+
     public $tilemap = false;
     public $tileset = false;
 
     // number of characters wide a path needs to be
-    public $pathWidth = 2;
-    public $pathHeight = 2;
+    public int $pathWidth = 2;
+    public int $pathHeight = 2;
 
-    public $mapStyle = self::MAP_STYLE_PLATFORM;
-    public $mapStyles = [
+    public string $mapStyle = self::MAP_STYLE_PLATFORM;
+    public array $mapStyles = [
         self::MAP_STYLE_PLATFORM,
         self::MAP_STYLE_OVERHEAD
     ];
@@ -63,7 +61,7 @@ class MapPaths extends TileLayer
         }
     }
 
-    public function GetData()
+    public function GetData() : array
     {
         $row = 0;
         $col = 0;

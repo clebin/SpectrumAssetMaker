@@ -4,9 +4,9 @@ namespace ClebinGames\SpectrumAssetMaker;
 
 /**
  * Spectrum Asset Maker
- * Chris Owen 2024
+ * Chris Owen 2025
  * 
- * Read Tiled map and tileset and save screen data for use on the Spectrum.
+ * Read Tiled map and tileset and save screen data for use on the Spectrum and Spectrum Next.
  * Load PNG/GIF graphics data and save as graphics data
  * 
  * Load multiple Tiled layers and save as individual screens
@@ -15,13 +15,17 @@ namespace ClebinGames\SpectrumAssetMaker;
 class App
 {
     // app details
-    const VERSION = '1.0b4';
-    const RELEASE_YEAR = '2024';
+    const VERSION = '1.1b1';
+    const RELEASE_YEAR = '2025';
 
     // output formats
     const FORMAT_ASM = 'asm';
     const FORMAT_C = 'c';
     const FORMAT_BINARY = 'binary';
+
+    // file extensions
+    const FILE_EXTENSION_PNG = 'png';
+    const FILE_EXTENSION_GIF = 'gif';
 
     // naming
     const NAMING_CAMELCASE = 'camelcase';
@@ -59,6 +63,12 @@ class App
     const VERBOSITY_NORMAL = 1;
     const VERBOSITY_VERBOSE = 2;
 
+    // layer types
+    public const LAYER_TYPE_ALL = 'all';
+    public const LAYER_TYPE_TILELAYER = 'tilelayer';
+    public const LAYER_TYPE_OBJECTGROUP = 'objectgroup';
+
+    // classic colours
     public static $coloursSupported = [
         self::COLOUR_BLACK,
         self::COLOUR_BLUE,
@@ -97,14 +107,17 @@ class App
         self::COMPRESSION_ZX0
     ];
 
-    public static $layerTypesSupported = [
-        'all',
-        'objectgroup',
-        'tilelayer'
+    // layer types
+
+    public static array $layerTypesSupported = [
+        self::LAYER_TYPE_ALL,
+        self::LAYER_TYPE_OBJECTGROUP,
+        self::LAYER_TYPE_TILELAYER
     ];
+
     public static $saveGameProperties = false;
     private static $stringDelimiter = CR;
-    public static $verbosity = self::VERBOSITY_NORMAL;
+    public static int $verbosity = self::VERBOSITY_NORMAL;
 
     // list of output files - for binaries.lst
     private static $outputFiles = [];
@@ -251,21 +264,19 @@ class App
     /**
      * Output errors that have occurred during asset generation
      */
-    public static function ShowErrors()
+    public static function ShowErrors() : void
     {
         if (self::$error === true) {
             echo CR . self::TERMINAL_RED . 'Errors (' . sizeof(self::$errorDetails) . '): ' . CR;
             echo self::TERMINAL_WHITE . implode(CR, self::$errorDetails);
             echo CR;
-
-            return false;
         }
     }
 
     /**
      * Get Speccy style stripes for the terminal output
      */
-    public static function GetTerminalStripes()
+    public static function GetTerminalStripes() : string
     {
         return self::TERMINAL_RED . '/' .
             self::TERMINAL_YELLOW . '/' .
@@ -277,7 +288,7 @@ class App
     /**
      * Check if rgb colour matches paper colour
      */
-    public static function colourIsPaper($rgb, $paperColour, $filetype = 'gif')
+    public static function colourIsPaper($rgb, $paperColour, $filetype = App::FILE_EXTENSION_GIF)
     {
         // get rgb values
         $r = ($rgb >> 16) & 0xFF;
@@ -285,7 +296,7 @@ class App
         $b = $rgb & 0xFF;
 
         // gif
-        if ($filetype == 'gif') {
+        if ($filetype == App::FILE_EXTENSION_GIF) {
             // pure black counts as ink
             if ($r == 0 && $g == 0 && $b == 0) {
                 return false;
@@ -581,18 +592,18 @@ class App
     /**
      * Did an error occur?
      */
-    public static function DidErrorOccur()
+    public static function DidErrorOccur() : bool
     {
         return self::$error;
     }
 
-    public static function AddOutputFile($path)
+    public static function AddOutputFile($path) : void
     {
         if (!in_array($path, self::$outputFiles))
             self::$outputFiles[] = $path;
     }
 
-    public static function ObjectToArray($object)
+    public static function ObjectToArray($object) : array
     {
         return @json_decode(@json_encode($object), 1);
     }
@@ -600,7 +611,7 @@ class App
     /**
      * Get binaries.lst file with list of screen files
      */
-    public static function ProcessAssetsLst($binariesLstFolder = '')
+    public static function ProcessAssetsLst($binariesLstFolder = '') : void
     {
         $strBinaries = '';
         $binariesLstFolder = rtrim($binariesLstFolder, '/') . '/';
@@ -617,7 +628,7 @@ class App
     /**
      * Return output message in a standard format
      */
-    public static function OutputMessage($module, $name, $message)
+    public static function OutputMessage($module, $name, $message) : void
     {
         echo self::TERMINAL_CYAN . $module .
             self::TERMINAL_WHITE . ' [' .
@@ -630,7 +641,7 @@ class App
     /**
      * Return whether tool is in verbose mode
      */
-    public static function GetVerbosity()
+    public static function GetVerbosity() : int
     {
         return self::$verbosity;
     }

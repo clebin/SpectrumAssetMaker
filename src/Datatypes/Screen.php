@@ -26,14 +26,14 @@ This simple program illustrates the layout of the screen display by filling it w
 
 class Screen extends Datatype
 {
-    public $datatypeName = 'Screen';
+    public string $datatypeName = 'Screen';
     protected $image = false;
-    public $extension = 'png';
-    public $attributes = [];
-    public $attributeData = [];
-    public $pixelData = [];
-    protected $addArrayLength = false;
-    protected $addToAssetsLst = false;
+    public string $extension = App::FILE_EXTENSION_PNG;
+    public array $attributes = [];
+    public array $attributeData = [];
+    public array $pixelData = [];
+    protected bool $addArrayLength = false;
+    protected bool $addToAssetsLst = false;
 
     public function __construct($config)
     {
@@ -58,9 +58,9 @@ class Screen extends Datatype
         // read image file
         $this->extension = substr($filename, -3);
 
-        if ($this->extension == 'png') {
+        if ($this->extension == App::FILE_EXTENSION_PNG) {
             $this->image = imagecreatefrompng($filename);
-        } else if ($this->extension == 'gif') {
+        } else if ($this->extension == App::FILE_EXTENSION_PNG) {
             $this->image = imagecreatefromgif($filename);
         } else {
             App::AddError('Filetype (' . $this->extension . ') not supported');
@@ -294,7 +294,7 @@ class Screen extends Datatype
         }
     }
 
-    public function GetData()
+    public function GetData() : array
     {
         $this->attributeData = [];
 
@@ -309,12 +309,12 @@ class Screen extends Datatype
     /**
      * Return output filename only
      */
-    public function GetOutputFilename()
+    public function GetOutputFilename() : string
     {
         return $this->filename . '.scr';
     }
 
-    public function WriteFile()
+    public function WriteFile() : void
     {
         $this->WriteBinaryFile($this->GetOutputFilepath());
     }

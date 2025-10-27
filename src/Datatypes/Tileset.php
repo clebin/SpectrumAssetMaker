@@ -10,14 +10,15 @@ use \ClebinGames\SpectrumAssetMaker\Tile;
  */
 class Tileset extends Datatype
 {
-    public $datatypeName = 'Tileset';
-    protected $tilesetIsSet = false;
-    protected $addProperties = false;
-    protected $replaceFlashWithSolid = false;
+    public string $datatypeName = 'Tileset';
+
+    protected bool $tilesetIsSet = false;
+    protected bool $addProperties = false;
+    protected bool $replaceFlashWithSolid = false;
 
     // array of tiles
-    protected $tiles = [];
-    public $large_tileset = false;
+    protected array $tiles = [];
+    public bool $isLargeTileset = false;
 
     public function __construct($config)
     {
@@ -47,7 +48,7 @@ class Tileset extends Datatype
     /**
      * Set name and filename
      */
-    public function SetName($name)
+    public function SetName($name) : void
     {
         $this->name = $name;
         $this->codeName = App::GetConvertedCodeName($name, $this->codeFormat);
@@ -80,7 +81,7 @@ class Tileset extends Datatype
 
         // need to represent tile numbers with 16 bits
         if (sizeof($this->tiles) > 256) {
-            $this->large_tileset = true;
+            $this->isLargeTileset = true;
         }
 
         App::OutputMessage($this->datatypeName, $this->name, 'Added ' . $count . ' tiles');
@@ -104,7 +105,7 @@ class Tileset extends Datatype
         return $this->tiles[0];
     }
 
-    public function TilesetIsSet()
+    public function TilesetIsSet() : bool
     {
         return $this->tilesetIsSet;
     }
@@ -112,7 +113,7 @@ class Tileset extends Datatype
     /**
      * Get number of tiles in tileset
      */
-    public function GetNumTiles()
+    public function GetNumTiles() : int
     {
         return sizeof($this->tiles);
     }
@@ -190,7 +191,7 @@ class Tileset extends Datatype
             $this->codeName . 'Colours',
             $colours,
             2,
-            $this->large_tileset
+            $this->isLargeTileset
         ) . CR;
 
         // properties array
@@ -199,7 +200,7 @@ class Tileset extends Datatype
                 $this->codeName . 'Properties',
                 $properties,
                 2,
-                $this->large_tileset
+                $this->isLargeTileset
             ) . CR;
         }
 

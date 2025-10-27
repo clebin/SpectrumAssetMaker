@@ -6,31 +6,60 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 abstract class Datatype
 {
-    public $datatypeName = 'Datatype';
-    protected $data = [];
-    protected $name;
-    protected $codeName;
+    // datatype friendly name
+    public string $datatypeName = 'Datatype';
 
-    // code format - asm or c
-    protected $codeFormat = App::FORMAT_ASM;
-    protected static $formatsSupported = [
+    // data
+    protected array $data = [];
+
+    // output name
+    protected string $name;
+
+    // output name for code
+    protected string $codeName;
+
+    // static define name for code
+    protected string $defineName;
+
+    // output format - asm, c or binary
+    protected string $codeFormat = App::FORMAT_ASM;
+
+    // support compression tyhpes
+    protected static array $formatsSupported = [
         App::FORMAT_ASM,
-        App::FORMAT_C
+        App::FORMAT_C,
+        App::FORMAT_BINARY
     ];
 
-    public $compression = App::COMPRESSION_NONE;
+    // compression
+    public string|false $compression = App::COMPRESSION_NONE;
 
-    protected $defineName;
-    protected $codeSection = 'rodata_user';
-    protected $filename = false;
-    protected $addArrayLength = true;
+    // code section
+    protected string $codeSection = 'rodata_user';
 
-    protected $requireInputFile = true;
-    protected $inputFilepath = false;
+    // input filename
+    protected string|false $filename = false;
 
-    protected $outputFolder = '';
-    protected $isValid = true;
-    protected $addToAssetsLst = true;
+    // add array length to beginning of asm array
+    protected bool $addArrayLength = true;
+
+    // default file extension for binary file
+    public string $binaryFileExtension = 'bin';
+
+    // do we need an input file for this datatype?
+    protected bool $requireInputFile = true;
+
+    // input filepath
+    protected string|false $inputFilepath = false;
+
+    // output folder
+    protected string $outputFolder = '';
+
+    // add to project .lst file
+    protected bool $addToAssetsLst = true;
+
+    // is everything valid for processing?
+    protected bool $isValid = true;
 
     public function __construct($config)
     {
@@ -77,7 +106,7 @@ abstract class Datatype
         }
     }
 
-    public function GetName()
+    public function GetName() : string
     {
         return $this->name;
     }
@@ -85,7 +114,7 @@ abstract class Datatype
     /**
      * Set name and filename
      */
-    public function SetName($name)
+    public function SetName($name) : void
     {
         $this->name = $name;
         $this->codeName = App::GetConvertedCodeName($name, $this->codeFormat);
@@ -97,7 +126,7 @@ abstract class Datatype
      * 
      * Set array of data manually
      */
-    public function SetData($data)
+    public function SetData($data) : void
     {
         $this->data = $data;
     }
@@ -105,7 +134,7 @@ abstract class Datatype
     /**
      * Return array of data
      */
-    public function GetData()
+    public function GetData() : array
     {
         return $this->data;
     }
@@ -113,7 +142,7 @@ abstract class Datatype
     /**
      * Return output filename only
      */
-    public function GetOutputFilename()
+    public function GetOutputFilename() : string
     {
         return $this->filename . '.' . $this->GetOutputFileExtension();
     }
@@ -121,12 +150,16 @@ abstract class Datatype
     /**
      * Get output file extension for the current format/language
      */
-    public function GetOutputFileExtension()
+    public function GetOutputFileExtension() : string
     {
         switch ($this->codeFormat) {
             case 'c':
                 return 'c';
                 break;
+
+            case 'binary':
+                return $this->GetBinaryFileExtension();
+            break;
 
             default:
                 return 'asm';
@@ -136,7 +169,7 @@ abstract class Datatype
     /**
      * Return full output filepath
      */
-    public function GetOutputFilepath()
+    public function GetOutputFilepath() : string
     {
         return $this->outputFolder . $this->GetOutputFilename();
     }
@@ -144,7 +177,7 @@ abstract class Datatype
     /**
      * Set code section (eg. BANK_3)
      */
-    public function SetCodeSection($section)
+    public function SetCodeSection($section) : void
     {
         $this->codeSection = $section;
     }
@@ -152,7 +185,7 @@ abstract class Datatype
     /**
      * Set whether to output in C or Assembly
      */
-    public function SetFormat($format)
+    public function SetFormat($format) : void
     {
         if (in_array($format, self::$formatsSupported)) {
             $this->codeFormat = $format;
@@ -164,7 +197,7 @@ abstract class Datatype
     /**
      * Get codename
      */
-    public function GetCodeName()
+    public function GetCodeName() : string
     {
         return $this->codeName;
     }
@@ -175,6 +208,7 @@ abstract class Datatype
      */
     public function GetCode()
     {
+        echo $this->codeFormat;
         switch ($this->codeFormat) {
 
             case App::FORMAT_BINARY:
@@ -212,7 +246,7 @@ abstract class Datatype
     /**
      * Get code in binary format
      */
-    public function WriteBinaryFile($filename)
+    public function WriteBinaryFile($filename) : void
     {
         $data = $this->GetData();
 
@@ -257,23 +291,32 @@ abstract class Datatype
     /**
      * Write to output file
      */
-    public function WriteFile()
+    public function WriteFile() : void
     {
         if ($this->addToAssetsLst === true) {
             App::AddOutputFile($this->GetOutputFilepath()) . CR;
         }
 
-        // compress with zx0
+        // use binaries for zx0 compression
+        if ($this->compression == App::COMPRESSION_ZX0) {
+            $this->codeFormat = App::FORMAT_BINARY;
+        }
+
+        // binary
+        if( $this->codeFormat == App::FORMAT_BINARY) {
+
+            $data_filename = $this->GetOutputFilepath();
+            
+            $this->WriteBinaryFile($data_filename);
+        }
+        // regular text file
+        else {
+            file_put_contents($this->GetOutputFilepath(), $this->GetCode());
+        }
+        
+        // do zx0 compression
         if ($this->compression == App::COMPRESSION_ZX0) {
 
-            // only output raw data
-            $this->codeFormat = App::FORMAT_BINARY;
-
-            // output data
-            $data_filename = str_replace('.asm', '.data.asm', $this->GetOutputFilepath());
-            $this->WriteBinaryFile($data_filename);
-
-            // output binary header
             file_put_contents($this->getOutputFilepath(), $this->GetBinaryReferenceAsmFile($data_filename));
 
             App::OutputMessage($this->datatypeName, $this->name, 'Compressing ' . $data_filename . ' with ZX0');
@@ -282,13 +325,9 @@ abstract class Datatype
                 $data_filename
             );
         }
-        // regular - without zx0 compression
-        else {
-            file_put_contents($this->GetOutputFilepath(), $this->GetCode());
-        }
     }
 
-    public function GetHeader()
+    public function GetHeader() : string
     {
         switch ($this->codeFormat) {
             case App::FORMAT_C:
@@ -301,7 +340,7 @@ abstract class Datatype
     /**
      * Get C header
      */
-    public function GetHeaderC()
+    public function GetHeaderC() : string
     {
         return '// file generated by Spectrum Asset Maker' . CR .
             '// https://github.com/clebin/SpectrumAssetMaker' . CR . CR;
@@ -310,7 +349,7 @@ abstract class Datatype
     /**
      * Get header for asm reference to binary file (for zx0)
      */
-    public function GetBinaryReferenceAsmFile($data_filename)
+    public function GetBinaryReferenceAsmFile($data_filename) : string
     {
         return '; file generated by Spectrum Asset Maker' . CR .
             '; https://github.com/clebin/SpectrumAssetMaker' . CR . CR .
@@ -323,7 +362,7 @@ abstract class Datatype
     /**
      * Get standard asm header
      */
-    public function GetHeaderAsm()
+    public function GetHeaderAsm() : string
     {
         return '; file generated by Spectrum Asset Maker' . CR .
             '; https://github.com/clebin/SpectrumAssetMaker' . CR . CR .
@@ -331,9 +370,17 @@ abstract class Datatype
     }
 
     /**
+     * Get the file extension for a binary file
+     */
+    public function GetBinaryFileExtension() : string
+    {
+        return $this->binaryFileExtension;
+    }
+    
+    /**
      * Process the file
      */
-    public function Process()
+    public function Process() : void
     {
         if ($this->isValid === true) {
             $this->WriteFile();

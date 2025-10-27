@@ -74,10 +74,8 @@
         {
             "name": "gunsight",
             "input": "raw-assets/graphics/gunsight.png",
-            "transparent-index": 0,
             "format": "binary",
-            "output-folder": "./output/asm/graphics",
-            "section": "BANK_0"
+            "output-folder": "./output/binary/graphics-next"
         }
     ],
     "text": [

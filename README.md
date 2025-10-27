@@ -26,6 +26,19 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets for 
 * Arrays of data taken from a JSON config file
 
 
+## Future output formats
+
+* Next tilemap
+
+* Next tileset
+
+* Next palette
+
+* Next bitmap
+
+* Next sprite
+
+
 ## Input formats:
 
 |Type|File expected|

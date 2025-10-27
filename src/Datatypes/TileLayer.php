@@ -9,15 +9,17 @@ use \ClebinGames\SpectrumAssetMaker\App;
  */
 class TileLayer extends Datatype
 {
-    public $datatypeName = 'Tile Layer';
-    public $num = 0;
-    public $width = false;
-    public $height = false;
+    public string $datatypeName = 'Tile Layer';
+
+    public int $num = 0;
+    public int|false $width = false;
+    public int|false $height = false;
+    public string|false $compression = false;
+    public string $codeFormat = App::FORMAT_ASM;
+    public bool $addDimensions = true;
+    protected bool $addArrayLength = false;
+
     public $tilemap;
-    public $compression = false;
-    public $codeFormat = App::FORMAT_ASM;
-    public $addDimensions = true;
-    protected $addArrayLength = false;
 
     public function __construct($config)
     {
@@ -29,7 +31,9 @@ class TileLayer extends Datatype
         $this->height = intval($config['height']);
         $this->addDimensions = $config['add-dimensions'];
         $this->compression = $config['compression'];
+
         $this->data = $this->ReadLayer($config['data']);
+        
         $this->codeSection = $config['section'];
     }
 
@@ -71,7 +75,7 @@ class TileLayer extends Datatype
     /**
      * Get data
      */
-    public function GetData()
+    public function GetData() : array
     {
         // compression
         if ($this->compression === App::COMPRESSION_RLE) {

@@ -6,34 +6,41 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\BlankData;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Tilemap;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Tileset;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Graphics;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\GraphicsClassic;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\GraphicsNext;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Sprite;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\SpriteNext;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Screen;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\BitmapNext;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\ArrayData;
 
 class Configuration
 {
-    private static $configPath = '';
-    private static $config = [];
-    private static $settings = [];
+    private static string $configPath = '';
+    private static array $config = [];
+    private static array $settings = [];
 
     // default settings
-    public static $createBinariesLst = false;
-    public static $outputFolder = "./assets";
+    public static bool $createBinariesLst = false;
+    public static string $outputFolder = "./assets";
 
     // map config sections to datatype
-    private static $sectionDatatypeMapping = [
+    private static array $sectionDatatypeMapping = [
         "sprites" => Sprite::class,
+        "sprites-next" => SpriteNext::class,
         "tilemaps" => Tilemap::class,
         "tilesets" => Tileset::class,
-        "graphics" => Graphics::class,
+        "graphics" => GraphicsClassic::class,
+        "graphics-next" => GraphicsNext::class,
         "text" => Text::class,
         "screen" => Screen::class,
+        "bitmap-next" => BitmapNext::class,
         "blank-data" => BlankData::class,
         "array-data" => ArrayData::class
     ];
-
-    public static function Process($configPath, $sectionsInUse = [])
+    
+    public static function Process($configPath, $sectionsInUse = []) : void
     {
         if (!file_exists($configPath)) {
 
@@ -81,7 +88,7 @@ class Configuration
         }
     }
 
-    private static function ReadSection($datatypeName, $config)
+    private static function ReadSection($datatypeName, $config) : void
     {
         foreach($config as $item)
         {
@@ -90,7 +97,7 @@ class Configuration
         }
     }
 
-    private static function ReadSettings($config)
+    private static function ReadSettings($config) : void
     {
         // create binaries lst
         if (isset($config['create-assets-list'])) {
@@ -116,7 +123,7 @@ class Configuration
         self::$settings = $config;
     }
 
-    public static function GetOutputFolder()
+    public static function GetOutputFolder() : string
     {
         return self::$outputFolder;
     }

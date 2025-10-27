@@ -10,15 +10,16 @@ use \ClebinGames\SpectrumAssetMaker\GameObject;
  */
 class ObjectMap extends Datatype
 {
-    public $datatypeName = 'Object Map';
-    protected $num = 0;
-    protected $objects = [];
-    protected $customProperties = [];
-    protected $addObjectDimensions = false;
-    protected $addArrayLength = true;
+    public string $datatypeName = 'Object Map';
+    protected int $num = 0;
+    protected array $objects = [];
+    protected array $customProperties = [];
+    protected bool $addObjectDimensions = false;
+    protected bool $addArrayLength = true;
+    protected array $objectTypes = [];
+    protected array $layer = [];
+
     protected $tilemap;
-    protected $objectTypes = [];
-    protected $layer = [];
 
     public function __construct($config)
     {
@@ -79,7 +80,7 @@ class ObjectMap extends Datatype
         }
     }
 
-    public function GetData()
+    public function GetData() : array
     {
         // loop through objects
         $count = 0;

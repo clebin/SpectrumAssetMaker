@@ -8,23 +8,23 @@ namespace ClebinGames\SpectrumAssetMaker;
 class Tile
 {
     // graphics data
-    public $graphics = [];
-    public $replaceFlashWithSolid = false;
+    public array $graphics = [];
+    public bool $replaceFlashWithSolid = false;
 
-    public $id = 0;
+    public int $id = 0;
 
     // individual tile info
-    public $paper = 0;
-    public $ink = 7;
-    public $bright = false;
-    public $flash = false;
+    public int $paper = 0;
+    public int $ink = 7;
+    public bool $bright = false;
+    public bool $flash = false;
 
     // game properties
-    public $solid = false;
-    public $lethal = false;
-    public $platform = false;
-    public $ladder = false;
-    public $custom = false;
+    public bool $solid = false;
+    public bool $lethal = false;
+    public bool $platform = false;
+    public bool $ladder = false;
+    public bool $custom = false;
 
     public function __construct($id, $properties, $replaceFlashWithSolid = false)
     {
@@ -79,7 +79,7 @@ class Tile
     /**
      * Return paper number for tile
      */
-    public function GetPaper($id)
+    public function GetPaper($id) : int
     {
         return $this->paper;
     }
@@ -87,7 +87,7 @@ class Tile
     /**
      * Return ink number for tile
      */
-    public function GetInk($id)
+    public function GetInk($id) : int
     {
         return $this->ink;
     }
@@ -95,7 +95,7 @@ class Tile
     /**
      * Return whether bright is set on tile
      */
-    public function isBright()
+    public function isBright() : bool
     {
         return $this->bright;
     }
@@ -103,7 +103,7 @@ class Tile
     /**
      * Return whether flash is set on tile
      */
-    public function isFlash()
+    public function isFlash() : bool
     {
         return $this->flash;
     }
@@ -111,7 +111,7 @@ class Tile
     /**
      * Return whether solid is set on tile
      */
-    public function isSolid()
+    public function isSolid() : bool
     {
         return $this->solid;
     }
@@ -119,7 +119,7 @@ class Tile
     /**
      * Return whether lethal is set on tile
      */
-    public function isLethal()
+    public function isLethal() : bool
     {
         return $this->lethal;
     }
@@ -127,7 +127,7 @@ class Tile
     /**
      * Return whether lethal is set on tile
      */
-    public function isPlatform()
+    public function isPlatform() : bool
     {
         return $this->platform;
     }
@@ -135,7 +135,7 @@ class Tile
     /**
      * Return whether ladder is set on tile
      */
-    public function isLadder()
+    public function isLadder() : bool
     {
         return $this->ladder;
     }
@@ -143,7 +143,7 @@ class Tile
     /**
      * Return whether custom1 is set on tile
      */
-    public function isCustom1()
+    public function isCustom1() : bool
     {
         return $this->custom;
     }
@@ -151,7 +151,7 @@ class Tile
     /**
      * Get byte containing flash, bright, paper and ink as a string
      */
-    public function GetColoursByte()
+    public function GetColoursByte() : string
     {
         $str = '';
 
@@ -171,7 +171,7 @@ class Tile
      * Get byte containing solid, lethal, platform, custom
      * variables as a string
      */
-    public function GetPropertiesByte()
+    public function GetPropertiesByte() : string
     {
         return ($this->solid == true ? '1' : '0') .
             ($this->lethal == true ? '1' : '0') .

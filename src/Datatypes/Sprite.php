@@ -6,19 +6,20 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class Sprite extends Datatype
 {
-    public $datatypeName = 'Sprite';
+    public string $datatypeName = 'Sprite';
+
     private $spriteImage = false;
     private $maskImage = false;
 
-    private $spriteData = [];
-    private $maskData = [];
+    private array $spriteData = [];
+    private array $maskData = [];
 
-    public $width = 0;
-    public $height = 0;
-    public $numColumns = 0;
-    public $spriteExtension = 'gif';
-    public $maskExtension = 'gif';
-    public $paperColour = App::COLOUR_BLACK;
+    public int $width = 0;
+    public int $height = 0;
+    public int $numColumns = 0;
+    public string $spriteExtension = App::FILE_EXTENSION_GIF;
+    public string $maskExtension = App::FILE_EXTENSION_GIF;
+    public string $paperColour = App::COLOUR_BLACK;
 
     public function __construct($config)
     {
@@ -102,9 +103,9 @@ class Sprite extends Datatype
         }
 
         // get the image
-        if ($extension == 'png') {
+        if ($extension == App::FILE_EXTENSION_PNG) {
             return imagecreatefrompng($filename);
-        } else if ($extension == 'gif') {
+        } else if ($extension == App::FILE_EXTENSION_GIF) {
             return imagecreatefromgif($filename);
         } else {
             App::AddError('Filetype (' . $extension . ') not supported');

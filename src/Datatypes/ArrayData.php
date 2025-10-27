@@ -6,14 +6,13 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class ArrayData extends Datatype
 {
-    public $datatypeName = 'Array Data';
+    public string $datatypeName = 'Array Data';
 
-    public $arrayName = '';
-
-    public $data = [];
-    public $stringData = [];
-    public $fields = [];
-    public $numFields = 0;
+    public string $arrayName = '';
+    public array $data = [];
+    public array $stringData = [];
+    public array $fields = [];
+    public int $numFields = 0;
 
     public function __construct($config)
     {
@@ -52,7 +51,7 @@ class ArrayData extends Datatype
         return true;
     }
 
-    public function WriteFile()
+    public function WriteFile() : void
     {
         if ($this->addToAssetsLst === true) {
             App::AddOutputFile($this->GetOutputFilepath()) . CR;
@@ -109,7 +108,5 @@ class ArrayData extends Datatype
                 'output-folder' => $this->outputFolder
             ], $data))->Process();
         }
-
-        return true;
     }
 }

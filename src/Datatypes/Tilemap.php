@@ -9,26 +9,27 @@ use \ClebinGames\SpectrumAssetMaker\App;
  */
 class Tilemap extends Datatype
 {
-    public $datatypeName = 'Tilemap';
+    public string $datatypeName = 'Tilemap';
+
     // data arrays
-    public $maps = [];
+    public array $maps = [];
 
-    public $numTileLayers = 0;
-    public $numObjectMaps = 0;
+    public int $numTileLayers = 0;
+    public int $numObjectMaps = 0;
 
-    public $defineName = 'TILEMAPS_LEN';
-    public $width = false;
-    public $height = false;
+    public string $defineName = 'TILEMAPS_LEN';
+    public int|false $width = false;
+    public int|false $height = false;
 
     public $objectTypes = false;
-    public $ignoreHiddenLayers = false;
-    public $layerTypes = 'all';
-    public $generatePaths = false;
-    public $addDimensions = false;
+    public bool $ignoreHiddenLayers = false;
+    public string $layerTypes = App::LAYER_TYPE_ALL;
+    public bool $generatePaths = false;
+    public bool $addDimensions = false;
     public $tileset = false;
 
     // allowed properties on enemies, objects, etc.
-    private $object_allowed_properties = [
+    private array $object_allowed_properties = [
         'collectable',
         'deltax',
         'deltay',
@@ -83,10 +84,6 @@ class Tilemap extends Datatype
         // read tilemap
         if (isset($config['map'])) {
             $this->isValid = $this->ReadFile($config['map']);
-        }
-
-        // graphics
-        if (isset($config['graphics'])) {
         }
     }
 
@@ -170,8 +167,8 @@ class Tilemap extends Datatype
             }
             // tile layer
             else if (
-                $layer['type'] == 'tilelayer' &&
-                ($this->layerTypes == 'tilelayer' || $this->layerTypes == 'all')
+                $layer['type'] == App::LAYER_TYPE_TILELAYER &&
+                ($this->layerTypes == App::LAYER_TYPE_TILELAYER || $this->layerTypes == App::LAYER_TYPE_ALL)
             ) {
 
                 $map = new TileLayer([
@@ -211,8 +208,8 @@ class Tilemap extends Datatype
             }
             // object layer
             else if (
-                $layer['type'] == 'objectgroup' &&
-                ($this->layerTypes == 'objectgroup' || $this->layerTypes == 'all')
+                $layer['type'] == App::LAYER_TYPE_OBJECTGROUP &&
+                ($this->layerTypes == App::LAYER_TYPE_OBJECTGROUP || $this->layerTypes == App::LAYER_TYPE_ALL)
             ) {
                 $map = new ObjectMap([
                     'tilemap' => $this,
@@ -297,7 +294,7 @@ class Tilemap extends Datatype
         return $str;
     }
 
-    public function Process()
+    public function Process() : void
     {
         if ($this->isValid === true) {
 

@@ -6,9 +6,9 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class BlankData extends Datatype
 {
-    public $datatypeName = 'Blank Data';
-    protected $size = 0;
-    protected $requireInputFile = false;
+    public string $datatypeName = 'Blank Data';
+    protected int $size = 0;
+    protected bool $requireInputFile = false;
 
     public function __construct($config)
     {

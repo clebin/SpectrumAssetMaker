@@ -6,13 +6,16 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class Text extends Datatype
 {
-    public $datatypeName = 'Text';
+    public string $datatypeName = 'Text';
+
+    protected bool $addArrayLength = false;
+    protected string|false $filename = '';
+
+    // character codes and delimiters
     protected $linefeed = 13;
     protected $sourceDelimiter = CR;
     protected $asmDelimiter = 0;
     protected $charsetStart = 32;
-    protected $addArrayLength = false;
-    protected $filename = '';
 
     public function __construct($config, $data = false)
     {
