@@ -208,7 +208,6 @@ abstract class Datatype
      */
     public function GetCode()
     {
-        echo $this->codeFormat;
         switch ($this->codeFormat) {
 
             case App::FORMAT_BINARY:

@@ -119,7 +119,7 @@ class Sprite extends Datatype
 
         // loop through columns
         for ($col = 0; $col < $this->numColumns; $col++) {
-            $data[] = $this->GetPixelData($image, $col, $mask);
+            $data[] = $this->GetAttributeData($image, $col, $mask);
         }
         return $data;
     }
@@ -127,7 +127,7 @@ class Sprite extends Datatype
     /**
      * Read an individual attribute (or tile)
      */
-    private function GetPixelData($image, $col, $mask = false)
+    private function GetAttributeData($image, $col, $mask = false)
     {
         // starting values for x
         $startx = $col * 8;

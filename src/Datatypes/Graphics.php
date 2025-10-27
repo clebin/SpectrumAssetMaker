@@ -72,23 +72,20 @@ abstract class Graphics extends Datatype
                 $this->numTiles . ' attributes. ' . CR;
         }
 
-        // loop through rows of atttributes
-        for ($row = 0; $row < $this->numRows; $row++) {
-
-            // loop through columns of atttributes
-            for ($col = 0; $col < $this->numColumns; $col++) {
-                $this->data[] = $this->GetPixelData($col, $row);
-            }
-        }
+        $this->data = $this->ReadAttributes();
 
         return true;
     }
 
+    /**
+     * Read pixel data
+     */
+    abstract function ReadAttributes() : array;
 
     /**
      * Return pixel data for image
      */
-    abstract function GetPixelData($col, $row) : array;
+    abstract function ReadAttribute($col, $row) : array;
 
     /**
      * Get raw tile data for a numbered tile

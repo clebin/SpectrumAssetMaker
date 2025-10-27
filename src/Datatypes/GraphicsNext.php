@@ -9,21 +9,38 @@ class GraphicsNext extends Graphics
     public string $datatypeName = 'Next Graphics';
 
     public string $binaryFileExtension = 'nxt';
+    public bool $addArrayLength = false;
 
     protected string $codeFormat = App::FORMAT_BINARY;
-    protected static array $formatsSupported = [
-        App::FORMAT_BINARY,
-    ];
 
     public function __construct($config)
     {
         parent::__construct($config);
     }
 
+    public function ReadAttributes() : array
+    {
+        $data = [];
+
+        // loop through rows of atttributes
+        for ($row = 0; $row < $this->numRows; $row++) {
+
+            // loop through columns of atttributes
+            for ($col = 0; $col < $this->numColumns; $col++) {
+                $attribute = $this->ReadAttribute($col, $row);
+
+                $data = array_merge($data, $attribute);
+            }
+        }
+
+        return $data;
+    }
+
+
     /**
      * Read an individual attribute (or tile)
      */
-    public function GetPixelData($col, $row) : array
+    public function ReadAttribute($col, $row) : array
     {
         // starting values for x & y
         $startx = $col * 8;
@@ -58,6 +75,8 @@ class GraphicsNext extends Graphics
                 // combine the two into one byte
                 $pixelColour = $pixelColour1 | $pixelColour2;
                 
+                // echo $pixelColour1.' | '.$pixelColour2.' = '.$pixelColour.' ('.decbin($pixelColour).')'.CR;
+
                 // add row of data
                 $attribute[] = $pixelColour;
             }

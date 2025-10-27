@@ -19,10 +19,26 @@ class GraphicsClassic extends Graphics
         }
     }
 
+    public function ReadAttributes() : array
+    {
+        $data = [];
+
+        // loop through rows of atttributes
+        for ($row = 0; $row < $this->numRows; $row++) {
+
+            // loop through columns of atttributes
+            for ($col = 0; $col < $this->numColumns; $col++) {
+                $data[] = $this->ReadAttribute($col, $row);
+            }
+        }
+
+        return $data;
+    }
+
     /**
      * Read an individual attribute (or tile)
      */
-    public function GetPixelData($col, $row) : array
+    public function ReadAttribute($col, $row) : array
     {
         // starting values for x & y
         $startx = $col * 8;
