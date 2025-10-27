@@ -1,7 +1,7 @@
 # Spectrum Asset Maker
 ## Chris Owen 2025
 
-Command-line utility for the creation of a wide range of ZX Spectrum assets for use with z88dk and sp1. Intended to be a one-stop shop for all your game assets.
+Command-line utility for the creation of a wide range of ZX Spectrum assets (Classic and Next). Intended to be a one-stop shop for all your game assets.
 
 ## Output Formats for Classic and Next
 
@@ -35,11 +35,11 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets for 
 
 * Tile/Attribute Graphics
 
-* Next tilemap - 1 byte per tile format
+* Next tilemap - short format, 1-byte per tile
 
-* Palette - 1 byte per entry format
+* Palette - short format, 1-byte per entry
 
-* Palette - 2 bytes per entry format
+* Palette - extended format, 2-bytes per entry
 
 * 4-bit Sprites
 
@@ -48,7 +48,7 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets for 
 
 ## Future Output Formats
 
-* Next tilemap - 2 bytes per tile format
+* Next tilemap - extended format, 2-bytes per tile
 
 * Next bitmaps
 

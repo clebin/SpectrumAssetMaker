@@ -16,7 +16,7 @@ require("src/Datatypes/BlankData.php");
 require("src/Datatypes/ArrayData.php");
 require("src/Datatypes/Tilemap.php");
 require("src/Datatypes/TileLayer.php");
-require("src/Datatypes/TileLayerNextAttributes.php");
+require("src/Datatypes/TileLayerNextTwoBytes.php");
 require("src/Datatypes/Tileset.php");
 require("src/Datatypes/MapPaths.php");
 require("src/Datatypes/Graphics.php");
