@@ -41,15 +41,16 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets for 
 
 * Palette - 2 bytes per entry format
 
+* 4-bit Sprites
+
+* 8-bit Sprites
+
 
 ## Future Output Formats
 
 * Next tilemap - 2 bytes per tile format
 
 * Next bitmaps
-
-* Next sprites
-
 
 ## Input formats:
 
