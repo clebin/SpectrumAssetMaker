@@ -3,19 +3,11 @@
 
 Command-line utility for the creation of a wide range of ZX Spectrum assets for use with z88dk and sp1. Intended to be a one-stop shop for all your game assets.
 
-## Output formats
+## Output Formats for Classic and Next
 
-* Graphics data
-
-* Masked/Unmasked Sprite (sp1 format)
-
-* .SCR file (eg. loading screen)
-
-* Tilemap - tile numbers, associated with a tileset
+* Tileset Attributes - Game properties (solid, lethal, ladder, custom)
 
 * Path Map - an array showing exits up/down/left/right for each square. Can be used to speed up pathfinding for complex AI.
-
-* Tileset - Includes attribute colours, solid properties. Associated with a set of graphics.
 
 * Object Map - object type, x, y, width, height
 
@@ -26,17 +18,37 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets for 
 * Arrays of data taken from a JSON config file
 
 
-## Future output formats
+## Output Formats for Classic
 
-* Next tilemap
+* Tilemap - tile numbers, associated with a tileset
 
-* Next tileset
+* Tile/Attribute Graphics
 
-* Next palette
+* Tile/Attribute Colours
 
-* Next bitmap
+* Masked/Unmasked Sprite (sp1 format)
 
-* Next sprite
+* .SCR file (eg. loading screen)
+
+
+## Output Formats for Spectrum Next
+
+* Tile/Attribute Graphics
+
+* Next tilemap - 1 byte per tile format
+
+* Palette - 1 byte per entry format
+
+* Palette - 2 bytes per entry format
+
+
+## Future Output Formats
+
+* Next tilemap - 2 bytes per tile format
+
+* Next bitmaps
+
+* Next sprites
 
 
 ## Input formats:
@@ -46,11 +58,13 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets for 
 |**Tilemap**|Tiled tilemap exported JSON (.tmj)||
 |**Tileset**|Tiled tileset exported as JSON (.tsj)|
 |**Object types**|Tiled Object Types XML file (.xml)|
-|**Tileset graphics**|Black and white PNG or GIF (PNG recommended)|
-|**Sprite**|Black and white PNG or GIF (PNG recommended)|
-|**Sprite Mask**|Black and white PNG or GIF (PNG recommended)|
+|**Tile/Attribute graphics**|Black and white PNG or GIF (PNG recommended)|
+|**Next Tile/Attribute graphics**|Indexed PNG or GIF (PNG recommended)|
+|**Next Palette**|Indexed PNG or GIF (PNG recommended)|
+|**Classic Sprite**|Black and white PNG or GIF (PNG recommended)|
+|**Classic Sprite Mask**|Black and white PNG or GIF (PNG recommended)|
 |**Text**|Plain text file|
-|**SCR**|PNG file, 256 pixels by 192 pixels|
+|**Classic SCR**|PNG file, 256 pixels by 192 pixels|
 
 ## Installation:
 
@@ -134,6 +148,24 @@ Below is an example JSON configuration file. More JSON files are included in the
             "output-folder": "./assets",
             "section": "BANK_0"
         }],
+    "graphics-next": [{
+        "name": "next-font",
+        "input": "raw-assets/fonts/lander-bold-next.png",
+        "output-folder": "./assets",
+        "format": "binary"
+    }],
+    "palette-next-one-byte": [{
+        "name": "next-font",
+        "input": "raw-assets/fonts/lander-bold-next.png",
+        "output-folder": "./assets",
+        "format": "binary"
+    }],
+    "palette-next-two-bytes": [{
+        "name": "next-font",
+        "input": "raw-assets/fonts/lander-bold-next.png",
+        "output-folder": "./assets",
+        "format": "binary"
+    }],
     "screens": [
         {
             "name": "loading-screen",

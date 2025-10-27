@@ -7,6 +7,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 abstract class PaletteNext extends Datatype
 {
     public string $datatypeName = 'Next Palette';
+    public string $binaryFileExtension = 'nxp';
 
     public int $numColours = 256;
     public array $colours = [];
