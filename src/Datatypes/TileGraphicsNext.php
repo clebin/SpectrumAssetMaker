@@ -4,7 +4,7 @@ namespace ClebinGames\SpectrumAssetMaker\Datatypes;
 
 class TileGraphicsNext extends GraphicsNext
 {
-    public string $datatypeName = 'Next Graphics';
+    public string $datatypeName = 'Tile Graphics Next';
 
     public int $tileWidth = 8;
     public int $tileHeight = 8;

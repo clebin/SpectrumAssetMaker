@@ -7,7 +7,8 @@ use \ClebinGames\SpectrumAssetMaker\App;
 class PaletteNextOneByte extends PaletteNext
 {
     public string $datatypeName = 'Next Palette One Byte';
-
+    public bool $addArrayLength = false;
+    
     public function ReadFile(string $filename): bool
     {
         if (!file_exists($filename)) {
@@ -28,9 +29,6 @@ class PaletteNextOneByte extends PaletteNext
             $blue = intval($rgb['blue'] / 85);
 
             $value = $red << 5 | $green << 2 | $blue;
-
-            // $bin_val = str_pad(decbin($value), 8, '0', STR_PAD_LEFT);
-            // echo 'Bin: '.$bin_val.' ('.$red.' | '.$green.' | '.$blue = '. $value. ')'.CR;
 
             // print_r($rgb);
             $this->data[] = $value;

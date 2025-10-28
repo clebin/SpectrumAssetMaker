@@ -12,6 +12,8 @@ class TileLayerNextTwoBytes extends TileLayer
     public const TILED_ROTATE_MASK = 134217728;
     public const TILED_ATTRIBUTE_RSHIFT = 27;
 
+    public string $binaryFileExtension = 'nxm';
+
     /**
      * Read a Tiled tilemap layer
      */

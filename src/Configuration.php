@@ -50,7 +50,6 @@ class Configuration
     public static function Process($configPath, $sectionsInUse = []) : void
     {
         if (!file_exists($configPath)) {
-
             echo 'Error: Config file not found';
             return;
         }
@@ -68,8 +67,9 @@ class Configuration
         }
 
         // check if json was parsed
-        if (sizeof((array) $config) == 0) {
+        if ( !is_array($config) ||sizeof((array) $config) == 0) {
             App::AddError('JSON configuration couldn\'t be parsed correctly.');
+            return;
         }
 
         // settings

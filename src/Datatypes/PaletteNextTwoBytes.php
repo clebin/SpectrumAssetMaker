@@ -7,7 +7,8 @@ use \ClebinGames\SpectrumAssetMaker\App;
 class PaletteNextTwoBytes extends PaletteNext
 {
     public string $datatypeName = 'Next Palette Two Bytes';
-
+    public bool $addArrayLength = false;
+    
     public function ReadFile(string $filename): bool
     {
         if (!file_exists($filename)) {

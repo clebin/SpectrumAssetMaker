@@ -9,6 +9,9 @@ use \ClebinGames\SpectrumAssetMaker\App;
  */
 class Tilemap extends Datatype
 {
+    public const TILE_LAYER_FORMAT_ONE_BYTE = 'one-byte';
+    public const TILE_LAYER_FORMAT_TWO_BYTES = 'two-bytes';
+
     public string $datatypeName = 'Tilemap';
 
     // data arrays
@@ -20,6 +23,8 @@ class Tilemap extends Datatype
     public string $defineName = 'TILEMAPS_LEN';
     public int|false $width = false;
     public int|false $height = false;
+
+    public $tileLayerFormat = self::TILE_LAYER_FORMAT_ONE_BYTE;
 
     public $objectTypes = false;
     public bool $ignoreHiddenLayers = false;
@@ -44,6 +49,11 @@ class Tilemap extends Datatype
     public function __construct($config)
     {
         parent::__construct($config);
+
+        // tile layer format
+        if( isset($config['tile-layer-format']) && $config['tile-layer-format'] == self::TILE_LAYER_FORMAT_TWO_BYTES) {
+            $this->tileLayerFormat = self::TILE_LAYER_FORMAT_TWO_BYTES;
+        }
 
         // ignore hidden layers
         if (isset($config['ignore-hidden-layers']) && $config['ignore-hidden-layers'] === true) {
@@ -171,7 +181,8 @@ class Tilemap extends Datatype
                 ($this->layerTypes == App::LAYER_TYPE_TILELAYER || $this->layerTypes == App::LAYER_TYPE_ALL)
             ) {
 
-                $map = new TileLayer([
+                
+                $tile_layer_args = [
                     'tilemap' => $this,
                     'num' => $this->numTileLayers,
                     'data' => $layer['data'],
@@ -182,7 +193,13 @@ class Tilemap extends Datatype
                     'format' => $this->codeFormat,
                     'section' => $this->codeSection,
                     'output-folder' => $this->outputFolder
-                ]);
+                ];
+
+                if( $this->tileLayerFormat == self::TILE_LAYER_FORMAT_TWO_BYTES) {
+                    $map = new TileLayerNextTwoBytes($tile_layer_args);
+                } else {
+                    $map = new TileLayer($tile_layer_args);
+                }
 
                 // generate open paths
                 if ($this->generatePaths === true) {

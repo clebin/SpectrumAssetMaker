@@ -44,7 +44,7 @@ abstract class Datatype
     protected string|false $filename = false;
 
     // add array length to beginning of asm array
-    protected bool $addArrayLength = true;
+    protected bool $addArrayLength;
 
     // default file extension for binary file
     public string $binaryFileExtension = 'bin';

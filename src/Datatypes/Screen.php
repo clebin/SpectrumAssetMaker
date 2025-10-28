@@ -28,6 +28,9 @@ class Screen extends Datatype
 {
     public string $datatypeName = 'Screen';
     protected $image = false;
+
+    public string $binaryFileExtension = 'scr';
+    
     public string $extension = App::FILE_EXTENSION_PNG;
     public array $attributes = [];
     public array $attributeData = [];
