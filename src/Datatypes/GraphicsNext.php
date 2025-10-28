@@ -98,7 +98,6 @@ abstract class GraphicsNext extends Graphics
 
                 $pixelColour1 = $pixelColour1 << 4;
                 
-
                 // next pixel
                 $x++;
 

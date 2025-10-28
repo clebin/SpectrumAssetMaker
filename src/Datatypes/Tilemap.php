@@ -24,7 +24,7 @@ class Tilemap extends Datatype
     public int|false $width = false;
     public int|false $height = false;
 
-    public $tileLayerFormat = self::TILE_LAYER_FORMAT_ONE_BYTE;
+    public $byteFormat = self::TILE_LAYER_FORMAT_ONE_BYTE;
 
     public $objectTypes = false;
     public bool $ignoreHiddenLayers = false;
@@ -51,8 +51,8 @@ class Tilemap extends Datatype
         parent::__construct($config);
 
         // tile layer format
-        if( isset($config['tile-layer-format']) && $config['tile-layer-format'] == self::TILE_LAYER_FORMAT_TWO_BYTES) {
-            $this->tileLayerFormat = self::TILE_LAYER_FORMAT_TWO_BYTES;
+        if( isset($config['byte-format']) && $config['byte-format'] == self::TILE_LAYER_FORMAT_TWO_BYTES) {
+            $this->byteFormat = self::TILE_LAYER_FORMAT_TWO_BYTES;
         }
 
         // ignore hidden layers
@@ -195,7 +195,7 @@ class Tilemap extends Datatype
                     'output-folder' => $this->outputFolder
                 ];
 
-                if( $this->tileLayerFormat == self::TILE_LAYER_FORMAT_TWO_BYTES) {
+                if( $this->byteFormat == self::TILE_LAYER_FORMAT_TWO_BYTES) {
                     $map = new TileLayerNextTwoBytes($tile_layer_args);
                 } else {
                     $map = new TileLayer($tile_layer_args);
