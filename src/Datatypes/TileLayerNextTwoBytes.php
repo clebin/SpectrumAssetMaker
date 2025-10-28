@@ -6,6 +6,12 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class TileLayerNextTwoBytes extends TileLayer
 {
+    // tiled attribute handling
+    public const TILED_XFLIP_MASK = 2147483648;
+    public const TILED_YFLIP_MASK = 1073741824;
+    public const TILED_ROTATE_MASK = 134217728;
+    public const TILED_ATTRIBUTE_RSHIFT = 27;
+
     /**
      * Read a Tiled tilemap layer
      */
@@ -21,9 +27,9 @@ class TileLayerNextTwoBytes extends TileLayer
             $palette_offset = 0;
 
             // attributes
-            $xflip = ($tileNum & self::TILED_XFLIP_MASK) >> 27;
-            $yflip = ($tileNum & self::TILED_YFLIP_MASK) >> 27;
-            $rotate = ($tileNum & self::TILED_ROTATE_MASK) >> 27;
+            $xflip = ($tileNum & self::TILED_XFLIP_MASK) >> self::TILED_ATTRIBUTE_RSHIFT;
+            $yflip = ($tileNum & self::TILED_YFLIP_MASK) >> self::TILED_ATTRIBUTE_RSHIFT;
+            $rotate = ($tileNum & self::TILED_ROTATE_MASK) >> self::TILED_ATTRIBUTE_RSHIFT;
 
             $attributes = $palette_offset | $xflip | $yflip | $rotate;
 
