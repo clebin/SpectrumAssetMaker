@@ -37,6 +37,8 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets (Cla
 
 * Next tilemap (nxt) - short format, 1-byte per tile
 
+* Next tilemap (nxt) - extended format, 2-bytes per tile (palette offset not supported yet)
+
 * Palette (pal) - short format, 1-byte per entry
 
 * Palette (pal) - extended format, 2-bytes per entry
@@ -46,8 +48,6 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets (Cla
 * Layer 2 Screen (nxi) - 256x192 with or without embedded palette
 
 ## Future Output Formats
-
-* Next tilemap - extended format, 2-bytes per tile
 
 * Next bitmap
 
