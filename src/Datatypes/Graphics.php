@@ -66,14 +66,9 @@ abstract class Graphics extends Datatype
         $this->numRows = $dimensions[1] / $this->tileHeight;
         $this->numTiles = $this->numColumns * $this->numRows;
 
-        if (App::GetVerbosity() != App::VERBOSITY_NORMAL) {
-            echo 'Graphics: Added' . $this->numTiles . ' attributes';
-        } else if (App::GetVerbosity() == App::VERBOSITY_VERBOSE) {
-            echo 'Graphics: Added' . $this->extension . ' - ' .
-                $this->numColumns . ' x ' . $this->numRows .
-                ' attributes (' . $dimensions[0] . ' x ' . $dimensions[1] . 'px) = ' .
-                $this->numTiles . ' attributes. ' . CR;
-        }
+        // output dimensions
+        App::OutputMessage($this->datatypeName, $this->name, 'Image size: '.$dimensions[0] . 'x' . $dimensions[1] . 'px');
+        App::OutputMessage($this->datatypeName, $this->name, 'Tiles: '.$this->numColumns.'x'.$this->numRows.'='.$this->numTiles);
 
         $this->data = $this->ReadAttributes();
 

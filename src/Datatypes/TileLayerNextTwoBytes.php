@@ -39,7 +39,7 @@ class TileLayerNextTwoBytes extends TileLayer
             $tileNum = $tileNum & self::TILED_TILE_NUM_MASK;
 
             // first byte
-            $data[] = $attributes;
+            $data[] = 0;
 
             // second byte is tile number
             $data[] = $tileNum;

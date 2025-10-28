@@ -91,6 +91,7 @@ abstract class GraphicsNext extends Graphics
 
                 $pixelColour1 = imagecolorat($this->image, $x, $y);
                 
+                // echo $pixelColour1.' ';
                 if( $pixelColour1 < 0 || $pixelColour1 >= 16) {
                     $pixelColour1 = 0;
                 }
@@ -103,6 +104,7 @@ abstract class GraphicsNext extends Graphics
 
                 $pixelColour2 = imagecolorat($this->image, $x, $y);
                 
+                // echo $pixelColour2.' ';
                 if( $pixelColour2 < 0 || $pixelColour2 >= 16) {
                     $pixelColour2 = 0;
                 }
@@ -110,7 +112,7 @@ abstract class GraphicsNext extends Graphics
                 // combine the two into one byte
                 $value = $pixelColour1 | $pixelColour2;
                 
-                // $bin_val = str_pad(decbin($value), 8, '0', STR_PAD_LEFT);
+                $bin_val = str_pad(decbin($value), 8, '0', STR_PAD_LEFT);
                 // echo '('.$x.','.$y.') '.$pixelColour1.' | '.$pixelColour2.' = '.$value.' ('.$bin_val.')'.CR;
 
                 // add row of data
