@@ -47,10 +47,6 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets (Cla
 
 * Layer 2 Screen (nxi) - 256x192 with or without embedded palette
 
-## Future Output Formats
-
-* Next bitmap
-
 ## Input formats:
 
 |Type|File format expected|
