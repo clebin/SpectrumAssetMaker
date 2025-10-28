@@ -18,6 +18,6 @@ tilesets/game-tiles-properties.asm
 ./output/binary/graphics/canal.nxi
 ./output/binary/graphics/font-compressed.asm
 ./output/binary/palettes-next/palette2.pal
-./output/binary/sprites-next/gunsight-4bit.asm
-./output/binary/sprites-next/gunsight-8bit.asm
+./output/binary/sprites-next/gunsight-4bit.spr
+./output/binary/sprites-next/gunsight-8bit.spr
 sample-text.asm

@@ -9,6 +9,11 @@ use \ClebinGames\SpectrumAssetMaker\App;
  */
 class TileLayer extends Datatype
 {
+    public const TILED_TILE_NUM_MASK = 255;
+    public const TILED_XFLIP_MASK = 2147483648;
+    public const TILED_YFLIP_MASK = 1073741824;
+    public const TILED_ROTATE_MASK = 134217728;
+
     public string $datatypeName = 'Tile Layer';
 
     public int $num = 0;
@@ -47,11 +52,7 @@ class TileLayer extends Datatype
         foreach ($layer as $tileNum) {
 
             $tileNum = intval($tileNum) - 1;
-
-            if ($tileNum < 0 || $tileNum > 255) {
-                echo 'Error: Probably invalid tile number (' . $tileNum . ')' . CR;
-                $tileNum = 0;
-            }
+            $tileNum = $tileNum & self::TILED_TILE_NUM_MASK;
 
             $data[] = $tileNum;
         }
