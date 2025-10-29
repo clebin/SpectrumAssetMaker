@@ -27,6 +27,12 @@ class App
     const FILE_EXTENSION_PNG = 'png';
     const FILE_EXTENSION_GIF = 'gif';
 
+    // byte formats
+    const BINARY_FORMAT_ONE_BYTE = '1-byte';
+    const BINARY_FORMAT_TWO_BYTE = '2-byte';
+    const BINARY_FORMAT_4BIT = '4-bit';
+    const BINARY_FORMAT_8BIT = '8-bit';
+
     // naming
     const NAMING_CAMELCASE = 'camelcase';
     const NAMING_UNDERSCORES = 'underscores';
@@ -519,6 +525,7 @@ class App
     public static function GetConvertedCodeName($source_name, $format)
     {
         $name = '';
+
         switch (self::$namingConvention) {
             case 'underscores':
                 $name = self::GetConvertedCodeNameUnderscores($source_name);
@@ -530,9 +537,9 @@ class App
                 break;
         }
 
-        if ($format == App::FORMAT_ASM) {
+        // if ($format == App::FORMAT_ASM) {
             $name = '_' . $name;
-        }
+        // }
 
         return $name;
     }
@@ -616,18 +623,19 @@ class App
     /**
      * Get binaries.lst file with list of screen files
      */
-    public static function ProcessAssetsLst($binariesLstFolder = '') : void
+    public static function ProcessAssetsLst($assetsLstFolder = '') : void
     {
-        $strBinaries = '';
-        $binariesLstFolder = rtrim($binariesLstFolder, '/') . '/';
+        $strAssets = '';
+
+        $assetsLstFolder = rtrim($assetsLstFolder, '/') . '/';
 
         sort(App::$outputFiles);
 
         foreach (App::$outputFiles as $path) {
-            $strBinaries .= str_replace($binariesLstFolder, '', $path) . CR;
+            $strAssets .= str_replace($assetsLstFolder, '', $path) . CR;
         }
 
-        file_put_contents($binariesLstFolder . 'assets.lst', $strBinaries);
+        file_put_contents($assetsLstFolder . 'assets.lst', $strAssets);
     }
 
     /**

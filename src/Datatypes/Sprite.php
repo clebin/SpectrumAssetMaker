@@ -71,10 +71,8 @@ class Sprite extends Datatype
         $this->height = imagesy($this->spriteImage);
         $this->numColumns = $this->width / 8;
 
-        if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
-            App::OutputMessage($this->datatypeName, $this->name, 'Created ' . $this->numColumns . ' columns (' . $this->width . ' x ' . $this->height . 'px)');
-        }
-
+        App::OutputMessage($this->datatypeName, $this->name, 'Created ' . $this->numColumns . ' columns (' . $this->width . ' x ' . $this->height . 'px)');
+   
         // get raw pixel data
         $this->spriteData = $this->GetImageData($this->spriteImage);
 

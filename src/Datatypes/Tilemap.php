@@ -9,9 +9,6 @@ use \ClebinGames\SpectrumAssetMaker\App;
  */
 class Tilemap extends Datatype
 {
-    public const TILE_LAYER_FORMAT_ONE_BYTE = 'one-byte';
-    public const TILE_LAYER_FORMAT_TWO_BYTES = 'two-bytes';
-
     public string $datatypeName = 'Tilemap';
 
     // data arrays
@@ -23,8 +20,6 @@ class Tilemap extends Datatype
     public string $defineName = 'TILEMAPS_LEN';
     public int|false $width = false;
     public int|false $height = false;
-
-    public $byteFormat = self::TILE_LAYER_FORMAT_ONE_BYTE;
 
     public $objectTypes = false;
     public bool $ignoreHiddenLayers = false;
@@ -49,11 +44,6 @@ class Tilemap extends Datatype
     public function __construct($config)
     {
         parent::__construct($config);
-
-        // tile layer format
-        if( isset($config['byte-format']) && $config['byte-format'] == self::TILE_LAYER_FORMAT_TWO_BYTES) {
-            $this->byteFormat = self::TILE_LAYER_FORMAT_TWO_BYTES;
-        }
 
         // ignore hidden layers
         if (isset($config['ignore-hidden-layers']) && $config['ignore-hidden-layers'] === true) {
@@ -192,14 +182,11 @@ class Tilemap extends Datatype
                     'compression' => $this->compression,
                     'format' => $this->codeFormat,
                     'section' => $this->codeSection,
-                    'output-folder' => $this->outputFolder
+                    'output-folder' => $this->outputFolder,
+                    'add-to-assets-list' => $this->addToAssetsLst
                 ];
 
-                if( $this->byteFormat == self::TILE_LAYER_FORMAT_TWO_BYTES) {
-                    $map = new TileLayerNextTwoBytes($tile_layer_args);
-                } else {
-                    $map = new TileLayer($tile_layer_args);
-                }
+                $map = $this->ReadLayer($tile_layer_args);
 
                 // generate open paths
                 if ($this->generatePaths === true) {
@@ -272,6 +259,14 @@ class Tilemap extends Datatype
         }
 
         return true;
+    }
+
+    /**
+     * Read tile layer
+     */
+    public function ReadLayer($args)
+    {
+        return new TileLayer($args);
     }
 
     /**

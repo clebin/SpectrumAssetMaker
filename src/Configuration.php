@@ -4,16 +4,15 @@ namespace ClebinGames\SpectrumAssetMaker;
 
 use \ClebinGames\SpectrumAssetMaker\Datatypes\BlankData;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Tilemap;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\TilemapNext;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Tileset;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\GraphicsClassic;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Sprite;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\SpriteNext4Bit;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\SpriteNext8Bit;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\SpriteNext;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Screen;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\ScreenNextLayer2;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\PaletteNextOneByte;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\PaletteNextTwoBytes;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\ScreenNext;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\PaletteNext;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\BitmapNext;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\ArrayData;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\TileGraphicsNext;
@@ -25,24 +24,23 @@ class Configuration
     private static array $settings = [];
 
     // default settings
-    public static bool $createBinariesLst = false;
+    public static bool $createAssetsLst = false;
     public static string $outputFolder = "./assets";
 
     // map config sections to datatype
     private static array $sectionDatatypeMapping = [
         "sprite" => Sprite::class,
-        "sprite-next-4bit" => SpriteNext4Bit::class,
-        "sprite-next-8bit" => SpriteNext8Bit::class,
+        "sprite-next" => SpriteNext::class,
         "tilemap" => Tilemap::class,
+        "tilemap-next" => TilemapNext::class,
         "tileset" => Tileset::class,
         "graphics" => GraphicsClassic::class,
         "tile-graphics-next" => TileGraphicsNext::class,
         "text" => Text::class,
         "screen" => Screen::class,
-        "screen-next-layer2" => ScreenNextLayer2::class,
+        "screen-next" => ScreenNext::class,
         "bitmap-next" => BitmapNext::class,
-        "palette-next-one-byte" => PaletteNextOneByte::class,
-        "palette-next-two-bytes" => PaletteNextTwoBytes::class,
+        "palette-next" => PaletteNext::class,
         "blank-data" => BlankData::class,
         "array-data" => ArrayData::class
     ];
@@ -90,7 +88,7 @@ class Configuration
         self::$config = $config;
 
         // save binaries.lst
-        if (self::$createBinariesLst === true) {
+        if (self::$createAssetsLst === true) {
             App::ProcessAssetsLst(self::$outputFolder);
         }
     }
@@ -108,7 +106,7 @@ class Configuration
     {
         // create binaries lst
         if (isset($config['create-assets-list'])) {
-            self::$createBinariesLst = $config['create-assets-list'];
+            self::$createAssetsLst = $config['create-assets-list'];
         }
 
         // base output folder

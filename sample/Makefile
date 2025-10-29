@@ -63,8 +63,8 @@ graphics-next:
 palette-next-one-byte:
 	php $(TOOLPATH) --config=./config.json --section=palette-next-one-byte
 
-palette-next-two-bytes:
-	php $(TOOLPATH) --config=./config.json --section=palette-next-two-bytes
+palette-next-2-byte:
+	php $(TOOLPATH) --config=./config.json --section=palette-next-2-byte
 
 screen-next-layer2:
 	php $(TOOLPATH) --config=./config.json --section=screen-next-layer2

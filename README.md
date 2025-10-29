@@ -102,13 +102,28 @@ The tool can be configured to generate all supported assets associated with a pr
 If the 'create-assets-list' settings, the tool will create an 'assets.lst' file in the specified output folder containing file-paths for all the generated assets. You can add this
 file to your project settings with '@output-folder/assets.lst' to include the assets as part of your build.
 
+You can exclude individual assets from the LST file using by setting 'add-to-assets-list' to false in the asset's JSON section.
+
+
+### Naming ###
+
+You can set the format of variable names to match your coding style. Iinclude the "settings/naming" field in your JSON. Options are:
+
+* camelcase (default)
+
+* underscores
+
+* titlecase
+
+### JSON example ###
+
 Below is an example JSON configuration file. More JSON files are included in the 'sample' folder.
 
 ```json
 {
     "settings": {
         "create-assets-list": true,
-        "naming": "camelcase",
+        "naming": "underscores",
         "output-folder": "./assets",
         "object-types": "raw-assets/objects/objecttypes.xml"
     },
@@ -128,14 +143,23 @@ Below is an example JSON configuration file. More JSON files are included in the
         "name": "next-font",
         "input": "raw-assets/fonts/lander-bold-next.png",
         "output-folder": "./assets",
-        "format": "binary"
+        "format": "binary",
     }],
-    "palette-next-two-bytes": [{
-        "name": "next-font",
-        "input": "raw-assets/fonts/lander-bold-next.png",
-        "output-folder": "./assets",
-        "format": "binary"
-    }],
+    "palette-next-2-byte": [
+        {
+            "name": "next-font",
+            "input": "raw-assets/fonts/lander-bold-next.png",
+            "output-folder": "./assets",
+            "format": "binary"
+        },
+        {
+            "name": "next-font-for-reference",
+            "input": "raw-assets/fonts/lander-bold-next.png",
+            "output-folder": "./assets/reference-asm",
+            "format": "asm"
+            "add-to-assets-list": false,
+        }
+    ],
     "screen": [
         {
             "name": "loading-screen",

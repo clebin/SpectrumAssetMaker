@@ -4,7 +4,7 @@ namespace ClebinGames\SpectrumAssetMaker\Datatypes;
 
 use \ClebinGames\SpectrumAssetMaker\App;
 
-class TileLayerNextTwoBytes extends TileLayer
+class TileLayerNext extends TileLayer
 {
     // tiled attribute handling
     public const TILED_XFLIP_MASK = 2147483648;
@@ -14,10 +14,48 @@ class TileLayerNextTwoBytes extends TileLayer
 
     public string $binaryFileExtension = 'nxm';
 
+    public $binaryFormat = App::BINARY_FORMAT_ONE_BYTE;
+
+    public function __construct($config)
+    {
+        parent::__construct($config);
+    }
+
     /**
      * Read a Tiled tilemap layer
      */
     public function ReadLayer($layer)
+    {
+        if( $this->binaryFormat == App::BINARY_FORMAT_TWO_BYTE) {
+            return $this->ReadLayerTwoByte($layer);
+        }
+        return $this->ReadLayerOneByte($layer);
+    }
+    
+    /**
+     * Read a Tiled tilemap layer
+     */
+    public function ReadLayerOneByte($layer)
+    {
+        $data = [];
+        // data
+        foreach ($layer as $tileNum) {
+
+            $tileNum = intval($tileNum) - 1;
+            $tileNum = $tileNum & self::TILED_TILE_NUM_MASK;
+
+            $data[] = $tileNum;
+            $data[] = 0;
+        }
+
+        // return a Screen object
+        return $data;
+    }
+
+    /**
+     * Read a Tiled tilemap layer
+     */
+    public function ReadLayerTwoByte($layer)
     {
         $data = [];
         // data
@@ -38,14 +76,14 @@ class TileLayerNextTwoBytes extends TileLayer
             // tile num
             $tileNum = $tileNum & self::TILED_TILE_NUM_MASK;
 
-            // first byte
-            $data[] = 0;
-
-            // second byte is tile number
+            // tile number byte
             $data[] = $tileNum;
+
+            // attributes byte
+            $data[] = $attributes;
         }
 
-        // return a Screen object
+        // return data
         return $data;
     }
 }

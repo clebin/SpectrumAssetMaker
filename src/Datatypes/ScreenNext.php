@@ -4,7 +4,7 @@ namespace ClebinGames\SpectrumAssetMaker\Datatypes;
 
 use \ClebinGames\SpectrumAssetMaker\App;
 
-class ScreenNextLayer2 extends GraphicsNext
+class ScreenNext extends GraphicsNext
 {
     public string $datatypeName = 'Next Layer 2 Screen';
 

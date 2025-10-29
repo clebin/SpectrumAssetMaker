@@ -118,7 +118,7 @@
             "output-folder": "./output/asm/palettes-next"
         }
     ],
-    "palette-next-two-bytes": [
+    "palette-next-2-byte": [
         {
             "name": "palette2",
             "input": "raw-assets/graphics/gunsight.png",
