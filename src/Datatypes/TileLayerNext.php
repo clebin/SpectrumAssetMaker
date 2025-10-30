@@ -20,7 +20,7 @@ class TileLayerNext extends TileLayer
     {
         parent::__construct($config);
 
-        if( isset($config['binary-format']) && $config['binary-fomat'] == App::BINARY_FORMAT_ONE_BYTE) {
+        if( isset($config['binary-format']) && $config['binary-format'] == App::BINARY_FORMAT_ONE_BYTE) {
             $this->binaryFormat = App::BINARY_FORMAT_ONE_BYTE;
         }
     }
@@ -67,7 +67,7 @@ class TileLayerNext extends TileLayer
 
             $tileNum = intval($tileNum) - 1;
 
-            // palette offset
+            // palette offset - not implemented but doesn't seem to work anyway
             $palette_offset = 0;
 
             // attributes

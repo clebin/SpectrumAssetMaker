@@ -44,6 +44,8 @@ class PaletteNext extends Datatype
         // read image file
         $this->image = $this->GetImageFromFile($filename);
 
+        $this->numColours = imagecolorstotal($this->image);
+
         if( $this->binaryFormat == App::BINARY_FORMAT_ONE_BYTE) {
 
             $this->ReadPaletteOneByte();
