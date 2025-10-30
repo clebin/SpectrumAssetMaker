@@ -30,6 +30,7 @@ class TilemapNext extends Tilemap
     public function ReadLayer($args)
     {
         $args['binary-format'] = $this->binaryFormat;
+        
         return new TileLayerNext($args);
     }
 }

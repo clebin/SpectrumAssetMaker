@@ -10,15 +10,19 @@ class TileLayerNext extends TileLayer
     public const TILED_XFLIP_MASK = 2147483648;
     public const TILED_YFLIP_MASK = 1073741824;
     public const TILED_ROTATE_MASK = 134217728;
-    public const TILED_ATTRIBUTE_RSHIFT = 27;
+    public const TILED_ATTRIBUTE_RSHIFT = 28;
 
     public string $binaryFileExtension = 'nxm';
 
-    public $binaryFormat = App::BINARY_FORMAT_ONE_BYTE;
+    public $binaryFormat = App::BINARY_FORMAT_TWO_BYTE;
 
     public function __construct($config)
     {
         parent::__construct($config);
+
+        if( isset($config['binary-format']) && $config['binary-fomat'] == App::BINARY_FORMAT_ONE_BYTE) {
+            $this->binaryFormat = App::BINARY_FORMAT_ONE_BYTE;
+        }
     }
 
     /**
@@ -26,10 +30,11 @@ class TileLayerNext extends TileLayer
      */
     public function ReadLayer($layer)
     {
-        if( $this->binaryFormat == App::BINARY_FORMAT_TWO_BYTE) {
-            return $this->ReadLayerTwoByte($layer);
+        if( $this->binaryFormat == App::BINARY_FORMAT_ONE_BYTE) {
+            return $this->ReadLayerOneByte($layer);
         }
-        return $this->ReadLayerOneByte($layer);
+
+        return $this->ReadLayerTwoByte($layer);
     }
     
     /**
@@ -45,7 +50,6 @@ class TileLayerNext extends TileLayer
             $tileNum = $tileNum & self::TILED_TILE_NUM_MASK;
 
             $data[] = $tileNum;
-            $data[] = 0;
         }
 
         // return a Screen object
@@ -81,6 +85,7 @@ class TileLayerNext extends TileLayer
 
             // attributes byte
             $data[] = $attributes;
+
         }
 
         // return data
