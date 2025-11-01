@@ -1,7 +1,7 @@
 # Spectrum Asset Maker
 ## Chris Owen 2025
 
-Command-line utility for the creation of a wide range of ZX Spectrum assets (Classic and Next). Intended to be a one-stop shop for all your game assets.
+A command-line utility for the creation of a wide range of ZX Spectrum assets (for Classic and Next). Spectrum Asset Maker is intended to be a one-stop shop for all your game assets.
 
 ## Output Formats for Classic and Next
 
@@ -18,7 +18,7 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets (Cla
 * Arrays of data taken from a JSON config file
 
 
-## Output Formats for Classic
+## Output Formats for Classic Spectrum
 
 * Tilemap - tile numbers, associated with a tileset
 
@@ -31,7 +31,7 @@ Command-line utility for the creation of a wide range of ZX Spectrum assets (Cla
 * .SCR file (eg. loading screen)
 
 
-## Output Formats for Spectrum Next
+## Output Formats for Spectrum Next (experimental)
 
 * Tile/Attribute Graphics (nxt)
 
@@ -104,6 +104,28 @@ file to your project settings with '@output-folder/assets.lst' to include the as
 
 You can exclude individual assets from the LST file using by setting 'add-to-assets-list' to false in the asset's JSON section.
 
+#### binary-format
+
+Some Spectrum Next assets can be stored in different binary formats, eg. palettes can be 1 or 2 bytes per colour, and sprites can be 4-bit or 8-bit per-pixel. This is set using the 'binary-format' option (see example JSON)
+
+### create-binary-reference-file
+
+By default, Spectrum Asset Maker creates an asm file pointing to the binary that you can use in your C program, for example:
+
+```
+section rodata_user
+
+public _gunsight
+public _gunsight_end
+
+_gunsight:
+
+        BINARY "./binary/generated/gunsight.spr" ; 128 bytes
+
+_gunsight_end:
+```
+
+If this is unwanted (if you're using Next or Boriel BASIC for example), you can disable this on a per asset-basis by setting 'create-binary-reference-file' to false (see example JSON)
 
 ### Naming ###
 
@@ -134,29 +156,32 @@ Below is an example JSON configuration file. More JSON files are included in the
     }],
     "graphics": [{
             "name": "font",
-            "input": "raw-assets/fonts/lander-bold.png",
+            "input": "raw-assets/fonts/nice-font.png",
             "paper-colour": "white",
             "output-folder": "./assets",
             "section": "BANK_0"
         }],
-    "palette-next-one-byte": [{
+    "palette-next": [{
         "name": "next-font",
-        "input": "raw-assets/fonts/lander-bold-next.png",
+        "input": "raw-assets/fonts/nice-font.png",
         "output-folder": "./assets",
         "format": "binary",
-    }],
-    "palette-next-2-byte": [
+        "binary-format": "1-byte"
+        },
         {
             "name": "next-font",
-            "input": "raw-assets/fonts/lander-bold-next.png",
+            "input": "raw-assets/fonts/nice-font.png",
             "output-folder": "./assets",
-            "format": "binary"
+            "format": "binary",
+            "binary-format": "2-byte",
+            "create-binary-reference-file": false
         },
         {
             "name": "next-font-for-reference",
             "input": "raw-assets/fonts/lander-bold-next.png",
             "output-folder": "./assets/reference-asm",
-            "format": "asm"
+            "format": "asm",
+            "binary-format": "1-byte"
             "add-to-assets-list": false,
         }
     ],
@@ -176,26 +201,29 @@ Below is an example JSON configuration file. More JSON files are included in the
         }
     ],
     "sprite": [
-    {
-        "name": "player-sprite",
-        "input": "raw-assets/sprites/player-sprite.png",
-        "mask": "raw-assets/sprites/player-sprite-mask.png",
-        "paper-colour": "black",
-        "output-folder": "./assets/sprites",
-        "section": "BANK_0"
-    }],
-    "sprite-next-4bit": [
-    {
-        "name": "player-sprite",
-        "input": "raw-assets/sprites/player-sprite.png",
-        "output-folder": "./assets/sprites",
-    }],
-    "sprite-next-8bit": [
-    {
-        "name": "player-sprite",
-        "input": "raw-assets/sprites/player-sprite.png",
-        "output-folder": "./assets/sprites",
-    }],
+        {
+            "name": "player-sprite",
+            "input": "raw-assets/sprites/player-sprite.png",
+            "mask": "raw-assets/sprites/player-sprite-mask.png",
+            "paper-colour": "black",
+            "output-folder": "./assets/sprites",
+            "section": "BANK_0"
+        }],
+    "sprite-next": [
+        {
+            "name": "player-sprite",
+            "input": "raw-assets/sprites/player-sprite.png",
+            "output-folder": "./assets/sprites",
+            "format": "binary",
+            "binary-format": "4-bit"
+        },
+        {
+            "name": "enemy-sprite",
+            "input": "raw-assets/sprites/player-sprite.png",
+            "output-folder": "./assets/sprites",
+            "format": "binary",
+            "binary-format": "8-bit"
+        }],
     "text": [{
 		"name": "intro-text",
 		"input": "raw-assets/intro.txt",
@@ -204,7 +232,7 @@ Below is an example JSON configuration file. More JSON files are included in the
     }],
     "tile-graphics-next": [{
         "name": "next-font",
-        "input": "raw-assets/fonts/lander-bold-next.png",
+        "input": "raw-assets/fonts/game-tileset.png",
         "output-folder": "./assets",
         "format": "binary"
     },
@@ -239,7 +267,9 @@ Below is an example JSON configuration file. More JSON files are included in the
 
 ### Tileset format ###
 
-For classic Spectrum, each tile in your tileset should have the following custom properties set:
+**Classic Spectrum**
+
+Set the following properties in Tiled which get saved in the tileset colours array.
 
 * flash (boolean)
 
@@ -251,15 +281,37 @@ For classic Spectrum, each tile in your tileset should have the following custom
 
 * solid (boolean)
 
+By default, it will output the attributes as a byte in the usual Spectrum F,B,P3,P2,P1,I3,I2,I1 format. By setting 'replace-flash-with-solid' to true, you can use the most significant bit to store whether the tile is solid instead of FLASH. If only Sinclair had used that precious bit for something more useful (bright paper + bright ink, how much nicer would that have been?)
+
+**Classic or Next:**
+
+You can use the following properties in Tiles to create a separate properties array:
+
+* solid (boolean)
+
+* lethal (boolean)
+
+* ladder (boolean)
+
+* custom (boolean)
+
+This feature may be expanded later.
+
+
+**Note:** Each tile in the tileset MUST have at least one property set, even if not used by Spectrum Asset Maker, otherwise Tiled won't include it in the exported JSON and you'll end up with missing tiles and errors.
+
+
 ### Importing Tilemap layers ###
 
-If --layer-type is set to 'all' (default) or 'tilelayer', the tool will create code for each tilemap layer. The tool will include hidden layers unless --ignore-hidden-layers is set to true.
+If 'layer-type' is set to 'all' (default) or 'tilelayer', the tool will create code for each tilemap layer. The tool will include hidden layers unless 'ignore-hidden-layers' is set to true.
 
-The layer name will be used for variable and file naming, unless --name is specified.
+The Tiled layer names will be used for variable and file naming.
+
 
 ### Generating path maps
 
-'Path maps' can be pre-generated to speed up movement calculation in some situations, eg. for computer AI. 
+'Path maps' can be pre-generated which helps speed up movement calculations in some situations. The feature was created to speed up enemy AI in my game Gilligan's Mine.
+
 This will create a byte for each square on the map that specifies which directions a player/character may move from that square.
 
 This feature requires 'solid' (true/false) and optionally 'ladder' (true/false) to be set on tileset tiles in Tiled.
@@ -282,7 +334,7 @@ For example, a square with exits in all 4 directions would be represented as:
 
 ### Importing Object layers ###
 
-If --layer-type is set to 'all' (default) or 'objectgroup', the tool will create code for each objectgroup layer.
+If 'layer-type' is set to 'all' (default) or 'objectgroup', the tool will create code for each objectgroup layer.
 
 To add the width & height of objects, add a boolean 'add-dimensions' property to the appropriate layer and set to 'true'.
 
@@ -306,8 +358,8 @@ Export the objecttypes.xml and specify the path using the --object-types paramet
 
 1 byte for tilenum, 1 byte for run-length.
 
-The data will be preceded by 2 bytes specifying the array length (hi/lo). This will appear after rows and columns if --add-dimensions is specified.
+The data will be preceded by 2 bytes specifying the array length (hi/lo). This will appear after rows and columns if 'add-dimensions' is specified.
 
-### Known Issues:
+### ZX0 Compression (beta)
 
-* Leaving gaps in the middle of tilesets (ie. no paper/ink/bright properties) will cause errors.
+You can set 'compression' to 'zx0' to compress a generated binary file using ZX0. This still needs to be fully tested.

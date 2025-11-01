@@ -87,6 +87,12 @@ abstract class Datatype
             $this->isValid = false;
         }
 
+        // create asm reference file?
+        if( isset($config['create-binary-reference-file']) &&
+            $config['create-binary-reference-file'] === false) {
+                $this->createReferenceFile = false;
+        }
+
         // set name, including code name, define name, etc
         if (isset($config['name']))
             $this->SetName($config['name']);
