@@ -102,7 +102,7 @@ You can pass '--section=[section name]' to only create assets of a particular ty
 
 ## JSON global settings
 
-#### create-assets-list
+### create-assets-list
 
 If the 'create-assets-list' setting is used, the tool will create an 'assets.lst' file in the specified output folder containing file-paths for all the generated assets. You can add this
 file to your project settings with '@output-folder/assets.lst' to include the assets as part of your build.
@@ -122,7 +122,7 @@ You can set the format of variable names to match your coding style. Iinclude th
 
 ## JSON asset settings
 
-#### binary-format
+### binary-format
 
 Some Spectrum Next assets can be stored in different binary formats, eg. palettes can be 1 or 2 bytes per colour, and sprites can be 4-bit or 8-bit per-pixel. This is set using the 'binary-format' option (see example JSON for usage)
 
