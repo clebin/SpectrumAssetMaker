@@ -109,6 +109,16 @@ file to your project settings with '@output-folder/assets.lst' to include the as
 
 You can exclude individual assets from the LST file using by setting 'add-to-assets-list' to false in the asset's JSON section.
 
+### Naming ###
+
+You can set the format of variable names to match your coding style. Iinclude the "settings/naming" field in your JSON. Options are:
+
+* camelcase (default)
+
+* underscores
+
+* titlecase
+
 
 ## JSON asset settings
 
@@ -135,17 +145,7 @@ _gunsight_end:
 
 If this is unwanted (if you're using Next or Boriel BASIC for example), you can disable this on a per asset-basis by setting 'create-binary-reference-file' to false (see example JSON)
 
-### Naming ###
-
-You can set the format of variable names to match your coding style. Iinclude the "settings/naming" field in your JSON. Options are:
-
-* camelcase (default)
-
-* underscores
-
-* titlecase
-
-### JSON example ###
+## Example JSON Config File
 
 Below is an example JSON configuration file. More JSON files are included in the 'sample' folder.
 
