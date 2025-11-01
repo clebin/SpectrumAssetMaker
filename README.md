@@ -85,7 +85,7 @@ Install PHP with your favourite package manager:
 > (use installer from PHP.net)
 
 
-## Usage without parameters
+## Usage
 
 On the command line, run:
 
