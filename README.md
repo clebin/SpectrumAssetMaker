@@ -68,19 +68,19 @@ A command-line utility for the creation of a wide range of ZX Spectrum assets (f
 
 Install PHP with your favourite package manager:
 
-Mac with Homebrew:
+**Mac with Homebrew:**
 
 > brew install php
 
-Linux - Debian/Ubuntu/Mint:
+**Linux - Debian/Ubuntu/Mint:**
 
 > sudo apt install php
 
-Linux - Fedora/RedHat:
+**Linux - Fedora/RedHat:**
 
 > sudo dnf install -y php
 
-Windows/Mac without Homebrew:
+**Windows/Mac without Homebrew:**
 
 > (use installer from PHP.net)
 
@@ -89,24 +89,27 @@ Windows/Mac without Homebrew:
 
 On the command line, run:
 
-> php SpectrumAssetMaker.php
+> php SpectrumAssetMaker.php --config=[path to JSON config file]
 
-## Read a JSON configuration file:
+All assets associated with a project with a project - sprites, tilemaps, graphics etc - are specified in the JSON config file. These are created in one pass, simplifying the build process.
 
-**--config=**[path to JSON config file]
+You can pass '--section=[section name]' to only create assets of a particular type as specified in the JSON file.
 
-The tool can be configured to generate all supported assets associated with a project - sprites, tilemaps, graphics etc - in one pass, simplifying the build process.
+**Example:**
+
+> php SpectrumAssetMaker.php --config=config-assets.json --section=sprite
+
 
 #### create-assets-list
 
-If the 'create-assets-list' settings, the tool will create an 'assets.lst' file in the specified output folder containing file-paths for all the generated assets. You can add this
+If the 'create-assets-list' setting is used, the tool will create an 'assets.lst' file in the specified output folder containing file-paths for all the generated assets. You can add this
 file to your project settings with '@output-folder/assets.lst' to include the assets as part of your build.
 
 You can exclude individual assets from the LST file using by setting 'add-to-assets-list' to false in the asset's JSON section.
 
 #### binary-format
 
-Some Spectrum Next assets can be stored in different binary formats, eg. palettes can be 1 or 2 bytes per colour, and sprites can be 4-bit or 8-bit per-pixel. This is set using the 'binary-format' option (see example JSON)
+Some Spectrum Next assets can be stored in different binary formats, eg. palettes can be 1 or 2 bytes per colour, and sprites can be 4-bit or 8-bit per-pixel. This is set using the 'binary-format' option (see example JSON for usage)
 
 ### create-binary-reference-file
 
@@ -360,6 +363,6 @@ Export the objecttypes.xml and specify the path using the --object-types paramet
 
 The data will be preceded by 2 bytes specifying the array length (hi/lo). This will appear after rows and columns if 'add-dimensions' is specified.
 
-### ZX0 Compression (beta)
+### ZX0 Compression (experimental)
 
 You can set 'compression' to 'zx0' to compress a generated binary file using ZX0. This still needs to be fully tested.
