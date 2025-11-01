@@ -100,12 +100,17 @@ You can pass '--section=[section name]' to only create assets of a particular ty
 > php SpectrumAssetMaker.php --config=config-assets.json --section=sprite
 
 
+## JSON global settings
+
 #### create-assets-list
 
 If the 'create-assets-list' setting is used, the tool will create an 'assets.lst' file in the specified output folder containing file-paths for all the generated assets. You can add this
 file to your project settings with '@output-folder/assets.lst' to include the assets as part of your build.
 
 You can exclude individual assets from the LST file using by setting 'add-to-assets-list' to false in the asset's JSON section.
+
+
+## JSON asset settings
 
 #### binary-format
 
