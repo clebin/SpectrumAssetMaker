@@ -29,8 +29,15 @@ abstract class Graphics extends Datatype
             App::AddError($this->datatypeName . ': No input specified for "' . $this->name . '"');
             return;
         }
+    }
 
+    public function Process() : void
+    {
         $this->isValid = $this->ReadFile($this->inputFilepath);
+
+        if($this->isValid === true) {
+            $this->WriteFile();
+        }
     }
 
     /**

@@ -12,10 +12,10 @@ class Tilemap extends Datatype
     public string $datatypeName = 'Tilemap';
 
     // data arrays
-    public array $maps = [];
+    public array $layers = [];
 
     public int $numTileLayers = 0;
-    public int $numObjectMaps = 0;
+    public int $numObjectLayers = 0;
 
     public string $defineName = 'TILEMAPS_LEN';
     public int|false $width = false;
@@ -140,7 +140,7 @@ class Tilemap extends Datatype
     {
         // loop through groups
         $this->numTileLayers = 0;
-        $this->numObjectMaps = 0;
+        $this->numObjectLayers = 0;
 
         foreach ($data['layers'] as $group) {
             $this->ReadLayerGroup($group['layers'], $group['name']);
@@ -150,24 +150,22 @@ class Tilemap extends Datatype
 
     public function ReadLayerGroup($group, $groupName = false)
     {
-        foreach ($group as $layer) {
+        foreach ($group as $source_layer) {
 
-            $map = false;
+            $layer = false;
             $paths = false;
 
             if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
-                App::OutputMessage('Map layer', $layer['name'], 'Reading ' . $layer['type']);
+                App::OutputMessage('Map layer', $source_layer['name'], 'Reading ' . $source_layer['type']);
             }
 
             // tilemap
-            if ($this->ignoreHiddenLayers === true && $layer['hidden'] === true) {
+            if ($this->ignoreHiddenLayers === true && $source_layer['hidden'] === true) {
                 // do nothing
-                $map = false;
-                $paths = false;
             }
             // tile layer
             else if (
-                $layer['type'] == App::LAYER_TYPE_TILELAYER &&
+                $source_layer['type'] == App::LAYER_TYPE_TILELAYER &&
                 ($this->layerTypes == App::LAYER_TYPE_TILELAYER || $this->layerTypes == App::LAYER_TYPE_ALL)
             ) {
 
@@ -175,9 +173,9 @@ class Tilemap extends Datatype
                 $tile_layer_args = [
                     'tilemap' => $this,
                     'num' => $this->numTileLayers,
-                    'data' => $layer['data'],
-                    'width' => $layer['width'],
-                    'height' => $layer['height'],
+                    'data' => $source_layer['data'],
+                    'width' => $source_layer['width'],
+                    'height' => $source_layer['height'],
                     'add-dimensions' => $this->addDimensions,
                     'compression' => $this->compression,
                     'format' => $this->codeFormat,
@@ -186,7 +184,7 @@ class Tilemap extends Datatype
                     'add-to-assets-list' => $this->addToAssetsLst
                 ];
 
-                $map = $this->ReadLayer($tile_layer_args);
+                $layer = $this->ReadLayer($tile_layer_args);
 
                 // generate open paths
                 if ($this->generatePaths === true) {
@@ -196,9 +194,9 @@ class Tilemap extends Datatype
                             'tilemap' => $this,
                             'tileset_obj' => $this->tileset,
                             'num' => $this->numTileLayers,
-                            'data' => $layer['data'],
-                            'width' => $layer['width'],
-                            'height' => $layer['height'],
+                            'data' => $source_layer['data'],
+                            'width' => $source_layer['width'],
+                            'height' => $source_layer['height'],
                             'add-dimensions' => $this->addDimensions,
                             'compression' => $this->compression,
                             'section' => $this->codeSection,
@@ -212,34 +210,34 @@ class Tilemap extends Datatype
             }
             // object layer
             else if (
-                $layer['type'] == App::LAYER_TYPE_OBJECTGROUP &&
+                $source_layer['type'] == App::LAYER_TYPE_OBJECTGROUP &&
                 ($this->layerTypes == App::LAYER_TYPE_OBJECTGROUP || $this->layerTypes == App::LAYER_TYPE_ALL)
             ) {
-                $map = new ObjectMap([
+                $layer = new ObjectLayer([
                     'tilemap' => $this,
-                    'num' => $this->numObjectMaps,
-                    'layer' => $layer,
+                    'num' => $this->numObjectLayers,
+                    'layer' => $source_layer,
                     'object-types' => $this->objectTypes,
                     'format' => $this->codeFormat,
                     'section' => $this->codeSection,
                     'output-folder' => $this->outputFolder
                 ]);
-                $this->numObjectMaps++;
+                $this->numObjectLayers++;
             }
 
             // layer has been processed
-            if ($map !== false) {
+            if ($layer !== false) {
                 // set name
                 if ($groupName !== false) {
-                    $map->SetName($groupName . '-' . $layer['name']);
+                    $layer->SetName($groupName . '-' . $source_layer['name']);
                 } else {
-                    $map->SetName($layer['name']);
+                    $layer->SetName($source_layer['name']);
                 }
 
                 // add to maps array
-                $this->maps[] = $map;
+                $this->layers[] = $layer;
             } else {
-                echo 'Error: Couldn\'t process layer ' . $layer['name'] . '' . CR;
+                echo 'Error: Couldn\'t process layer ' . $source_layer['name'] . '' . CR;
             }
 
             // paths layer
@@ -247,13 +245,13 @@ class Tilemap extends Datatype
                 if ($paths !== false) {
                     // set name
                     if ($groupName !== false) {
-                        $paths->SetName($groupName . '-' . $layer['name'] . '-paths');
+                        $paths->SetName($groupName . '-' . $source_layer['name'] . '-paths');
                     } else {
-                        $paths->SetName($layer['name'] . '-paths');
+                        $paths->SetName($source_layer['name'] . '-paths');
                     }
 
                     // add to maps array
-                    $this->maps[] = $paths;
+                    $this->layers[] = $paths;
                 }
             }
         }
@@ -280,9 +278,9 @@ class Tilemap extends Datatype
     /**
      * Return the number of screens
      */
-    public function GetNumObjectMaps()
+    public function GetNumObjectLayers()
     {
-        return $this->numObjectMaps;
+        return $this->numObjectLayers;
     }
 
     /**
@@ -292,7 +290,7 @@ class Tilemap extends Datatype
     {
         $str = '';
 
-        for ($i = 0; $i < sizeof($this->maps); $i++) {
+        for ($i = 0; $i < sizeof($this->layers); $i++) {
 
             switch ($this->codeFormat) {
                 case 'c':
@@ -312,8 +310,8 @@ class Tilemap extends Datatype
 
             // write tilemaps to files
             $count = 0;
-            foreach ($this->maps as $map) {
-                $map->WriteFile();
+            foreach ($this->layers as $layer) {
+                $layer->WriteFile();
                 $count++;
             }
         }

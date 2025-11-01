@@ -27,7 +27,7 @@ require("src/Datatypes/TileGraphicsNext.php");
 require("src/Datatypes/PaletteNext.php");
 require("src/Datatypes/Sprite.php");
 require("src/Datatypes/SpriteNext.php");
-require("src/Datatypes/ObjectMap.php");
+require("src/Datatypes/ObjectLayer.php");
 require("src/Datatypes/Text.php");
 require("src/Datatypes/Screen.php");
 require("src/Datatypes/ScreenNext.php");

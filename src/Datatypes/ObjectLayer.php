@@ -8,9 +8,9 @@ use \ClebinGames\SpectrumAssetMaker\GameObject;
 /**
  * Class representing an object map
  */
-class ObjectMap extends Datatype
+class ObjectLayer extends Datatype
 {
-    public string $datatypeName = 'Object Map';
+    public string $datatypeName = 'Object Layer';
     protected int $num = 0;
     protected array $objects = [];
     protected array $customProperties = [];

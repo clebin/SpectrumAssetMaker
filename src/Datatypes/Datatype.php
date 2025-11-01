@@ -365,6 +365,7 @@ abstract class Datatype
      */
     public function WriteFile() : void
     {
+        // add to .lst file
         if ($this->addToAssetsLst === true) {
 
             if( $this->codeFormat == App::FORMAT_BINARY) {
@@ -481,6 +482,7 @@ abstract class Datatype
      */
     public function Process() : void
     {
+        // check if everything's ok
         if ($this->isValid === true) {
             $this->WriteFile();
         }

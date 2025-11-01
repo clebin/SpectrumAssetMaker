@@ -54,7 +54,6 @@
             "name": "gunsight-4bit",
             "input": "raw-assets/graphics/gunsight.png",
             "format": "binary",
-            "num-colours": 16,
             "output-folder": "./output/binary/sprites-next"
         }
     ],
@@ -63,7 +62,6 @@
             "name": "gunsight-8bit",
             "input": "raw-assets/graphics/gunsight.png",
             "format": "binary",
-            "num-colours": 16,
             "output-folder": "./output/binary/sprites-next"
         }
     ],
@@ -114,7 +112,6 @@
             "name": "palette1",
             "input": "raw-assets/graphics/gunsight.png",
             "format": "asm",
-            "num-colours": 16,
             "output-folder": "./output/asm/palettes-next"
         }
     ],
@@ -123,7 +120,6 @@
             "name": "palette2",
             "input": "raw-assets/graphics/gunsight.png",
             "format": "binary",
-            "num-colours": 16,
             "output-folder": "./output/binary/palettes-next"
         }
     ],

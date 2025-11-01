@@ -23,6 +23,7 @@ class SpriteNext extends GraphicsNext
         if( isset($config['binary-format']) && $config['binary-format'] == App::BINARY_FORMAT_8BIT) {
             $this->binaryFormat = App::BINARY_FORMAT_8BIT;
         }
+
     }
 
     public function ReadAttribute($col, $row) : array
