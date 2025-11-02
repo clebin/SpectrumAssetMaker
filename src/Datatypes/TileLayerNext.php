@@ -58,6 +58,11 @@ class TileLayerNext extends TileLayer
 
     /**
      * Read a Tiled tilemap layer
+     * 
+     * Destination format:
+     * 
+     * Byte 1: [tile num][tile num][tile num][tile num][tile num][tile num][tile num][tile num]
+     * Byte 2: [palette offset][palette offset][palette offset][palette offset][x mirror][y mirror][rotate][ULA over tilemap] 
      */
     public function ReadLayerTwoByte($layer)
     {
@@ -67,15 +72,17 @@ class TileLayerNext extends TileLayer
 
             $tileNum = intval($tileNum) - 1;
 
-            // palette offset - not implemented but doesn't seem to work anyway
-            $palette_offset = 0;
-
             // attributes
             $xflip = ($tileNum & self::TILED_XFLIP_MASK) >> self::TILED_ATTRIBUTE_RSHIFT;
             $yflip = ($tileNum & self::TILED_YFLIP_MASK) >> self::TILED_ATTRIBUTE_RSHIFT;
             $rotate = ($tileNum & self::TILED_ROTATE_MASK) >> self::TILED_ATTRIBUTE_RSHIFT;
+            $ula_over_tilemap = 0;
 
-            $attributes = $palette_offset | $xflip | $yflip | $rotate;
+            // palette offset - not implemented but doesn't seem to work anyway
+            // $palette_offset = rand(0,15) << 4;
+            $palette_offset = 0;
+
+            $attributes = $palette_offset | $xflip | $yflip | $rotate | $ula_over_tilemap;
 
             // tile num
             $tileNum = $tileNum & self::TILED_TILE_NUM_MASK;
