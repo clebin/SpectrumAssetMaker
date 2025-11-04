@@ -550,9 +550,7 @@ class App
                 break;
         }
 
-        // if ($format == App::FORMAT_ASM) {
-            $name = '_' . $name;
-        // }
+        $name = '_' .ltrim($name, '_');
 
         return $name;
     }
