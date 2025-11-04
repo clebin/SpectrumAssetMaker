@@ -28,13 +28,13 @@ abstract class GraphicsNext extends Graphics
         $count = 0;
 
         // loop through rows
-        for ($row = 0; $row < $this->numRows; $row++) {
+        for ($y = 0; $y < $this->numRows; $y++) {
 
             // loop through columns
-            for ($col = 0; $col < $this->numColumns; $col++) {
+            for ($x = 0; $x < $this->numColumns; $x++) {
 
                 // add pixel
-                $data[] = $this->ReadPixel($col, $row);
+                $data[] = $this->ReadPixel($x, $y);
                 $count++;
             }
         }
@@ -48,13 +48,13 @@ abstract class GraphicsNext extends Graphics
         $count = 0;
 
         // loop through columns
-            for ($col = 0; $col < $this->numColumns; $col++) {
+        for ($x = 0; $x < $this->numColumns; $x++) {
 
             // loop through rows
-            for ($row = 0; $row < $this->numRows; $row++) {
+            for ($y = 0; $y < $this->numRows; $y++) {
 
                 // add pixel
-                $data[] = $this->ReadPixel($col, $row);
+                $data[] = $this->ReadPixel($x, $y);
                 $count++;
             }
         }
