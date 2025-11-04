@@ -515,7 +515,7 @@ The 'path-map-style' property changes navigation style. There are two options:
 
 * overhead - character can move in all 4 directions if there's a space
 
-### Output foramt
+### Output format
 
 The byte format of a square in the path map is as follows:
 
