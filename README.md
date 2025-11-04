@@ -401,6 +401,7 @@ Add the following properties to the individual tile in Tiled:
 
 * solid (boolean)
 
+
 ### Custom Properties ###
 
 You can customise what is saved by adding a "tile-properties" section to the tileset config JSON. This allows you to create as many 8-bit arrays of properties as you like.
