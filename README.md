@@ -349,6 +349,40 @@ Below is an example JSON configuration file. More JSON files are included in the
     }]]
 }
 ```
+### Importing Tilemap layers ###
+
+If 'layer-type' is set to 'all' (default) or 'tilelayer', the tool will create code for each tilemap layer. The tool will include hidden layers unless "ignore-hidden-layers" is set to true.
+
+The destination code name is built from the folder and layer names in Tiled and respects the global "naming" setting. For example, take the following structure in Tiled:
+
+```
+(folder) level-1
+|_____ (tilelayer) layout
+|______(objectmap) enemies
+|______(objectmap) collectables
+```
+This will create the following asm resources. With "naming" set to "underscores":
+
+```
+level_1_layout
+level_1_enemies
+level_1_colletables
+```
+
+With "naming" set to "camelcase":
+```
+level1Layout
+level1Enemies
+level1Collectables
+```
+
+With "naming" set to "titlecase":
+```
+Level1Layout
+Level1Enemies
+Level1Collectables
+```
+
 
 ### Tileset format ###
 
@@ -430,44 +464,20 @@ Or you can add a second array of properties but leave the 'colours' array as def
 }
 ```
 
+The resulting arrays for 'tilesetMine' and 'tilesetJungle' would be named in code like this (where "naming" is set to "camelcase"):
+
+```
+tilesetMineColours
+tilesetMineMyProperties
+tilesetJungleColours
+tilesetJungleMyProperties
+```
+
+
 **Note:** Each tile in the tileset MUST have at least one property set, even if not used by Spectrum Asset Maker, otherwise Tiled won't include it in the exported JSON and you'll end up with missing tiles and errors.
 
 **Note 2:** At the moment each tile slot uses a full 8-bits, potentialy wasting bits. In future it should be possible to combile multiple tiles into a single byte.
 
-
-### Importing Tilemap layers ###
-
-If 'layer-type' is set to 'all' (default) or 'tilelayer', the tool will create code for each tilemap layer. The tool will include hidden layers unless "ignore-hidden-layers" is set to true.
-
-The destination code name is built from the folder and layer names in Tiled and respects the global "naming" setting. For example, take the following structure in Tiled:
-
-```
-(folder) level-1
-|_____ (tilelayer) layout
-|______(objectmap) enemies
-|______(objectmap) collectables
-```
-This will create the following asm resources. With "naming" set to "underscores":
-
-```
-level_1_layout
-level_1_enemies
-level_1_colletables
-```
-
-With "naming" set to "camelcase":
-```
-level1Layout
-level1Enemies
-level1Collectables
-```
-
-With "naming" set to "titlecase":
-```
-Level1Layout
-Level1Enemies
-Level1Collectables
-```
 
 ### Generating path maps
 
