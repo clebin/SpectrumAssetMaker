@@ -30,8 +30,8 @@ require("src/Datatypes/SpriteNext.php");
 require("src/Datatypes/ObjectLayer.php");
 require("src/Datatypes/Text.php");
 require("src/Datatypes/Screen.php");
-require("src/Datatypes/ScreenNext.php");
 require("src/Datatypes/BitmapNext.php");
+require("src/Datatypes/ScreenNext.php");
 
 // read filenames from command line arguments
 $options = getopt('', [

@@ -45,7 +45,7 @@ A command-line utility for the creation of a wide range of ZX Spectrum assets (f
 
 * Sprite (spr) - 4-bit or 8-bit format
 
-* Layer 2 Screen (nxi) - 256x192 with or without embedded palette
+* Bitmap (nxi) - pixels stored in row or column order
 
 ## Input formats:
 
@@ -109,7 +109,7 @@ file to your project settings with '@output-folder/assets.lst' to include the as
 
 You can exclude individual assets from the LST file using by setting 'add-to-assets-list' to false in the asset's JSON section.
 
-### Naming ###
+### naming
 
 You can set the format of variable names to match your coding style. Iinclude the "settings/naming" field in your JSON. Options are:
 
@@ -120,11 +120,41 @@ You can set the format of variable names to match your coding style. Iinclude th
 * titlecase
 
 
+### next-screen-format
+
+Set how the Next screen is laid out, either as 3 rows (for 256x192 resolution) or 5 columns (for 320x256 or 640x256 resolution).
+
+* rows (default)
+
+* columns
+
+
 ## JSON asset settings
+
+### input
+
+Input file to use
+
+### output-folder
+
+Where to save the generated asset(s)
+
+
+### format
+
+Format to save data as, usually assembly or as binary file.
+
+* asm (default)
+
+* binary
+
+* c
+
 
 ### binary-format
 
 Some Spectrum Next assets can be stored in different binary formats, eg. palettes can be 1 or 2 bytes per colour, and sprites can be 4-bit or 8-bit per-pixel. This is set using the 'binary-format' option (see example JSON for usage)
+
 
 ### create-binary-reference-file
 
@@ -144,6 +174,53 @@ _gunsight_end:
 ```
 
 If this is unwanted (if you're using Next or Boriel BASIC for example), you can disable this on a per asset-basis by setting 'create-binary-reference-file' to false (see example JSON)
+
+
+### section
+
+Code/memory section to save the asm to (eg. "rodata_section", "PAGE_80", "BANK_20")
+
+
+### bank
+
+Alternative to 'section' setting - set memory bank by number
+
+
+### page
+
+Alternative to 'section' setting - set memory page by number
+
+
+### compression
+
+Set the compression format to use (see README section on Compression). Default is no compression.
+
+* rle
+
+* zx0 (binary only)
+
+
+### bitmap-format
+
+*For Next bitmaps*. Override the global "next-screen-format" setting to save by columns or rows.
+
+* rows
+
+* columns
+
+
+### paper-colour
+
+*For classic Spectrum sprites*. Set which colour to use for PAPER. Anything else will be taken as INK.
+
+### mask
+
+*For classic Spectrum sprites*. Specify a path to an image to use as the sprite mask.
+
+### ignore-hidden-layers
+
+*For tilemaps*. Set to true to skip importing hidden tile layers. Default is false.
+
 
 ## Example JSON Config File
 

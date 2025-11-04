@@ -16,6 +16,26 @@ class Tileset extends Datatype
     protected bool $addProperties = false;
     protected bool $replaceFlashWithSolid = false;
 
+    // property definitions
+    public array $tilePropertyDefinitions = [];
+
+    // default property definitions
+    public static array $defaultTilePropertyDefinitions = [
+
+        'colours' => [
+            'flash', 
+            'bright', 
+            [
+                'name' => 'paper',
+                'length' => 3
+            ],
+            [
+                'name' => 'ink',
+                'length' => 3
+            ]
+        ]
+    ];
+
     // array of tiles
     protected array $tiles = [];
     public bool $isLargeTileset = false;
@@ -23,6 +43,13 @@ class Tileset extends Datatype
     public function __construct($config)
     {
         parent::__construct($config);
+
+        // set properties layout
+        if(isset($config['tile-properties'])) {
+            $this->tilePropertyDefinitions = $config['tile-properties'];
+        } else {
+            $this->tilePropertyDefinitions = self::$defaultTilePropertyDefinitions;
+        }
 
         // set sprite image
         if (isset($config['tileset'])) {
@@ -35,6 +62,9 @@ class Tileset extends Datatype
         // solid
         if (isset($config['replace-flash-with-solid']) && $config['replace-flash-with-solid'] == 'true') {
             $this->replaceFlashWithSolid = true;
+
+            // update tile properties array
+            $this->tilePropertyDefinitions['colours'][0] = 'solid';
         }
 
         // properties
@@ -74,7 +104,7 @@ class Tileset extends Datatype
             $id = intval($tile['id']);
 
             // save to tiles array using id as key
-            $this->tiles[] = new Tile($id, $tile['properties'], $this->replaceFlashWithSolid);
+            $this->tiles[] = new Tile($id, $tile['properties'], $this->tilePropertyDefinitions);
 
             $count++;
         }
@@ -138,8 +168,8 @@ class Tileset extends Datatype
         $properties = [];
 
         foreach ($this->tiles as $tile) {
-            $colours[] = $tile->GetColoursByte();
-            $properties[] = $tile->GetPropertiesByte();
+            $colours[] = $tile->GetPropertiesByte('colours');
+            $properties[] = $tile->GetPropertiesByte('properties');
         }
 
         // colours

@@ -18,30 +18,75 @@ abstract class GraphicsNext extends Graphics
         parent::__construct($config);
     }
 
-    public function ReadAttributes() : array
+    // abstract function for ReadImage()
+    abstract public function ReadImage() : array;
+
+
+    public function ReadPixelsInRows() : array
     {
         $data = [];
+        $count = 0;
 
-        // loop through rows of atttributes
+        // loop through rows
         for ($row = 0; $row < $this->numRows; $row++) {
 
-            // loop through columns of atttributes
+            // loop through columns
             for ($col = 0; $col < $this->numColumns; $col++) {
-                $attribute = $this->ReadAttribute($col, $row);
 
-                $data = array_merge($data, $attribute);
+                // add pixel
+                $data[] = $this->ReadPixel($col, $row);
+                $count++;
+            }
+        }
+        
+        return $data;
+    }
+
+    public function ReadPixelsInColumns() : array
+    {
+        $data = [];
+        $count = 0;
+
+        // loop through columns
+            for ($col = 0; $col < $this->numColumns; $col++) {
+
+            // loop through rows
+            for ($row = 0; $row < $this->numRows; $row++) {
+
+                // add pixel
+                $data[] = $this->ReadPixel($col, $row);
+                $count++;
             }
         }
 
         return $data;
     }
 
-    abstract function ReadAttribute($col, $row) : array;
+    public function ReadPixel(int $x, int $y) : int
+    {
+        $value = imagecolorat($this->image, $x, $y);
+        
+        if( $value < 0 || $value >= 256) {
+            $value = 0;
+        }
+
+        // $bin_val = str_pad(decbin($value), 8, '0', STR_PAD_LEFT);
+        // echo '('.$x.','.$y.') '.$value.' ('.$bin_val.')'.CR;
+        return $value;
+    }
+
+    public function ReadAttribute($col, $row) : array
+    {
+        if( $this->binaryFormat == App::BINARY_FORMAT_8BIT) {
+            return $this->ReadAttribute8Bit($col, $row);
+        }
+        return $this->ReadAttribute4Bit($col, $row); 
+    }
 
     /**
      * Read an individual attribute (or tile) - using 8 bits per pixel
      */
-    public function ReadAttribute8Bit($col, $row) : array
+    public function ReadAttribute8Bit(int $col, int $row) : array
     {
         // starting values for x & y
         $startx = $col * $this->tileWidth;
@@ -55,17 +100,7 @@ abstract class GraphicsNext extends Graphics
             // cols
             for ($x = $startx; $x < $startx + $this->tileWidth; $x++) {
 
-                $value = imagecolorat($this->image, $x, $y);
-                
-                if( $value < 0 || $value >= 256) {
-                    $value = 0;
-                }
-
-                // $bin_val = str_pad(decbin($value), 8, '0', STR_PAD_LEFT);
-                // echo '('.$x.','.$y.') '.$value.' ('.$bin_val.')'.CR;
-
-                // add row of data
-                $attribute[] = $value;
+                $attribute[] = $this->ReadPixel($x, $y);
             }
         }
 
@@ -75,7 +110,7 @@ abstract class GraphicsNext extends Graphics
     /**
      * Read an individual attribute (or tile) - using 4 bits per pixel
      */
-    public function ReadAttribute4Bit($col, $row) : array
+    public function ReadAttribute4Bit(int $col, int $row) : array
     {
         // starting values for x & y
         $startx = $col * $this->tileWidth;

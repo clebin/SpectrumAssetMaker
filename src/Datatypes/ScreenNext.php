@@ -3,16 +3,11 @@
 namespace ClebinGames\SpectrumAssetMaker\Datatypes;
 
 use \ClebinGames\SpectrumAssetMaker\App;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\BitmapNext;
 
-class ScreenNext extends GraphicsNext
+class ScreenNext extends BitmapNext
 {
     public string $datatypeName = 'Next Layer 2 Screen';
-
-    public string $binaryFileExtension = 'nxi';
-    
-    public int $tileWidth = 256;
-    public int $tileHeight = 192;
-
     public bool $addPalette = false;
 
     public function __construct($config)
@@ -34,15 +29,15 @@ class ScreenNext extends GraphicsNext
 
         // append palette to file - 2 bytes per palette entry
         if( $this->addPalette === true) {
-            $palette = new PaletteNextTwobytes($this->config);
+            $palette = new PaletteNext($this->config);
             $this->data = array_merge($this->data, $palette->GetData());
         }
 
         return true;
     }
 
-    public function ReadAttribute($col, $row) : array
-    {
-        return $this->ReadAttribute8Bit($col, $row);
-    }
+    // public function ReadAttribute($col, $row) : array
+    // {
+    //     return $this->ReadAttribute8Bit($col, $row);
+    // }
 }

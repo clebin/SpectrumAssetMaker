@@ -312,13 +312,13 @@ class Screen extends Datatype
     /**
      * Return output filename only
      */
-    public function GetOutputFilename() : string
+    public function GetOutputFilename(int $bank = 0) : string
     {
         return $this->filename . '.scr';
     }
 
     public function WriteFile() : void
     {
-        $this->WriteBinaryFile($this->GetOutputFilepath());
+        $this->WriteBinaryFile($this->data, $this->GetOutputFilepath());
     }
 }

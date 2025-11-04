@@ -42,7 +42,13 @@ class Configuration
         "bitmap-next" => BitmapNext::class,
         "palette-next" => PaletteNext::class,
         "blank-data" => BlankData::class,
-        "array-data" => ArrayData::class
+        "array-data" => ArrayData::class,
+        
+        // deprecated labels
+        "sprites" => Sprite::class,
+        "tilemaps" => Tilemap::class,
+        "tilesets" => Tileset::class,
+        "screens" => Screen::class
     ];
     
     public static function Process($configPath, $sectionsInUse = []) : void
@@ -122,6 +128,13 @@ class Configuration
         // naming convention
         if (isset($config['naming'])) {
             App::$namingConvention = $config['naming'];
+        }
+
+        // next screen resolution
+        if( isset($config['next-screen-format']) && 
+            $config['next-screen-format'] == App::NEXT_BITMAP_FORMAT_COLUMNS) {
+
+            App::$nextScreenFormat == App::NEXT_BITMAP_FORMAT_COLUMNS;
         }
 
         // save all settings here

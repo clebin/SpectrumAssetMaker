@@ -75,9 +75,8 @@ abstract class Graphics extends Datatype
 
         // output dimensions
         App::OutputMessage($this->datatypeName, $this->name, 'Image size: '.$dimensions[0] . 'x' . $dimensions[1] . 'px');
-        App::OutputMessage($this->datatypeName, $this->name, 'Tiles: '.$this->numColumns.'x'.$this->numRows.'='.$this->numTiles);
 
-        $this->data = $this->ReadAttributes();
+        $this->data = $this->ReadImage();
 
         return true;
     }
@@ -85,12 +84,12 @@ abstract class Graphics extends Datatype
     /**
      * Read pixel data
      */
-    abstract function ReadAttributes() : array;
+    abstract function ReadImage() : array;
 
     /**
      * Return pixel data for image
      */
-    abstract function ReadAttribute($col, $row) : array;
+    // abstract function ReadAttribute($col, $row) : array;
 
     /**
      * Get raw tile data for a numbered tile

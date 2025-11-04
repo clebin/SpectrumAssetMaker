@@ -19,7 +19,7 @@ class GraphicsClassic extends Graphics
         }
     }
 
-    public function ReadAttributes() : array
+    public function ReadImage() : array
     {
         $data = [];
 

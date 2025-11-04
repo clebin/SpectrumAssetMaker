@@ -62,7 +62,7 @@ class TileLayerNext extends TileLayer
      * Destination format:
      * 
      * Byte 1: [tile num][tile num][tile num][tile num][tile num][tile num][tile num][tile num]
-     * Byte 2: [palette offset][palette offset][palette offset][palette offset][x mirror][y mirror][rotate][ULA over tilemap] 
+     * Byte 2: [palette offset][palette offset][palette offset][palette offset][x mirror][y mirror][rotate][ULA over tilemap]
      */
     public function ReadLayerTwoByte($layer)
     {

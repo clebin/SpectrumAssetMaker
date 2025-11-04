@@ -13,170 +13,136 @@ class Tile
 
     public int $id = 0;
 
-    // individual tile info
-    public int $paper = 0;
-    public int $ink = 7;
-    public bool $bright = false;
-    public bool $flash = false;
+    // source properties - in case we're not importing all tiled properties
+    // but want to make use of them, eg. ladders for generating path maps
+    public array $sourceProperties = [];
 
     // game properties
-    public bool $solid = false;
-    public bool $lethal = false;
-    public bool $platform = false;
-    public bool $ladder = false;
-    public bool $custom = false;
+    public array $properties = [];
 
-    public function __construct($id, $properties, $replaceFlashWithSolid = false)
+    public function __construct($id, $sourceProperties, $propertyDefinitions)
     {
         // id
         $this->id = $id;
 
-        // replace flash bit with solid property
-        $this->replaceFlashWithSolid = $replaceFlashWithSolid;
+        // property definitions
+        $this->properties = $propertyDefinitions;
 
-        // loop through properties
-        if (is_array($properties)) {
-            foreach ($properties as $prop) {
+        // App::$saveGameProperties = true;
 
-                switch ($prop['name']) {
+        // fill in values
+        foreach($this->properties as &$propertiesArray) {
 
-                        // attribute properties
-                    case 'paper':
-                        $this->paper = intval($prop['value']);
-                        break;
-                    case 'ink':
-                        $this->ink = intval($prop['value']);
-                        break;
-                    case 'bright':
-                        $this->bright = $prop['value'];
-                        break;
-                    case 'flash':
-                        $this->flash = $prop['value'];
-                        break;
+            foreach($propertiesArray as &$prop) {
 
-                        // game properties
-                    case 'solid':
-                        $this->solid = $prop['value'];
-                        App::$saveGameProperties = true;
-                        break;
-                    case 'lethal':
-                        $this->lethal = $prop['value'];
-                        break;
-                    case 'ladder':
-                        $this->ladder = $prop['value'];
-                        break;
-                    case 'platform':
-                        $this->platform = $prop['value'];
-                        break;
-                    case 'custom':
-                        $this->custom = $prop['value'];
-                        break;
+                // find value in tiled properties
+                $value = false;
+
+                // skip this value
+                if( $prop === false ) {
+                    $prop = [
+                        'name' => false,
+                        'length' => 1,
+                        'value' => false
+                    ];
+                }
+                else {
+
+                    // property definition is not an array
+                    if( !is_array($prop)) {
+                        $prop = [
+                            'name' => strval($prop),
+                            'length' => 1
+                        ];
+                    }
+
+                    // loop through property definitions
+                    foreach($sourceProperties as $sourceProp) {
+
+                        if( $sourceProp['name'] == $prop['name'] ) {
+                            $value = $sourceProp['value'];
+                        }
+
+                        $this->sourceProperties[$prop['name']] = $value;
+                    }
+
+                    $prop['value'] = $value;
+                }
+
+            }
+        }
+
+    }
+
+    /**
+     * Check if it's a ladder - use source properties in case we're not saving this
+     */
+    public function IsLadder() : bool
+    {
+        if( isset($this->sourceProperties['ladder']) && 
+            $this->sourceProperties['ladder'] === true ) {
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if it's solid - use source properties in case we're not saving this
+     */
+    public function IsSolid() : bool
+    {
+        if( isset($this->sourceProperties['solid']) && 
+            $this->sourceProperties['solid'] === true ) {
+                return true;
+        }
+        return false;
+    }
+
+    /* 
+     * Get a tile property
+     */
+    public function GetProperties($name, $array = false) : bool
+    {
+        // no array specified, go searching
+        if( $array === false ) {
+
+            foreach($this->properties as $array) {
+                foreach($array as $prop) {
+                    if($prop['name'] == $name) {
+                        return $prop['value'];
+                    }
                 }
             }
         }
-    }
+        // array specified
+        else if(isset($this->properties[$array][$name])) {
 
-    /**
-     * Return paper number for tile
-     */
-    public function GetPaper($id) : int
-    {
-        return $this->paper;
-    }
+            return $this->properties[$array][$name];
+        }
 
-    /**
-     * Return ink number for tile
-     */
-    public function GetInk($id) : int
-    {
-        return $this->ink;
-    }
-
-    /**
-     * Return whether bright is set on tile
-     */
-    public function isBright() : bool
-    {
-        return $this->bright;
-    }
-
-    /**
-     * Return whether flash is set on tile
-     */
-    public function isFlash() : bool
-    {
-        return $this->flash;
-    }
-
-    /**
-     * Return whether solid is set on tile
-     */
-    public function isSolid() : bool
-    {
-        return $this->solid;
-    }
-
-    /**
-     * Return whether lethal is set on tile
-     */
-    public function isLethal() : bool
-    {
-        return $this->lethal;
-    }
-
-    /**
-     * Return whether lethal is set on tile
-     */
-    public function isPlatform() : bool
-    {
-        return $this->platform;
-    }
-
-    /**
-     * Return whether ladder is set on tile
-     */
-    public function isLadder() : bool
-    {
-        return $this->ladder;
-    }
-
-    /**
-     * Return whether custom1 is set on tile
-     */
-    public function isCustom1() : bool
-    {
-        return $this->custom;
+        return false;
     }
 
     /**
      * Get byte containing flash, bright, paper and ink as a string
      */
-    public function GetColoursByte() : string
+    public function GetPropertiesByte($name) : string
     {
-        $str = '';
-
-        if ($this->replaceFlashWithSolid === true) {
-            $str .= ($this->solid == true ? '1' : '0');
-        } else {
-            $str .= ($this->flash == true ? '1' : '0');
+        if( !isset($this->properties[$name]) ) {
+            return false;
         }
 
-        return $str .
-            ($this->bright == true ? '1' : '0') . // bright
-            str_pad(decbin($this->paper), 3, '0', STR_PAD_LEFT) .
-            str_pad(decbin($this->ink), 3, '0', STR_PAD_LEFT);
-    }
+        $str = '';
 
-    /**
-     * Get byte containing solid, lethal, platform, custom
-     * variables as a string
-     */
-    public function GetPropertiesByte() : string
-    {
-        return ($this->solid == true ? '1' : '0') .
-            ($this->lethal == true ? '1' : '0') .
-            ($this->platform == true ? '1' : '0') .
-            ($this->custom == true ? '1' : '0') .
-            '0000';
+        foreach($this->properties[$name] as $prop) {
+
+            if( $prop['length'] > 1 ) {
+                $str .= str_pad(decbin($prop['value']), $prop['length'], '0', STR_PAD_LEFT);
+            } else {
+                $str .= ($prop['value'] == true || $prop['value'] == 1 ? '1' : '0');
+            }
+        }
+
+        return $str;
     }
 }

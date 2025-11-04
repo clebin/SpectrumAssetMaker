@@ -27,12 +27,18 @@ class App
     const FILE_EXTENSION_PNG = 'png';
     const FILE_EXTENSION_GIF = 'gif';
 
+    // memory bank length (16k)
+    const BANK_LENGTH_BYTES = 16384;
+
+    // memory page length (8k)
+    const PAGE_LENGTH_BYTES = 65536;
+
     // byte formats
     const BINARY_FORMAT_ONE_BYTE = '1-byte';
     const BINARY_FORMAT_TWO_BYTE = '2-byte';
     const BINARY_FORMAT_4BIT = '4-bit';
     const BINARY_FORMAT_8BIT = '8-bit';
-
+    
     // naming
     const NAMING_CAMELCASE = 'camelcase';
     const NAMING_UNDERSCORES = 'underscores';
@@ -74,6 +80,10 @@ class App
     public const LAYER_TYPE_TILELAYER = 'tilelayer';
     public const LAYER_TYPE_OBJECTGROUP = 'objectgroup';
 
+    // next bitmap format
+    public const NEXT_BITMAP_FORMAT_ROWS = 'rows';
+    public const NEXT_BITMAP_FORMAT_COLUMNS = 'columns';
+    
     // options
     public static $options = [];
     
@@ -138,6 +148,9 @@ class App
     // configuration
     public static $configFile;
     public static $sectionsInUse = [];
+
+    // next screen format - default to banks laid out as rows
+    public static $nextScreenFormat = self::NEXT_BITMAP_FORMAT_ROWS;
 
     // character set
     public static $charset = [

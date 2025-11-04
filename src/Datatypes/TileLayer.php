@@ -14,8 +14,6 @@ class TileLayer extends Datatype
 
     public string $datatypeName = 'Tile Layer';
 
-    public string $binaryFileExtension = 'nxm';
-
     public int $num = 0;
     public int|false $width = false;
     public int|false $height = false;

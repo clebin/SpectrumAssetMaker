@@ -17,8 +17,10 @@ class MapPaths extends TileLayer
     const string MAP_STYLE_PLATFORM = 'platform';
 
     public array $slopeTiles = [];
-    public string|false $compression = false;
+    public string|false $compression = App::COMPRESSION_NONE;
     public bool $addDimensions = true;
+
+    public string $codeFormat = App::FORMAT_ASM;
 
     public $tilemap = false;
     public $tileset = false;
@@ -37,6 +39,7 @@ class MapPaths extends TileLayer
     {
         parent::__construct($config);
 
+        $this->compression = false;
         $this->tileset = $config['tileset_obj'];
         $this->width = intval($config['width']);
         $this->height = intval($config['height']);
@@ -86,8 +89,8 @@ class MapPaths extends TileLayer
                         $tile = $this->GetTile($row - 1, $col + $i);
 
                         if (
-                            ($this->mapStyle == self::MAP_STYLE_PLATFORM && $tile->isLadder() === false) ||
-                            ($this->mapStyle == self::MAP_STYLE_OVERHEAD && $tile->isSolid() === true)
+                            ($this->mapStyle == self::MAP_STYLE_PLATFORM && $tile->IsLadder() === false) ||
+                            ($this->mapStyle == self::MAP_STYLE_OVERHEAD && $tile->IsSolid() === true)
                         ) {
                             $canMove = false;
                         }

@@ -46,6 +46,9 @@ abstract class Datatype
     // code section
     protected string $codeSection = 'rodata_user';
 
+    // number of memory banks
+    protected int $numBanks = 1;
+
     // input filename
     protected string|false $filename = false;
 
@@ -97,8 +100,16 @@ abstract class Datatype
         if (isset($config['name']))
             $this->SetName($config['name']);
 
+        // bank
+        if( isset($config['bank'])) {
+            $this->codeSection = 'BANK_'.intval($config['bank']);
+        }
+        // page
+        if( isset($config['page'])) {
+            $this->codeSection = 'PAGE_'.intval($config['page']);
+        }
         // code section
-        if (isset($config['section'])) {
+        else if (isset($config['section'])) {
             $this->SetCodeSection($config['section']);
         }
 
@@ -186,9 +197,10 @@ abstract class Datatype
     /**
      * Return output filename only
      */
-    public function GetOutputFilename() : string
+    public function GetOutputFilename(int $bank = 0) : string
     {
-        return $this->filename . '.' . $this->GetOutputFileExtension();
+        return $this->filename . ( $this->numBanks > 1 ? '_'.$bank : '' ). 
+            '.' . $this->GetOutputFileExtension();
     }
 
     /**
@@ -213,17 +225,17 @@ abstract class Datatype
     /**
      * Return full output filepath
      */
-    public function GetOutputFilepath() : string
+    public function GetOutputFilepath(int $bank = 0) : string
     {
-        return $this->outputFolder . $this->GetOutputFilename();
+        return $this->outputFolder . $this->GetOutputFilename($bank);
     }
 
     /**
      * Return filepath for an asm reference file
      */
-    public function GetOutputReferenceFilepath() : string
+    public function GetOutputReferenceFilepath(int $bank = 0) : string
     {
-        return $this->GetOutputFilepath().'.asm';
+        return $this->GetOutputFilepath($bank).'.asm';
     }
 
     /**
@@ -232,6 +244,23 @@ abstract class Datatype
     public function SetCodeSection($section) : void
     {
         $this->codeSection = $section;
+    }
+
+    /**
+     * Set code section to next bank or page
+     */
+    public function SetCodeSectionNextBankOrPage() : void
+    {
+        if( substr($this->codeSection, 0, 5) == 'PAGE_') {
+            $prefix = 'PAGE_';
+        }
+        else if( substr($this->codeSection, 0, 5) == 'BANK_' ) {
+            $prefix = 'BANK_';
+        }
+        else {
+            return;
+        }
+        $this->codeSection = $prefix.intval(explode('_', $this->codeSection)[1])+1;
     }
 
     /**
@@ -254,6 +283,14 @@ abstract class Datatype
         return $this->codeName;
     }
 
+    /**
+     * Get code section
+     */
+    public function GetCodeSection() : string
+    {
+        return $this->codeSection;
+    }
+    
     /**
      * 
      * Get code for screen in currently set language
@@ -297,9 +334,11 @@ abstract class Datatype
     /**
      * Get code in binary format
      */
-    public function WriteBinaryFile($filename) : void
+    public function WriteBinaryFile($data, $filename, $start = 0, $end = false) : int
     {
-        $data = $this->GetData();
+        if( $end === false ) {
+            $end = sizeof($data);
+        }
 
         // clear file
         file_put_contents($filename, '');
@@ -310,7 +349,9 @@ abstract class Datatype
             $count = 0;
 
             // loop throguh data
-            foreach ($data as $value) {
+            for($i=$start;$i<$end;$i++) {
+
+                $value = $data[$i];
 
                 // value is an array - eg. array split into attributes
                 if( is_array($value)) {
@@ -333,7 +374,8 @@ abstract class Datatype
             App::OutputMessage($this->datatypeName, $this->name, 'Wrote ' . $count . ' bytes to binary file.');
         }
 
-        $this->generatedBinaryFilesize = $count;
+        // return number of bytes written
+        return $count;
     }
     
 
@@ -365,6 +407,69 @@ abstract class Datatype
      */
     public function WriteFile() : void
     {
+        // use binaries for zx0 compression
+        if ($this->compression == App::COMPRESSION_ZX0) {
+            $this->codeFormat = App::FORMAT_BINARY;
+        }
+
+        // number of banks
+        $this->numBanks = ceil(sizeof($this->data) / App::BANK_LENGTH_BYTES);
+
+        // loop through banks
+        for($bank=0;$bank<$this->numBanks;$bank++) {
+
+            $this->AddToAssetsLst();
+
+            // binary
+            if( $this->codeFormat == App::FORMAT_BINARY) {
+
+                $data = $this->GetData();
+                $data_filename = $this->GetOutputFilepath($bank);
+                
+                // write this section of the binary file
+                if( $this->numBanks > 0) {
+
+                    $start = $bank * App::BANK_LENGTH_BYTES;
+                    
+                    if( $bank < $this->numBanks-1 ) {
+                        $end = ($bank+1) * App::BANK_LENGTH_BYTES;
+                    } else {
+                        $end = sizeof($this->data);
+                    }
+
+                    $numBytesWritten = $this->WriteBinaryFile($data, $data_filename, $start, $end);
+                }
+                // write the whole thing
+                else {
+                    $numBytesWritten = $this->WriteBinaryFile($data, $data_filename);
+                }
+
+                // create binary reference file
+                if( $this->createReferenceFile === true) {
+                    
+                    $asmReference = $this->GetBinaryReferenceAsmFile($data_filename, $numBytesWritten);
+                    file_put_contents($this->GetOutputReferenceFilepath($bank), $asmReference);
+                }
+
+                // do zx0 compression
+                if ($this->compression == App::COMPRESSION_ZX0) {
+                    $this->DoZX0Compression($data_filename);
+                }
+            }
+            // regular text file
+            else {
+                file_put_contents($this->GetOutputFilepath($bank), $this->GetCode());
+            }
+
+            // save in next bank
+            if( $this->numBanks > 0) {
+                $this->SetCodeSectionNextBankOrPage();
+            }
+        }
+    }
+
+    public function AddToAssetsLst() : void
+    {
         // add to .lst file
         if ($this->addToAssetsLst === true) {
 
@@ -378,51 +483,24 @@ abstract class Datatype
                 App::AddOutputFile($this->GetOutputFilepath()) . CR;
             }
         }
+    }
 
-        // use binaries for zx0 compression
-        if ($this->compression == App::COMPRESSION_ZX0) {
-            $this->codeFormat = App::FORMAT_BINARY;
+    public function DoZX0Compression(string $data_filename) : void
+    {
+        // reference file
+        if( $this->createReferenceFile === true) {
+
+            $asmReference = $this->GetBinaryReferenceAsmFile($data_filename);
+            file_put_contents($this->GetOutputReferenceFilepath(), $asmReference);
         }
 
-        // binary
-        if( $this->codeFormat == App::FORMAT_BINARY) {
+        // output message
+        App::OutputMessage($this->datatypeName, $this->name, 'Compressing ' . $data_filename . ' with ZX0');
 
-            $data_filename = $this->GetOutputFilepath();
-            
-            $this->WriteBinaryFile($data_filename);
-
-            // create binary reference file
-            if( $this->createReferenceFile === true) {
-                
-                $asmReference = $this->GetBinaryReferenceAsmFile($data_filename, $this->generatedBinaryFilesize);
-                file_put_contents($this->GetOutputReferenceFilepath(), $asmReference);
-            }
-        }
-        // regular text file
-        else {
-            file_put_contents($this->GetOutputFilepath(), $this->GetCode());
-        }
-        
-        // do zx0 compression
-        if ($this->compression == App::COMPRESSION_ZX0) {
-
-            $compressed_filename = $data_filename.'.zx0';
-
-            // reference file
-            if( $this->createReferenceFile === true) {
-
-                $asmReference = $this->GetBinaryReferenceAsmFile($data_filename);
-                file_put_contents($this->GetOutputReferenceFilepath(), $asmReference);
-            }
-
-            // output message
-            App::OutputMessage($this->datatypeName, $this->name, 'Compressing ' . $data_filename . ' with ZX0');
-
-            // do compression
-            App::CompressArrayZX0(
-                $data_filename
-            );
-        }
+        // do compression
+        App::CompressArrayZX0(
+            $data_filename
+        );
     }
 
     public function GetHeader() : string
@@ -451,7 +529,7 @@ abstract class Datatype
     {
         return '; file generated by Spectrum Asset Maker' . CR .
             '; https://github.com/clebin/SpectrumAssetMaker' . CR . CR .
-            'section ' . $this->codeSection . CR . CR .
+            'section ' . $this->GetCodeSection() . CR . CR .
             'public ' . $this->codeName  . CR .
             'public ' . $this->codeName.'_end' . CR . CR .
             $this->codeName . ':' . CR . CR .
@@ -466,7 +544,7 @@ abstract class Datatype
     {
         return '; file generated by Spectrum Asset Maker' . CR .
             '; https://github.com/clebin/SpectrumAssetMaker' . CR . CR .
-            'section ' . $this->codeSection . CR;
+            'section ' . $this->GetCodeSection() . CR;
     }
 
     /**

@@ -14,7 +14,7 @@ class TileGraphicsNext extends GraphicsNext
         parent::__construct($config);
     }
 
-    public function ReadAttributes() : array
+    public function ReadImage() : array
     {
         $data = [];
 
@@ -27,8 +27,6 @@ class TileGraphicsNext extends GraphicsNext
                 $data = array_merge($data, $attribute);
             }
         }
-
-
         return $data;
     }
 
