@@ -371,7 +371,7 @@ Add the following properties to the individual tile in Tiled:
 
 You can customise what is saved by adding a "tile-properties" section to the tileset config JSON. This allows you to create as many 8-bit arrays of properties as you like.
 
-In the example below, we've modified the 'colours' array to replace 'flash' with 'solid' and added a second array with 3 boolean properties and a 4-bit integer property called 'rating':
+In the example below, we've modified the 'colours' array to replace 'flash' with 'solid' and added a second array with 4 boolean properties (unbreakable, lethal, ladder, water) and a 4-bit integer property (rating):
 
 ```json
 
@@ -395,7 +395,7 @@ In the example below, we've modified the 'colours' array to replace 'flash' with
             }
         ],
         "my-properties": [
-            "solid",
+            "unbreakable",
             "lethal",
             "ladder",
             "water",
