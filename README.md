@@ -100,6 +100,146 @@ You can pass '--section=[section name]' to only create assets of a particular ty
 > php SpectrumAssetMaker.php --config=config-assets.json --section=sprite
 
 
+## Example JSON Config File
+
+Here is an example JSON configuration file to create a large set of game assets. The settings are explained in more detail below.
+
+
+```json
+{
+    "settings": {
+        "create-assets-list": true,
+        "naming": "underscores",
+        "output-folder": "./assets",
+        "object-types": "raw-assets/objects/objecttypes.xml"
+    },
+    "blank-data": [{
+        "name": "level-tilemap",
+        "size": 2208,
+        "output-folder": "./assets/blank-data"
+    }],
+    "graphics": [{
+            "name": "font",
+            "input": "raw-assets/fonts/nice-font.png",
+            "paper-colour": "white",
+            "output-folder": "./assets",
+            "section": "BANK_0"
+        }],
+    "palette-next": [{
+        "name": "next-font",
+        "input": "raw-assets/fonts/nice-font.png",
+        "output-folder": "./assets",
+        "format": "binary",
+        "binary-format": "1-byte"
+        },
+        {
+            "name": "next-font",
+            "input": "raw-assets/fonts/nice-font.png",
+            "output-folder": "./assets",
+            "format": "binary",
+            "binary-format": "2-byte",
+            "create-binary-reference-file": false
+        },
+        {
+            "name": "next-font-for-reference",
+            "input": "raw-assets/fonts/lander-bold-next.png",
+            "output-folder": "./assets/reference-asm",
+            "format": "asm",
+            "binary-format": "1-byte"
+            "add-to-assets-list": false,
+        }
+    ],
+    "screen": [
+        {
+            "name": "loading-screen",
+            "input": "raw-assets/loading-screen.png",
+            "output-folder": "./assets"
+        }
+    ],
+    "bitmap-next": [
+        {
+            "name": "background-screen",
+            "input": "raw-assets/background-screen.png",
+            "output-folder": "./assets",
+            "bank": 30
+        }
+    ],
+    "sprite": [
+        {
+            "name": "player-sprite",
+            "input": "raw-assets/sprites/player-sprite.png",
+            "mask": "raw-assets/sprites/player-sprite-mask.png",
+            "paper-colour": "black",
+            "output-folder": "./assets/sprites",
+            "section": "BANK_0"
+        }],
+    "sprite-next": [
+        {
+            "name": "player-sprite",
+            "input": "raw-assets/sprites/player-sprite.png",
+            "output-folder": "./assets/sprites",
+            "format": "binary",
+            "binary-format": "4-bit"
+        },
+        {
+            "name": "enemy-sprite",
+            "input": "raw-assets/sprites/player-sprite.png",
+            "output-folder": "./assets/sprites",
+            "format": "binary",
+            "binary-format": "8-bit"
+        }],
+    "text": [{
+		"name": "intro-text",
+		"input": "raw-assets/intro.txt",
+		"output-folder": "./assets/text",
+	    "section": "BANK_0"
+    }],
+    "tile-graphics-next": [{
+        "name": "next-font",
+        "input": "raw-assets/fonts/game-tileset.png",
+        "output-folder": "./assets",
+        "format": "binary"
+    },
+    "tilemap": [{
+        "map": "raw-assets/tilemaps/screens.tmj",
+        "output-folder": "./assets/levels",
+        "use-layer-names": true,
+        "generate-paths": true,
+        "path-width": 2,
+        "path-height": 2,
+        "path-map-style": "platform",
+        "format": "asm",
+        "compression": "rle",
+        "ignore-hidden-layers": false,
+        "section": "BANK_6",
+        "tileset": {
+            "name": "game-tiles",
+            "tileset": "raw-assets/tilesets/game-tileset.tsj",
+            "output-folder": "./assets/tilesets",
+            "replace-flash-with-solid": true,
+            "section": "BANK_4",
+            "custom-properties": {
+                "colours": true,
+                "properties": [
+                    "solid",
+                    "lethat",
+                    {
+                        "name": "prettiness",
+                        "length": 6
+                    }
+                ]
+            }
+        }
+    }],
+    "tileset": [{
+        "name": "menu-tiles",
+        "tileset": "raw-assets/main-menu/menu-tiles.tsj",
+        "output-folder": "./assets/main-menu",
+        "section": "BANK_4"
+    }]]
+}
+```
+
 ## JSON global settings
 
 ### create-assets-list
@@ -222,133 +362,6 @@ Set the compression format to use (see README section on Compression). Default i
 *For tilemaps*. Set to true to skip importing hidden tile layers. Default is false.
 
 
-## Example JSON Config File
-
-Below is an example JSON configuration file. More JSON files are included in the 'sample' folder.
-
-```json
-{
-    "settings": {
-        "create-assets-list": true,
-        "naming": "underscores",
-        "output-folder": "./assets",
-        "object-types": "raw-assets/objects/objecttypes.xml"
-    },
-    "blank-data": [{
-        "name": "level-tilemap",
-        "size": 2208,
-        "output-folder": "./assets/blank-data"
-    }],
-    "graphics": [{
-            "name": "font",
-            "input": "raw-assets/fonts/nice-font.png",
-            "paper-colour": "white",
-            "output-folder": "./assets",
-            "section": "BANK_0"
-        }],
-    "palette-next": [{
-        "name": "next-font",
-        "input": "raw-assets/fonts/nice-font.png",
-        "output-folder": "./assets",
-        "format": "binary",
-        "binary-format": "1-byte"
-        },
-        {
-            "name": "next-font",
-            "input": "raw-assets/fonts/nice-font.png",
-            "output-folder": "./assets",
-            "format": "binary",
-            "binary-format": "2-byte",
-            "create-binary-reference-file": false
-        },
-        {
-            "name": "next-font-for-reference",
-            "input": "raw-assets/fonts/lander-bold-next.png",
-            "output-folder": "./assets/reference-asm",
-            "format": "asm",
-            "binary-format": "1-byte"
-            "add-to-assets-list": false,
-        }
-    ],
-    "screen": [
-        {
-            "name": "loading-screen",
-            "input": "raw-assets/loading-screen.png",
-            "output-folder": "./assets"
-        }
-    ],
-    "screen-next-layer2": [
-        {
-            "name": "background-screen",
-            "input": "raw-assets/background-screen.png",
-            "output-folder": "./assets",
-            "add-palette": true
-        }
-    ],
-    "sprite": [
-        {
-            "name": "player-sprite",
-            "input": "raw-assets/sprites/player-sprite.png",
-            "mask": "raw-assets/sprites/player-sprite-mask.png",
-            "paper-colour": "black",
-            "output-folder": "./assets/sprites",
-            "section": "BANK_0"
-        }],
-    "sprite-next": [
-        {
-            "name": "player-sprite",
-            "input": "raw-assets/sprites/player-sprite.png",
-            "output-folder": "./assets/sprites",
-            "format": "binary",
-            "binary-format": "4-bit"
-        },
-        {
-            "name": "enemy-sprite",
-            "input": "raw-assets/sprites/player-sprite.png",
-            "output-folder": "./assets/sprites",
-            "format": "binary",
-            "binary-format": "8-bit"
-        }],
-    "text": [{
-		"name": "intro-text",
-		"input": "raw-assets/intro.txt",
-		"output-folder": "./assets/text",
-	    "section": "BANK_0"
-    }],
-    "tile-graphics-next": [{
-        "name": "next-font",
-        "input": "raw-assets/fonts/game-tileset.png",
-        "output-folder": "./assets",
-        "format": "binary"
-    },
-    "tilemap": [{
-        "map": "raw-assets/tilemaps/screens.tmj",
-        "output-folder": "./assets/levels",
-        "use-layer-names": true,
-        "generate-paths": true,
-        "path-width": 2,
-        "path-height": 2,
-        "path-map-style": "platform",
-        "format": "asm",
-        "compression": "rle",
-        "ignore-hidden-layers": false,
-        "section": "BANK_6",
-        "tileset": {
-            "name": "game-tiles",
-            "tileset": "raw-assets/tilesets/game-tileset.tsj",
-            "output-folder": "./assets/tilesets",
-            "replace-flash-with-solid": true,
-            "section": "BANK_4"
-        }
-    }],
-    "tileset": [{
-        "name": "menu-tiles",
-        "tileset": "raw-assets/main-menu/menu-tiles.tsj",
-        "output-folder": "./assets/main-menu",
-        "section": "BANK_4"
-    }]]
-}
-```
 ### Importing Tilemap layers ###
 
 If 'layer-type' is set to 'all' (default) or 'tilelayer', the tool will create code for each tilemap layer. The tool will include hidden layers unless "ignore-hidden-layers" is set to true.
