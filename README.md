@@ -447,7 +447,7 @@ The destination code name is built from the folder and layer names in Tiled and 
 |______(objectmap) enemies
 |______(objectmap) collectables
 ```
-This will create the following asm resources. With "naming" set to underscores:
+This will create the following asm resources. With "naming" set to "underscores":
 
 ```
 level1_layout
@@ -455,22 +455,19 @@ level1_enemies
 level1_colletables
 ```
 
-With naming set to camelcase
+With "naming" set to "camelcase":
 ```
 level1Layout
 level1Enemies
 level1Collectables
 ```
 
-With naming set to titlecase:
+With "naming" set to "titlecase":
 ```
 Level1Layout
 Level1Enemies
 Level1Collectables
 ```
-
-The Tiled layer names will be used for variable and file naming. respect the global "naming" setting.
-
 
 ### Generating path maps
 
