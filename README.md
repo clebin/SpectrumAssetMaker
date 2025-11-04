@@ -432,6 +432,8 @@ Or you can add a second array of properties but leave the 'colours' array as def
 
 **Note:** Each tile in the tileset MUST have at least one property set, even if not used by Spectrum Asset Maker, otherwise Tiled won't include it in the exported JSON and you'll end up with missing tiles and errors.
 
+**Note 2:** At the moment each tile slot uses a full 8-bits, potentialy wasting bits. In future it should be possible to combile multiple tiles into a single byte.
+
 
 ### Importing Tilemap layers ###
 
