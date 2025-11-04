@@ -222,7 +222,7 @@ Here is an example JSON configuration file to create a large set of game assets.
                 "colours": true,
                 "properties": [
                     "solid",
-                    "lethat",
+                    "lethal",
                     {
                         "name": "prettiness",
                         "length": 6
