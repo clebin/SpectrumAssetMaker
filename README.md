@@ -398,7 +398,7 @@ In the example below, we've modified the 'colours' array to replace 'flash' with
             "solid",
             "lethal",
             "ladder",
-            "jumpthrough",
+            "water",
             {
                 "name" : "rating",
                 "length" : 4
@@ -429,30 +429,6 @@ Or you can add a second array of properties but leave the 'colours' array as def
     ]
 }
 ```
-
-
-**Classic Spectrum**
-
-Set the following properties in Tiled which get saved in the tileset colours array.
-
-
-
-By default, Spectrum Asset Maker will output the attributes as a byte in the usual Spectrum F,B,P3,P2,P1,I3,I2,I1 format. By setting 'replace-flash-with-solid' to true, you can use the most significant bit to store whether the tile is solid instead of FLASH. If only Sinclair had used that precious bit for something more useful (bright paper + bright ink, how much nicer would that have been?)
-
-**Classic or Next:**
-
-You can use the following properties in Tiles to create a separate properties array:
-
-* solid (boolean)
-
-* lethal (boolean)
-
-* ladder (boolean)
-
-* custom (boolean)
-
-This feature may be expanded later.
-
 
 **Note:** Each tile in the tileset MUST have at least one property set, even if not used by Spectrum Asset Maker, otherwise Tiled won't include it in the exported JSON and you'll end up with missing tiles and errors.
 
