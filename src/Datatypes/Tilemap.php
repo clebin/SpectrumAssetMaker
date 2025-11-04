@@ -72,7 +72,6 @@ class Tilemap extends Datatype
 
         // add associated tileset
         if (isset($config['tileset']) && $config['tileset'] !== false) {
-
             if (is_array($config['tileset'])) {
                 $this->ReadTilesetWithConfig($config['tileset']);
             } else {

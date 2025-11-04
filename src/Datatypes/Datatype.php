@@ -378,7 +378,6 @@ abstract class Datatype
         return $count;
     }
     
-
     /**
      * Get code in assembly format
      */
@@ -415,19 +414,21 @@ abstract class Datatype
         // number of banks
         $this->numBanks = ceil(sizeof($this->data) / App::BANK_LENGTH_BYTES);
 
-        // loop through banks
-        for($bank=0;$bank<$this->numBanks;$bank++) {
 
-            $this->AddToAssetsLst();
+         // binary
+        if( $this->codeFormat == App::FORMAT_BINARY) {
 
-            // binary
-            if( $this->codeFormat == App::FORMAT_BINARY) {
+            $data = $this->GetData();
 
-                $data = $this->GetData();
+            // loop through banks
+            for($bank=0;$bank<$this->numBanks;$bank++) {
+
+                $this->AddToAssetsLst();
+
                 $data_filename = $this->GetOutputFilepath($bank);
-                
+
                 // write this section of the binary file
-                if( $this->numBanks > 0) {
+                if( $this->numBanks > 1) {
 
                     $start = $bank * App::BANK_LENGTH_BYTES;
                     
@@ -441,6 +442,7 @@ abstract class Datatype
                 }
                 // write the whole thing
                 else {
+
                     $numBytesWritten = $this->WriteBinaryFile($data, $data_filename);
                 }
 
@@ -455,16 +457,16 @@ abstract class Datatype
                 if ($this->compression == App::COMPRESSION_ZX0) {
                     $this->DoZX0Compression($data_filename);
                 }
-            }
-            // regular text file
-            else {
-                file_put_contents($this->GetOutputFilepath($bank), $this->GetCode());
-            }
 
-            // save in next bank
-            if( $this->numBanks > 0) {
-                $this->SetCodeSectionNextBankOrPage();
+                // move to the next bank
+                if( $this->numBanks > 0) {
+                    $this->SetCodeSectionNextBankOrPage();
+                }
             }
+        }
+        // regular text file
+        else {
+            file_put_contents($this->GetOutputFilepath(), $this->GetCode());
         }
     }
 
@@ -563,6 +565,8 @@ abstract class Datatype
         // check if everything's ok
         if ($this->isValid === true) {
             $this->WriteFile();
+        } else {
+            App::AddError('Datatype is not valid');
         }
     }
 }

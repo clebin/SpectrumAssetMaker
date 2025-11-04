@@ -102,5 +102,4 @@ class PaletteNext extends Datatype
             $this->data[] = $value2;
         }
     }
-       
 }

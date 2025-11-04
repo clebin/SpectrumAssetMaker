@@ -35,9 +35,4 @@ class ScreenNext extends BitmapNext
 
         return true;
     }
-
-    // public function ReadAttribute($col, $row) : array
-    // {
-    //     return $this->ReadAttribute8Bit($col, $row);
-    // }
 }

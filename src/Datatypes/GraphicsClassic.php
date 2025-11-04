@@ -127,7 +127,7 @@ class GraphicsClassic extends Graphics
     /**
      * Return graphics in assembly format
      */
-    public function GetCodeAsm()
+    public function GetCodeAsm() : string
     {
         $str = $this->GetHeaderAsm();
         $str .= 'public ' . $this->codeName . CR . CR;

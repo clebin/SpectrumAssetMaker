@@ -13,8 +13,6 @@ class Tileset extends Datatype
     public string $datatypeName = 'Tileset';
 
     protected bool $tilesetIsSet = false;
-    protected bool $addProperties = false;
-    protected bool $replaceFlashWithSolid = false;
 
     // property definitions
     public array $tilePropertyDefinitions = [];
@@ -59,17 +57,11 @@ class Tileset extends Datatype
             return;
         }
 
-        // solid
-        if (isset($config['replace-flash-with-solid']) && $config['replace-flash-with-solid'] == 'true') {
-            $this->replaceFlashWithSolid = true;
+        // repalace flash bit with solid (deprecated - use tile property definitions instead)
+        if (isset($config['replace-flash-with-solid']) && $config['replace-flash-with-solid'] == true) {
 
             // update tile properties array
             $this->tilePropertyDefinitions['colours'][0] = 'solid';
-        }
-
-        // properties
-        if (isset($config['add-tileset-properties']) && $config['add-tileset-properties'] == 'true') {
-            $this->addProperties = true;
         }
 
         $this->isValid = $this->ReadFile($filename);
@@ -159,78 +151,27 @@ class Tileset extends Datatype
     /**
      * Return tileset in assembly format
      */
-    public function GetCodeAsm()
+    public function GetCodeAsm() : string
     {
         $str = $this->GetHeaderAsm();
 
         // tile info
-        $colours = [];
-        $properties = [];
+        foreach($this->tilePropertyDefinitions as $name => $info) {
 
-        foreach ($this->tiles as $tile) {
-            $colours[] = $tile->GetPropertiesByte('colours');
-            $properties[] = $tile->GetPropertiesByte('properties');
-        }
+            $asmArray = [];
 
-        // colours
-        $str .= App::GetAsmArray(
-            $this->codeName . 'Colours',
-            $colours,
-            2
-        ) . CR;
+            foreach($this->tiles as $tile) {
 
-        // properties
-        if ($this->addProperties === true) {
+                $asmArray[] = $tile->GetPropertiesByte($name);
+            }
+        
+            $codeName = App::GetConvertedCodeName($this->codeName . '-' . $name, $this->codeFormat);
+
+            // colours
             $str .= App::GetAsmArray(
-                $this->codeName . 'Properties',
-                $properties,
+                $codeName,
+                $asmArray,
                 2
-            ) . CR;
-        }
-
-        return $str;
-    }
-
-    /**
-     * Return C array of tile colours and properties
-     */
-    public function GetCodeC()
-    {
-        $str = '';
-
-        $str .= '#define ' . strtoupper($this->defineName) . ' ' . sizeof($this->tiles) . CR . CR;
-
-        // tile info
-        $colours = [];
-        $properties = [];
-
-        foreach ($this->tiles as $tile) {
-            $colours[] = $tile->GetColoursByte();
-
-            $props = $tile->GetPropertiesByte();
-
-            // if ($props != '00000000') {
-            //     $this->addProperties = true;
-            // }
-
-            $properties[] = $props;
-        }
-
-        // colours
-        $str .= App::GetCArray(
-            $this->codeName . 'Colours',
-            $colours,
-            2,
-            $this->isLargeTileset
-        ) . CR;
-
-        // properties array
-        if ($this->addProperties === true) {
-            $str .= App::GetCArray(
-                $this->codeName . 'Properties',
-                $properties,
-                2,
-                $this->isLargeTileset
             ) . CR;
         }
 
