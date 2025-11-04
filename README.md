@@ -507,7 +507,7 @@ This feature requires 'solid' (true/false) and optionally 'ladder' (true/false) 
 The path-width and path-height settings are used to specify how many tiles wide/high the gap needs to be to fit through.
 
 
-### path-map-tsyle
+### path-map-style
 
 The 'path-map-style' property changes navigation style. There are two options:
 
