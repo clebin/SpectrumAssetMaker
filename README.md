@@ -451,8 +451,8 @@ This will create the following asm resources. With "naming" set to "underscores"
 
 ```
 level_1_layout
-level1_enemies
-level1_colletables
+level_1_enemies
+level_1_colletables
 ```
 
 With "naming" set to "camelcase":
