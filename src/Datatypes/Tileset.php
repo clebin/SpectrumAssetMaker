@@ -19,7 +19,6 @@ class Tileset extends Datatype
 
     // default property definitions
     public static array $defaultTilePropertyDefinitions = [
-
         'colours' => [
             'flash', 
             'bright', 
@@ -43,8 +42,30 @@ class Tileset extends Datatype
         parent::__construct($config);
 
         // set properties layout
-        if(isset($config['tile-properties'])) {
-            $this->tilePropertyDefinitions = $config['tile-properties'];
+        if(isset($config['custom-properties'])) {
+
+            if( isset($config['custom-properties']['colours'])) {
+
+                // colours set to true - inherit from defaults
+                if( $config['custom-properties']['colours'] === true ) {
+
+                    unset($config['tile-properties']['colours']);
+                    $this->tilePropertyDefinitions = array_merge(
+                        self::$defaultTilePropertyDefinitions,
+                        $config['custom-properties']
+                    );
+                }
+                // copy colours definitions from tileset config
+                else {
+                    
+                    if( $config['custom-properties']['colours'] === false) {
+                        unset($config['custom-properties']['colours']);
+                    }
+                    $this->tilePropertyDefinitions = $config['custom-properties'];
+                }
+            }
+
+            $this->tilePropertyDefinitions = $config['custom-properties'];
         } else {
             $this->tilePropertyDefinitions = self::$defaultTilePropertyDefinitions;
         }

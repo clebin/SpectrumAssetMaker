@@ -352,9 +352,10 @@ Below is an example JSON configuration file. More JSON files are included in the
 
 ### Tileset format ###
 
-**Classic Spectrum**
 
-Set the following properties in Tiled which get saved in the tileset colours array.
+By default, Spectrum Asset Maker will output the attributes as a byte in the usual Spectrum format attribute (F,B,P3,P2,P1,I3,I2,I1).
+
+Add the following properties to the individual tile in Tiled:
 
 * flash (boolean)
 
@@ -366,7 +367,77 @@ Set the following properties in Tiled which get saved in the tileset colours arr
 
 * solid (boolean)
 
-By default, it will output the attributes as a byte in the usual Spectrum F,B,P3,P2,P1,I3,I2,I1 format. By setting 'replace-flash-with-solid' to true, you can use the most significant bit to store whether the tile is solid instead of FLASH. If only Sinclair had used that precious bit for something more useful (bright paper + bright ink, how much nicer would that have been?)
+### Custom Properties ###
+
+You can customise what is saved by adding a "tile-properties" section to the tileset config JSON. This allows you to create as many 8-bit arrays of properties as you like.
+
+In the example below, we've modified the 'colours' array to replace 'flash' with 'solid' and added a second array with 3 boolean properties and a 4-bit integer property called 'rating':
+
+```json
+
+"tileset-properties": [
+{
+    "name": "game-tiles",
+    "tileset": "raw-assets/bean-bros.tsj",
+    "output-folder": "./binary/generated-asm",
+    "format": "asm",
+    "custom-properties": {
+        "colours": [
+            "solid", 
+            "bright",
+            {
+                "name": "paper",
+                "length": 3
+            },
+            {
+                "name": "ink",
+                "length": 3
+            }
+        ],
+        "my-properties": [
+            "solid",
+            "lethal",
+            "ladder",
+            "jumpthrough",
+            {
+                "name" : "rating,
+                "length" : 4
+            }
+        ]
+    }
+}
+```
+
+You can disable the 'colours' array like this:
+
+```
+"custom-properties": {
+    "colours": false,
+    "my-properties": [
+        ...
+    ]
+}
+```
+
+Or you can add a second array of properties but leave the 'colours' array as default:
+
+```
+"custom-properties": {
+    "colours": true,
+    "my-properties": [
+        ...
+    ]
+}
+```
+
+
+**Classic Spectrum**
+
+Set the following properties in Tiled which get saved in the tileset colours array.
+
+
+
+By default, Spectrum Asset Maker will output the attributes as a byte in the usual Spectrum F,B,P3,P2,P1,I3,I2,I1 format. By setting 'replace-flash-with-solid' to true, you can use the most significant bit to store whether the tile is solid instead of FLASH. If only Sinclair had used that precious bit for something more useful (bright paper + bright ink, how much nicer would that have been?)
 
 **Classic or Next:**
 

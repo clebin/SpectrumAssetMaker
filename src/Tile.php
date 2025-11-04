@@ -143,6 +143,17 @@ class Tile
             }
         }
 
+        $strlen = strlen($str);
+
+        // reduce to one byte
+        if( $strlen > 8 ) {
+            $str = substr($str, 0, 8);
+        }
+        // pad to one byte
+        else {
+            $str = str_pad($str, 8, '0', STR_PAD_RIGHT);
+        }
+
         return $str;
     }
 }
