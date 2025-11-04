@@ -437,9 +437,39 @@ Or you can add a second array of properties but leave the 'colours' array as def
 
 ### Importing Tilemap layers ###
 
-If 'layer-type' is set to 'all' (default) or 'tilelayer', the tool will create code for each tilemap layer. The tool will include hidden layers unless 'ignore-hidden-layers' is set to true.
+If 'layer-type' is set to 'all' (default) or 'tilelayer', the tool will create code for each tilemap layer. The tool will include hidden layers unless "ignore-hidden-layers" is set to true.
 
-The Tiled layer names will be used for variable and file naming.
+The destination code name is built from the folder and layer names in Tiled and respects the global "naming" setting. For example, take the following structure in Tiled:
+
+```
+(folder) level-1
+|_____ (tilelayer) layout
+|______(objectmap) enemies
+|______(objectmap) collectables
+```
+This will create the following asm resources. With "naming" set to underscores:
+
+```
+level1_layout
+level1_enemies
+level1_colletables
+```
+
+With naming set to camelcase
+```
+level1Layout
+level1Enemies
+level1Collectables
+```
+
+With naming set to titlecase:
+```
+Level1Layout
+Level1Enemies
+Level1Collectables
+```
+
+The Tiled layer names will be used for variable and file naming. respect the global "naming" setting.
 
 
 ### Generating path maps
