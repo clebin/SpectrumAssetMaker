@@ -450,7 +450,7 @@ The destination code name is built from the folder and layer names in Tiled and 
 This will create the following asm resources. With "naming" set to "underscores":
 
 ```
-level1_layout
+level_1_layout
 level1_enemies
 level1_colletables
 ```
