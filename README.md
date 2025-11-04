@@ -400,7 +400,7 @@ In the example below, we've modified the 'colours' array to replace 'flash' with
             "ladder",
             "jumpthrough",
             {
-                "name" : "rating,
+                "name" : "rating",
                 "length" : 4
             }
         ]
@@ -410,7 +410,7 @@ In the example below, we've modified the 'colours' array to replace 'flash' with
 
 You can disable the 'colours' array like this:
 
-```
+```json
 "custom-properties": {
     "colours": false,
     "my-properties": [
@@ -421,7 +421,7 @@ You can disable the 'colours' array like this:
 
 Or you can add a second array of properties but leave the 'colours' array as default:
 
-```
+```json
 "custom-properties": {
     "colours": true,
     "my-properties": [
