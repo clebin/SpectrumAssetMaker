@@ -142,8 +142,7 @@ class App
     private static $outputFiles = [];
 
     // errors
-    private static $error = false;
-    private static $errorDetails = [];
+    private static $numErrors = 0;
     
     // configuration
     public static $configFile;
@@ -290,9 +289,9 @@ class App
      */
     public static function ShowErrors() : void
     {
-        if (self::$error === true) {
-            echo CR . self::TERMINAL_RED . 'Errors (' . sizeof(self::$errorDetails) . '): ' . CR;
-            echo self::TERMINAL_WHITE . implode(CR, self::$errorDetails);
+        if (self::$numErrors > 0) {
+            echo CR . self::TERMINAL_RED . self::$numErrors .
+            ( self::$numErrors == 1 ? 'Error' : 'Errors') . ' Occured';
             echo CR;
         }
     }
@@ -452,7 +451,7 @@ class App
         $zx0_path = getenv('ZX0_PATH');
 
         if ($zx0_path === false) {
-            App::AddError('To use ZX0 compression you must set \'ZX0_PATH\' local environment variable pointing to the ZX0 executable or jarfile.');
+            self::AddError('To use ZX0 compression you must set \'ZX0_PATH\' local environment variable pointing to the ZX0 executable or jarfile.');
         }
 
         // remove old file if necessary
@@ -500,11 +499,12 @@ class App
             array_unshift($output, bindec(substr($bin, 0, 8)));
         }
 
+        // output information
         if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
-            App::OutputMessage(
+            self::OutputMessage(
+                'Compression ' . $inputSize . ' -> ' . $outputSize . ' bytes. Saved ' . round((($inputSize - $outputSize) / $inputSize) * 100, 1) . '%)',
                 'Tilemap',
-                ($name !== false ? $name : 'array'),
-                'Compression ' . $inputSize . ' -> ' . $outputSize . ' bytes. Saved ' . round((($inputSize - $outputSize) / $inputSize) * 100, 1) . '%)'
+                ($name !== false ? $name : 'array')
             );
         }
 
@@ -598,10 +598,36 @@ class App
     /**
      * Add to errors list
      */
-    public static function AddError($error)
+    public static function AddError($message, $module = false, $name = false) : void
     {
-        self::$error = true;
-        self::$errorDetails[] = ltrim($error, '.');
+        self::$numErrors++;
+
+        echo self::TERMINAL_RED . 'Error! ';
+
+        self::OutputMessage($message, $module, $name);
+    }
+
+    public static function AddWarning($message, $module = false, $name = false) : void
+    {
+        echo self::TERMINAL_BG_MAGENTA . 'Warning! ';
+
+        self::OutputMessage($message, $module, $name);        
+    }
+
+    public static function OutputMessage($message, $module = false, $name = false) : void
+    {
+        if( $module !== false) {
+            echo ' '.self::TERMINAL_CYAN . $module;
+        }
+
+        if( $name !== false ) {
+            echo self::TERMINAL_WHITE . ' [' .
+            self::TERMINAL_MAGENTA . $name .
+            self::TERMINAL_WHITE . ']';
+        }
+
+        echo ' '.self::TERMINAL_YELLOW . rtrim($message, '.') .
+        self::TERMINAL_WHITE . '.' . CR;
     }
 
     /**
@@ -617,7 +643,7 @@ class App
      */
     public static function DidErrorOccur() : bool
     {
-        return self::$error;
+        return (self::$numErrors > 0 ? true : false);
     }
 
     public static function AddOutputFile($path) : void
@@ -647,19 +673,6 @@ class App
         }
 
         file_put_contents($assetsLstFolder . 'assets.lst', $strAssets);
-    }
-
-    /**
-     * Return output message in a standard format
-     */
-    public static function OutputMessage($module, $name, $message) : void
-    {
-        echo self::TERMINAL_CYAN . $module .
-            self::TERMINAL_WHITE . ' [' .
-            self::TERMINAL_MAGENTA . $name .
-            self::TERMINAL_WHITE . '] ' .
-            self::TERMINAL_YELLOW . rtrim($message, '.') .
-            self::TERMINAL_WHITE . '.' . CR;
     }
 
     /**

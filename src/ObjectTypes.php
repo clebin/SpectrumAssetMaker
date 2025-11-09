@@ -23,7 +23,7 @@ class ObjectTypes
     public static function ReadFile($filepath)
     {
         if (!file_exists($filepath)) {
-            echo 'Error: Object types file ' . $filepath . ' not found' . CR;
+            App::AddError('File ' . $filepath . ' not found', 'Object types');
             return false;
         }
 
@@ -60,10 +60,14 @@ class ObjectTypes
         }
 
         if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
-            App::OutputMessage('Objects', self::$filepath, 'Processed ' . sizeof(self::$objectMapping) . ' object types.');
+            App::OutputMessage(
+                'Processed ' . sizeof(self::$objectMapping) . ' object types.',
+                'Object Types', 
+                self::$filepath
+            );
         }
     }
-
+    
     public static function GetIndex($name)
     {
         // print_r(self::$objectMapping);

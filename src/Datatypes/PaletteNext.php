@@ -37,7 +37,7 @@ class PaletteNext extends Datatype
     public function ReadFile(string $filename): bool
     {
         if (!file_exists($filename)) {
-            App::AddError('File (' . $filename . ') not found');
+            $this->AddError('File (' . $filename . ') not found');
             return false;
         }
 
@@ -53,7 +53,7 @@ class PaletteNext extends Datatype
             $this->ReadPaletteTWoBytes();
         }
 
-        App::OutputMessage($this->datatypeName, $this->name, 'Read '.$this->numColours.' colours from '.$filename.' ('.$this->binaryFormat.' format)');
+        $this->AddMessage('Read '.$this->numColours.' colours from '.$filename.' ('.$this->binaryFormat.' format)');
 
         return true;
     }

@@ -54,7 +54,7 @@ class Screen extends Datatype
     public function ReadFile($filename)
     {
         if (!file_exists($filename)) {
-            App::AddError('Graphics file (' . $filename . ') not found');
+            $this->AddError('Graphics file (' . $filename . ') not found');
             return false;
         }
 
@@ -66,7 +66,7 @@ class Screen extends Datatype
         } else if ($this->extension == App::FILE_EXTENSION_PNG) {
             $this->image = imagecreatefromgif($filename);
         } else {
-            App::AddError('Filetype (' . $this->extension . ') not supported');
+            $this->AddError('Filetype (' . $this->extension . ') not supported');
             return false;
         }
 
@@ -74,7 +74,7 @@ class Screen extends Datatype
         $dimensions = getimagesize($filename);
 
         if ($dimensions[0] != 256 || $dimensions[1] != 192) {
-            App::AddError('Screen has incorrect dimensions (not 256 x 192)');
+            $this->AddError('Screen has incorrect dimensions (not 256 x 192)');
             return false;
         }
 

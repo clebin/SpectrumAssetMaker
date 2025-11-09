@@ -26,7 +26,7 @@ abstract class Graphics extends Datatype
         if ($this->inputFilepath === false) {
 
             $this->isValid = false;
-            App::AddError($this->datatypeName . ': No input specified for "' . $this->name . '"');
+            $this->AddError('No input specified');
             return;
         }
     }
@@ -46,7 +46,7 @@ abstract class Graphics extends Datatype
     public function ReadFile($filename): bool
     {
         if (!file_exists($filename)) {
-            App::AddError('Graphics file (' . $filename . ') not found');
+            $this->AddError('File (' . $filename . ') not found');
             return false;
         }
 
@@ -58,12 +58,12 @@ abstract class Graphics extends Datatype
         } else if ($this->extension == App::FILE_EXTENSION_GIF) {
             $this->image = imagecreatefromgif($filename);
         } else {
-            App::AddError('Filetype (' . $this->extension . ') not supported');
+            $this->AddError('Filetype (' . $this->extension . ') not supported');
             return false;
         }
 
         if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
-            App::OutputMessage($this->datatypeName, $this->name, 'Reading ' . $this->extension . ' file');
+            $this->AddMessage('Reading ' . $this->extension . ' file');
         }
 
         // divide width and height into 8x8 (or 16x16) pixel attributes      
@@ -74,7 +74,7 @@ abstract class Graphics extends Datatype
         $this->numTiles = $this->numColumns * $this->numRows;
 
         // output dimensions
-        App::OutputMessage($this->datatypeName, $this->name, 'Image size: '.$dimensions[0] . 'x' . $dimensions[1] . 'px');
+        $this->AddMessage('Image size: '.$dimensions[0] . 'x' . $dimensions[1] . 'px');
 
         $this->data = $this->ReadImage();
 

@@ -154,7 +154,7 @@ abstract class Datatype
         } else if ($file_extension == App::FILE_EXTENSION_GIF) {
             $image = imagecreatefromgif($filename);
         } else {
-            App::AddError('Filetype (' . $file_extension . ') not supported');
+            $this->AddError('Filetype (' . $file_extension . ') not supported');
             return false;
         }
 
@@ -343,6 +343,11 @@ abstract class Datatype
             $end = sizeof($data);
         }
 
+        if(!is_dir(substr($filename, 0, strrpos($filename, '/')))) {
+            $this->AddError('Parent directory for "'.$filename.'" doesn\'t exist');
+            return -1;
+        }
+
         // clear file
         file_put_contents($filename, '');
 
@@ -351,7 +356,7 @@ abstract class Datatype
 
             $count = 0;
 
-            // loop throguh data
+            // loop through data
             for($i=$start;$i<$end;$i++) {
 
                 $value = $data[$i];
@@ -374,7 +379,7 @@ abstract class Datatype
                 }
 
             }
-            App::OutputMessage($this->datatypeName, $this->name, 'Wrote ' . $count . ' bytes to binary file.');
+            $this->AddMessage('Wrote ' . $count . ' bytes to binary file.');
         }
 
         // return number of bytes written
@@ -446,6 +451,10 @@ abstract class Datatype
                     $numBytesWritten = $this->WriteBinaryFile($data, $dataFilename);
                 }
 
+                if( $numBytesWritten <= 0) {
+                    return;
+                }
+
                 // add to .lst file
                 if ($this->addToAssetsLst === true) {
                     $this->AddToAssetsLst($bank);
@@ -455,6 +464,8 @@ abstract class Datatype
                 if( $this->createReferenceFile === true) {
                     
                     $asmReference = $this->GetBinaryReferenceAsmFile($dataFilename, $bank, $numBytesWritten);
+
+
                     file_put_contents($this->GetOutputReferenceFilepath($bank), $asmReference);
                 }
 
@@ -498,7 +509,7 @@ abstract class Datatype
         }
 
         // output message
-        App::OutputMessage($this->datatypeName, $this->name, 'Compressing ' . $dataFilename . ' with ZX0');
+        $this->AddMessage('Compressing ' . $dataFilename . ' with ZX0');
 
         // do compression
         App::CompressArrayZX0(
@@ -567,7 +578,19 @@ abstract class Datatype
         if ($this->isValid === true) {
             $this->WriteFile();
         } else {
-            App::AddError('Datatype is not valid');
+            $this->AddError('Datatype is not valid');
         }
+    }
+
+    public function AddMessage($message) {
+        App::OutputMessage($message, $this->datatypeName, $this->name);
+    }
+
+    public function AddError($message) {
+        App::AddError($message, $this->datatypeName, $this->name);
+    }
+
+    public function AddWarning($message) {
+        App::AddWarning($message, $this->datatypeName, $this->name);
     }
 }

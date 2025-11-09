@@ -27,7 +27,7 @@ class Sprite extends Datatype
 
         // set sprite image
         if ($this->inputFilepath === false) {
-            App::AddError($this->datatypeName . ': No input specified for "' . $this->name . '"');
+            $this->AddError('No input specified');
             $this->isValid = false;
             return;
         }
@@ -71,7 +71,7 @@ class Sprite extends Datatype
         $this->height = imagesy($this->spriteImage);
         $this->numColumns = $this->width / 8;
 
-        App::OutputMessage($this->datatypeName, $this->name, 'Created ' . $this->numColumns . ' columns (' . $this->width . ' x ' . $this->height . 'px)');
+        $this->AddMessage('Created ' . $this->numColumns . ' columns (' . $this->width . ' x ' . $this->height . 'px)');
    
         // get raw pixel data
         $this->spriteData = $this->GetImageData($this->spriteImage);
@@ -86,7 +86,7 @@ class Sprite extends Datatype
     public function GetImage($filename, $mask = false)
     {
         if (!file_exists($filename)) {
-            App::AddError('File "' . $filename . '" not found');
+            $this->AddError('File "' . $filename . '" not found');
             return false;
         }
 
@@ -106,7 +106,7 @@ class Sprite extends Datatype
         } else if ($extension == App::FILE_EXTENSION_GIF) {
             return imagecreatefromgif($filename);
         } else {
-            App::AddError('Filetype (' . $extension . ') not supported');
+            $this->AddError('Filetype (' . $extension . ') not supported');
             return false;
         }
     }

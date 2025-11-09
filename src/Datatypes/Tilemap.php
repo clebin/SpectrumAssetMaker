@@ -107,7 +107,7 @@ class Tilemap extends Datatype
     public function ReadFile($filename)
     {
         if (!file_exists($filename)) {
-            App::AddError('Tilemap file (' . $filename . ') not found');
+            $this->AddError('Tilemap file (' . $filename . ') not found');
             return false;
         }
 
@@ -155,7 +155,11 @@ class Tilemap extends Datatype
             $paths = false;
 
             if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
-                App::OutputMessage('Map layer', $source_layer['name'], 'Reading ' . $source_layer['type']);
+                App::OutputMessage(
+                    'Reading ' . $source_layer['type'],
+                    'Map layer', 
+                    $source_layer['name']
+                 );
             }
 
             // tilemap

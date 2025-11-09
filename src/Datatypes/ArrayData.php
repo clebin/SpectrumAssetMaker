@@ -28,13 +28,13 @@ class ArrayData extends Datatype
     public function ReadFile($filename)
     {
         if ($this->inputFilepath === false) {
-            App::AddError($this->datatypeName . ': No input specified for "' . $this->name . '"');
+            $this->AddError('No input specified');
             return false;
         }
 
         // read data
         if( !file_exists($this->inputFilepath)) {
-            App::AddError($this->datatypeName.': File not found for "'.$this->name.'"');    
+            $this->AddError('File (' . $filename . ') not found');  
             return false;
         }
 
@@ -44,7 +44,7 @@ class ArrayData extends Datatype
 
         // check if data matches number of fields
         if( sizeof($this->data) % $this->numFields > 0 ) {
-            App::AddError($this->datatypeName.': Data size mismatched to number of fields for "'.$this->name.'"');
+            $this->AddError('Data size mismatched to number of fields');
             return false;
         }
         

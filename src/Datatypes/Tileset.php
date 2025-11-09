@@ -127,7 +127,7 @@ class Tileset extends Datatype
             $this->isLargeTileset = true;
         }
 
-        App::OutputMessage($this->datatypeName, $this->name, 'Added ' . $count . ' tiles');
+        $this->AddMessage('Added ' . $count . ' tiles');
 
         $this->tilesetIsSet = true;
 
@@ -144,7 +144,7 @@ class Tileset extends Datatype
             return $this->tiles[$index];
 
         // tile not found
-        echo 'Tile #' . $index . ' not found. Using tile 0.' . CR;
+        $this->AddWarning('Tile #' . $index . ' not found. Using tile 0');
         return $this->tiles[0];
     }
 
