@@ -134,7 +134,7 @@ class Configuration
         if( isset($config['next-screen-format']) && 
             $config['next-screen-format'] == App::NEXT_BITMAP_FORMAT_COLUMNS) {
 
-            App::$nextScreenFormat == App::NEXT_BITMAP_FORMAT_COLUMNS;
+            App::$nextScreenFormat = App::NEXT_BITMAP_FORMAT_COLUMNS;
         }
 
         // save all settings here
