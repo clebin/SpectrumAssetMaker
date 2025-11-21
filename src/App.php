@@ -291,8 +291,8 @@ class App
     public static function ShowErrors() : void
     {
         if (self::$numErrors > 0) {
-            echo CR . self::TERMINAL_RED . self::$numErrors .
-            ( self::$numErrors == 1 ? 'Error' : 'Errors') . ' Occured';
+            echo CR . self::TERMINAL_RED . self::$numErrors . ' ' .
+            ( self::$numErrors == 1 ? 'error' : 'errors') . ' occured';
             echo CR;
         }
     }
