@@ -12,7 +12,7 @@ class FontNext extends GraphicsNext
     
     public string $binaryFormat = App::BINARY_FORMAT_1BIT;
 
-    public int $tileWidth = 16;
+    public int $tileWidth = 8;
     public int $tileHeight = 8;
 
     public function __construct($config)
