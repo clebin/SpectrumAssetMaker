@@ -34,22 +34,4 @@ class SpriteNext extends GraphicsNext
             $this->tileHeight = intval($config['tile-height']);
         }
     }
-
-    public function ReadImage() : array
-    {
-        $data = [];
-
-        // loop through rows of atttributes
-        for ($row = 0; $row < $this->numRows; $row++) {
-
-            // loop through columns of atttributes
-            for ($col = 0; $col < $this->numColumns; $col++) {
-                $attribute = $this->ReadAttribute($col, $row);
-
-                $data = array_merge($data, $attribute);
-            }
-        }
-
-        return $data;
-    }
 }

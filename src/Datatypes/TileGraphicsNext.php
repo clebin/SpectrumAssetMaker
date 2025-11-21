@@ -14,22 +14,6 @@ class TileGraphicsNext extends GraphicsNext
         parent::__construct($config);
     }
 
-    public function ReadImage() : array
-    {
-        $data = [];
-
-        // loop through rows of atttributes
-        for ($row = 0; $row < $this->numRows; $row++) {
-
-            // loop through columns of atttributes
-            for ($col = 0; $col < $this->numColumns; $col++) {
-                $attribute = $this->ReadAttribute($col, $row);
-                $data = array_merge($data, $attribute);
-            }
-        }
-        return $data;
-    }
-
     public function ReadAttribute($col, $row) : array
     {
         return $this->ReadAttribute8Bit($col, $row);

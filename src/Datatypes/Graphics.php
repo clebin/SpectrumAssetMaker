@@ -82,9 +82,29 @@ abstract class Graphics extends Datatype
     }
 
     /**
+     * Abstract function for reading an attribute
+     */
+    abstract public function ReadAttribute($col, $row) : array;
+    
+    /**
      * Read pixel data
      */
-    abstract function ReadImage() : array;
+    public function ReadImage() : array
+    {
+        $data = [];
+
+        // loop through rows of atttributes
+        for ($row = 0; $row < $this->numRows; $row++) {
+
+            // loop through columns of atttributes
+            for ($col = 0; $col < $this->numColumns; $col++) {
+                $attribute = $this->ReadAttribute($col, $row);
+
+                $data = array_merge($data, $attribute);
+            }
+        }
+        return $data;
+    }
 
     /**
      * Return pixel data for image

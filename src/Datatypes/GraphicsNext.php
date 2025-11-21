@@ -18,10 +18,6 @@ abstract class GraphicsNext extends Graphics
         parent::__construct($config);
     }
 
-    // abstract function for ReadImage()
-    abstract public function ReadImage() : array;
-
-
     public function ReadPixelsInRows() : array
     {
         $data = [];
