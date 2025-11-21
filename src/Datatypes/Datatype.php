@@ -422,7 +422,6 @@ abstract class Datatype
         // number of banks
         $this->numBanks = ceil(sizeof($this->data) / App::BANK_LENGTH_BYTES);
 
-
          // binary
         if( $this->codeFormat == App::FORMAT_BINARY) {
 
@@ -464,8 +463,6 @@ abstract class Datatype
                 if( $this->createReferenceFile === true) {
                     
                     $asmReference = $this->GetBinaryReferenceAsmFile($dataFilename, $bank, $numBytesWritten);
-
-
                     file_put_contents($this->GetOutputReferenceFilepath($bank), $asmReference);
                 }
 
@@ -483,6 +480,11 @@ abstract class Datatype
         // regular text file
         else {
             file_put_contents($this->GetOutputFilepath(), $this->GetCode());
+
+            // add to .lst file
+            if ($this->addToAssetsLst === true) {
+                $this->AddToAssetsLst();
+            }
         }
     }
 

@@ -36,6 +36,7 @@ class App
     // byte formats
     const BINARY_FORMAT_ONE_BYTE = '1-byte';
     const BINARY_FORMAT_TWO_BYTE = '2-byte';
+    const BINARY_FORMAT_1BIT = '1-bit';
     const BINARY_FORMAT_4BIT = '4-bit';
     const BINARY_FORMAT_8BIT = '8-bit';
     

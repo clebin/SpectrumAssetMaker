@@ -66,7 +66,7 @@ abstract class Graphics extends Datatype
             $this->AddMessage('Reading ' . $this->extension . ' file');
         }
 
-        // divide width and height into 8x8 (or 16x16) pixel attributes      
+        // divide width and height into 8x8 (or 16x16) pixel attributes
         $dimensions = getimagesize($filename);
 
         $this->numColumns = $dimensions[0] / $this->tileWidth;

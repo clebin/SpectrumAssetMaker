@@ -77,10 +77,20 @@ abstract class GraphicsNext extends Graphics
 
     public function ReadAttribute($col, $row) : array
     {
-        if( $this->binaryFormat == App::BINARY_FORMAT_8BIT) {
-            return $this->ReadAttribute8Bit($col, $row);
+        switch($this->binaryFormat) {
+
+            case App::BINARY_FORMAT_4BIT:
+                return $this->ReadAttribute4Bit($col, $row); 
+                break;
+
+            case App::BINARY_FORMAT_1BIT:
+                return $this->ReadAttribute1Bit($col, $row); 
+                break;
+
+            default:
+                return $this->ReadAttribute8Bit($col, $row);
+                break;
         }
-        return $this->ReadAttribute4Bit($col, $row); 
     }
 
     /**
@@ -151,6 +161,44 @@ abstract class GraphicsNext extends Graphics
 
                 // add row of data
                 $attribute[] = $value;
+            }
+        }
+
+        return $attribute;
+    }
+
+    /**
+     * Read an attribute using 1 bit per pixel
+     */
+    public function ReadAttribute1Bit(int $col, int $row) : array
+    {
+        // starting values for x & y
+        $startx = $col * $this->tileWidth;
+        $starty = $row * $this->tileHeight;
+
+        $attribute = [];
+
+        // rows
+        for ($y = $starty; $y < $starty + $this->tileHeight; $y++) {
+
+            $value = '';
+
+            // cols
+            for ($x = $startx; $x < $startx + $this->tileWidth; $x++) {
+
+                $pixel = $this->ReadPixel($x, $y);
+
+                if( $pixel > 0 ) {
+                    $value .= '1';
+                } else {
+                    $value .= '0';
+                }
+
+                if(strlen($value) == 8) {
+
+                    $attribute[] = bindec($value);
+                    $value = '';
+                }
             }
         }
 

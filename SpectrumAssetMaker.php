@@ -23,6 +23,7 @@ require("src/Datatypes/MapPaths.php");
 require("src/Datatypes/Graphics.php");
 require("src/Datatypes/GraphicsClassic.php");
 require("src/Datatypes/GraphicsNext.php");
+require("src/Datatypes/FontNext.php");
 require("src/Datatypes/TileGraphicsNext.php");
 require("src/Datatypes/PaletteNext.php");
 require("src/Datatypes/Sprite.php");

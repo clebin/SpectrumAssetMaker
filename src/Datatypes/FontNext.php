@@ -4,35 +4,20 @@ namespace ClebinGames\SpectrumAssetMaker\Datatypes;
 
 use \ClebinGames\SpectrumAssetMaker\App;
 
-class SpriteNext extends GraphicsNext
+class FontNext extends GraphicsNext
 {
-    public string $datatypeName = 'Next Sprite';
+    public string $datatypeName = 'Next Font';
 
     public string $binaryFileExtension = 'spr';
     
-    public string $binaryFormat = App::BINARY_FORMAT_4BIT;
+    public string $binaryFormat = App::BINARY_FORMAT_1BIT;
 
     public int $tileWidth = 16;
-    public int $tileHeight = 16;
+    public int $tileHeight = 8;
 
     public function __construct($config)
     {
         parent::__construct($config);
-
-        // tile layer format
-        if( isset($config['binary-format']) && $config['binary-format'] == App::BINARY_FORMAT_8BIT) {
-            $this->binaryFormat = App::BINARY_FORMAT_8BIT;
-        }
-
-        // tile width
-        if( isset($config['tile-width']) && intval($config['tile-width']) > 0) {
-            $this->tileWidth = intval($config['tile-width']);
-        }
-
-        // tile height
-        if( isset($config['tile-height']) && intval($config['tile-height']) > 0) {
-            $this->tileHeight = intval($config['tile-height']);
-        }
     }
 
     public function ReadImage() : array
@@ -49,7 +34,6 @@ class SpriteNext extends GraphicsNext
                 $data = array_merge($data, $attribute);
             }
         }
-
         return $data;
     }
 }

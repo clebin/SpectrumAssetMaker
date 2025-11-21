@@ -2,20 +2,21 @@
 
 namespace ClebinGames\SpectrumAssetMaker;
 
+use \ClebinGames\SpectrumAssetMaker\Datatypes\ArrayData;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\BitmapNext;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\BlankData;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\Tilemap;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\TilemapNext;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\Tileset;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\FontNext;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\GraphicsClassic;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\PaletteNext;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\Screen;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\ScreenNext;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Sprite;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\SpriteNext;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\Text;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\Screen;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\ScreenNext;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\PaletteNext;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\BitmapNext;
-use \ClebinGames\SpectrumAssetMaker\Datatypes\ArrayData;
 use \ClebinGames\SpectrumAssetMaker\Datatypes\TileGraphicsNext;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\Tilemap;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\TilemapNext;
+use \ClebinGames\SpectrumAssetMaker\Datatypes\Tileset;
 
 class Configuration
 {
@@ -43,6 +44,7 @@ class Configuration
         "palette-next" => PaletteNext::class,
         "blank-data" => BlankData::class,
         "array-data" => ArrayData::class,
+        "font-next" => FontNext::class,
         
         // deprecated labels
         "sprites" => Sprite::class,
