@@ -28,6 +28,8 @@ class Tilemap extends Datatype
     public bool $addDimensions = false;
     public $tileset = false;
 
+    public bool $useLayerNames = true;
+
     // allowed properties on enemies, objects, etc.
     private array $object_allowed_properties = [
         'collectable',
@@ -58,6 +60,11 @@ class Tilemap extends Datatype
         // generate paths
         if (isset($config['generate-paths']) && $config['generate-paths'] === true) {
             $this->generatePaths = true;
+        }
+
+        // don't use layer names
+        if( isset($config['use-layer-names']) && $config['use-layer-names'] === false) {
+            $this->useLayerNames = false;
         }
 
         // layer types
@@ -228,8 +235,12 @@ class Tilemap extends Datatype
 
             // layer has been processed
             if ($layer !== false) {
-                // set name
-                if ($groupName !== false) {
+                // set name from config
+                if( $this->useLayerNames === false) {
+                    $layer->SetName($this->name);
+                }
+                // set name from file
+                else if ($groupName !== false) {
                     $layer->SetName($groupName . '-' . $source_layer['name']);
                 } else {
                     $layer->SetName($source_layer['name']);
