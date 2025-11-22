@@ -314,7 +314,7 @@ class Screen extends Datatype
      */
     public function GetOutputFilename(int $bank = 0) : string
     {
-        return $this->filename . '.scr';
+        return $this->outputFilename . '.scr';
     }
 
     public function WriteFile() : void

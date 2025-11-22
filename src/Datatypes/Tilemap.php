@@ -110,9 +110,7 @@ class Tilemap extends Datatype
             $this->AddError('Tilemap file (' . $filename . ') not found');
             return false;
         }
-
-        $this->filename = $filename;
-
+        
         $json = file_get_contents($filename);
         $data = json_decode($json, true);
 

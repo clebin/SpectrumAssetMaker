@@ -95,7 +95,7 @@ class Tileset extends Datatype
     {
         $this->name = $name;
         $this->codeName = App::GetConvertedCodeName($name, $this->codeFormat);
-        $this->filename = App::GetConvertedFilename($name . '-properties');
+        $this->outputFilename = App::GetConvertedFilename($name . '-properties');
         $this->defineName = App::GetConvertedConstantName($name . '-len');
     }
 

@@ -49,9 +49,6 @@ abstract class Datatype
     // number of memory banks
     protected int $numBanks = 1;
 
-    // input filename
-    protected string|false $filename = false;
-
     // add array length to beginning of asm array
     protected bool $addArrayLength;
 
@@ -66,6 +63,9 @@ abstract class Datatype
 
     // output folder
     protected string $outputFolder = '';
+
+    // output filename
+    protected string $outputFilename = '';
 
     // add to project .lst file
     protected bool $addToAssetsLst = true;
@@ -125,6 +125,11 @@ abstract class Datatype
             $this->outputFolder = '';
         }
 
+        // output filename
+        if( isset($config['output-filename'])) {
+            $this->outputFilename = $config['output-filename'];
+        }
+
         // don't add to assets lst file
         if( isset($config['add-to-assets-list']) && $config['add-to-assets-list'] === false) {
             $this->addToAssetsLst = false;
@@ -173,7 +178,11 @@ abstract class Datatype
     {
         $this->name = $name;
         $this->codeName = App::GetConvertedCodeName($name, $this->codeFormat);
-        $this->filename = App::GetConvertedFilename($name);
+
+        if( $this->outputFilename == '') {
+            $this->outputFilename = App::GetConvertedFilename($name);
+        }
+
         $this->defineName = App::GetConvertedConstantName($name . '-len');
     }
 
@@ -199,7 +208,7 @@ abstract class Datatype
      */
     public function GetOutputFilename(int $bank = 0) : string
     {
-        return $this->filename . ( $this->numBanks > 1 ? '_'.$bank : '' ). 
+        return $this->outputFilename . ( $this->numBanks > 1 ? '_'.$bank : '' ). 
             '.' . $this->GetOutputFileExtension();
     }
 
