@@ -105,6 +105,8 @@ class Tileset extends Datatype
     public function ReadFile($filename)
     {
         if (!file_exists($filename)) {
+
+            $this->AddError('Filename "'.$filename.'" not found');
             return false;
         }
 
