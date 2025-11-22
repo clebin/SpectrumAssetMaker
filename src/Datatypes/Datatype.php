@@ -365,9 +365,13 @@ abstract class Datatype
                 if( is_array($value)) {
 
                     // loop through array
-                    foreach($value as $datarow) {
+                    foreach($value as $byte) {
 
-                        $byte = intval(implode('', $datarow));
+                        if( is_array($byte)) {
+                            $byte = implode('', $byte);
+                        }
+
+                        $byte = intval($byte);
                         fwrite($fp, pack("C", $byte));
                         $count++;
                     }

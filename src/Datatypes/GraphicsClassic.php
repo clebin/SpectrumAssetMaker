@@ -122,7 +122,12 @@ class GraphicsClassic extends Graphics
             $count = 0;
             // loop through rows
             foreach ($attribute as $datarow) {
-                $str .= 'defb @' . implode('', $datarow) . CR;
+
+                if( is_array($datarow) ) {
+                    $datarow = implode('', $datarow);
+                }
+
+                $str .= 'defb @' . $datarow . CR;
                 $count++;
             }
             $str .= CR;

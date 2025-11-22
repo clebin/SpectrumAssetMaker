@@ -100,16 +100,12 @@ abstract class Graphics extends Datatype
             for ($col = 0; $col < $this->numColumns; $col++) {
                 $attribute = $this->ReadAttribute($col, $row);
 
-                $data = array_merge($data, $attribute);
+                $data[] = $attribute;
             }
         }
+
         return $data;
     }
-
-    /**
-     * Return pixel data for image
-     */
-    // abstract function ReadAttribute($col, $row) : array;
 
     /**
      * Get raw tile data for a numbered tile
