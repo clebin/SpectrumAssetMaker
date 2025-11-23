@@ -150,7 +150,7 @@ class Sprite extends Datatype
                 $rgb = imagecolorat($image, $x, $y);
 
                 // transparent counts as paper, or black or white depending on setting
-                if (App::ColourIsPaper($rgb, $this->paperColour, $extension) === true) {
+                if ($this->ColourIsPaper($rgb) === true) {
                     $pixel = ($mask === true ? 1 : 0);
                 }
                 // anything else is ink

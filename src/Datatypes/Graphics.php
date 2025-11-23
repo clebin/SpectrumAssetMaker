@@ -11,9 +11,7 @@ abstract class Graphics extends Datatype
     public int $numColumns = 0;
     public int $numRows = 0;
     public int $numTiles = 0;
-    public string $extension = App::FILE_EXTENSION_PNG;
 
-    public string $paperColour = App::COLOUR_WHITE;
     public bool $addArrayLength = false;
 
     public int $tileWidth = 8;
@@ -221,21 +219,14 @@ abstract class Graphics extends Datatype
                 // $rgb = $this->ReadPixel($x, $y);
                 $pixel = imagecolorat($this->image, $x, $y);
 
-                if( ($this->paperColour == App::COLOUR_WHITE && $pixel > 0) ||
-                    ($this->paperColour == App::COLOUR_BLACK && $pixel == 0) ) {
-                    $pixel = 1;
-                } else {
+                // transparent counts as paper, or black or white depending on setting
+                if ($this->ColourIsPaper($pixel) === true) {
                     $pixel = 0;
                 }
-
-                // transparent counts as paper, or black or white depending on setting
-                // if (App::ColourIsPaper($rgb, $this->paperColour, $this->extension) === true) {
-                //     $pixel = 0;
-                // }
-                // // anything else is ink
-                // else {
-                //     $pixel = 1;
-                // }
+                // anything else is ink
+                else {
+                    $pixel = 1;
+                }
 
                 // add pixel value to this row
                 $datarow[] = $pixel;
@@ -273,6 +264,13 @@ abstract class Graphics extends Datatype
 
         return $data;
     }
+    
+    // if( ($this->paperColour == App3COLOUR_WHITE && $pixel > 0) ||
+    //     ($this->paperColour == App::COLOUR_BLACK && $pixel == 0) ) {
+    //     $pixel = 1;
+    // } else {
+    //     $pixel = 0;
+    // }
 
     /**
      * Get raw tile data for a numbered tile

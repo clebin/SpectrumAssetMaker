@@ -310,43 +310,6 @@ class App
     }
 
     /**
-     * Check if rgb colour matches paper colour
-     */
-    public static function ColourIsPaper($rgb, $paperColour, $filetype = App::FILE_EXTENSION_GIF)
-    {
-        // get rgb values
-        $r = ($rgb >> 16) & 0xFF;
-        $g = ($rgb >> 8) & 0xFF;
-        $b = $rgb & 0xFF;
-
-        // echo $filetype.' = '.$rgb.' - '.$r.','.$g.','.$b.' - '.$paperColour.CR;
-
-        // gif
-        if ($filetype == App::FILE_EXTENSION_GIF) {
-
-            // pure black counts as ink
-            if ($r == 0 && $g == 0 && $b == 0) {
-                return false;
-            }
-            // anything else is paper
-            else {
-                return true;
-            }
-        }
-        // png file
-        else {
-
-            $paper = self::$rgbColours[$paperColour];
-
-            if ($r != $paper[0] || $g != $paper[1] || $b != $paper[2]) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
-
-    /**
      * Return an array as a string in C format
      */
     public static function GetCArray($name, $values, $numbase = 10, $large_array = false)

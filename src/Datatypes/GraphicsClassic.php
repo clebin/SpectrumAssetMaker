@@ -7,7 +7,6 @@ use \ClebinGames\SpectrumAssetMaker\App;
 class GraphicsClassic extends Graphics
 {
     public static string $datatypeName = 'Graphics';
-    public string $paperColour = App::COLOUR_BLACK;
 
     public function __construct($config)
     {
