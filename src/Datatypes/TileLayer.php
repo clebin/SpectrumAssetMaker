@@ -12,7 +12,7 @@ class TileLayer extends Datatype
     // tiled tile-num handling
     public const TILED_TILE_NUM_MASK = 255;
 
-    public string $datatypeName = 'Tile Layer';
+    public static string $datatypeName = 'Tile Layer';
 
     public int $num = 0;
     public int|false $width = false;

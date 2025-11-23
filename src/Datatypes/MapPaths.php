@@ -6,7 +6,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class MapPaths extends TileLayer
 {
-    public string $datatypeName = 'Map Paths';
+    public static string $datatypeName = 'Map Paths';
 
     const int DIRECTION_UP = 8;
     const int DIRECTION_DOWN = 4;

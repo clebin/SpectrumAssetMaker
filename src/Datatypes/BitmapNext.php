@@ -6,9 +6,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class BitmapNext extends GraphicsNext
 {
-    public string $datatypeName = 'Next Bitmap';
-
-    public bool $addArrayLength = false;
+    public static string $datatypeName = 'Next Bitmap';
 
     public string $binaryFileExtension = 'nxi';
     protected string $codeFormat = App::FORMAT_BINARY;

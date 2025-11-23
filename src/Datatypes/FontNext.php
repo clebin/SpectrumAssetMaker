@@ -6,10 +6,11 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class FontNext extends GraphicsNext
 {
-    public string $datatypeName = 'Next Font';
+    public static string $datatypeName = 'Next Font';
 
     public string $binaryFileExtension = 'spr';
-    
+
+    public string $paperColour = App::COLOUR_BLACK;
     public string $binaryFormat = App::BINARY_FORMAT_1BIT;
 
     public int $tileWidth = 8;

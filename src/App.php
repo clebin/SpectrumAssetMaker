@@ -312,15 +312,18 @@ class App
     /**
      * Check if rgb colour matches paper colour
      */
-    public static function colourIsPaper($rgb, $paperColour, $filetype = App::FILE_EXTENSION_GIF)
+    public static function ColourIsPaper($rgb, $paperColour, $filetype = App::FILE_EXTENSION_GIF)
     {
         // get rgb values
         $r = ($rgb >> 16) & 0xFF;
         $g = ($rgb >> 8) & 0xFF;
         $b = $rgb & 0xFF;
 
+        // echo $filetype.' = '.$rgb.' - '.$r.','.$g.','.$b.' - '.$paperColour.CR;
+
         // gif
         if ($filetype == App::FILE_EXTENSION_GIF) {
+
             // pure black counts as ink
             if ($r == 0 && $g == 0 && $b == 0) {
                 return false;

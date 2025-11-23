@@ -6,12 +6,15 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 abstract class Graphics extends Datatype
 {
-    public string $datatypeName = 'Graphics';
+    public static string $datatypeName = 'Graphics';
     
     public int $numColumns = 0;
     public int $numRows = 0;
     public int $numTiles = 0;
     public string $extension = App::FILE_EXTENSION_PNG;
+
+    public string $paperColour = App::COLOUR_WHITE;
+    public bool $addArrayLength = false;
 
     public int $tileWidth = 8;
     public int $tileHeight = 8;
@@ -22,6 +25,11 @@ abstract class Graphics extends Datatype
     {
         parent::__construct($config);
      
+        // paper colour
+        if (isset($config['paper-colour']) && in_array($config['paper-colour'], App::$coloursSupported)) {
+            $this->paperColour = $config['paper-colour'];
+        }
+
         // set input file
         if ($this->inputFilepath === false) {
 
@@ -82,10 +90,167 @@ abstract class Graphics extends Datatype
     }
 
     /**
+     * Read a single pixel by x and y
+     */
+    public function ReadPixel(int $x, int $y) : int
+    {
+        $value = imagecolorat($this->image, $x, $y);
+        
+        if( $value < 0 || $value >= 256) {
+            $value = 0;
+        }
+
+        return $value;
+    }
+
+    /**
      * Abstract function for reading an attribute
      */
-    abstract public function ReadAttribute($col, $row) : array;
-    
+    public function ReadAttribute($col, $row) : array
+    {
+        switch($this->binaryFormat) {
+
+            case App::BINARY_FORMAT_4BIT:
+                return $this->ReadAttribute4Bit($col, $row); 
+                break;
+
+            case App::BINARY_FORMAT_1BIT:
+                return $this->ReadAttribute1Bit($col, $row); 
+                break;
+
+            default:
+                return $this->ReadAttribute8Bit($col, $row);
+                break;
+        }
+    }
+
+    /**
+     * Read an individual attribute (or tile) - using 8 bits per pixel
+     */
+    public function ReadAttribute8Bit(int $col, int $row) : array
+    {
+        // starting values for x & y
+        $startx = $col * $this->tileWidth;
+        $starty = $row * $this->tileHeight;
+
+        $attribute = [];
+
+        // rows
+        for ($y = $starty; $y < $starty + $this->tileHeight; $y++) {
+            
+            // cols
+            for ($x = $startx; $x < $startx + $this->tileWidth; $x++) {
+
+                $attribute[] = $this->ReadPixel($x, $y);
+            }
+        }
+
+        return $attribute;
+    }
+
+    /**
+     * Read an individual attribute (or tile) - using 4 bits per pixel
+     */
+    public function ReadAttribute4Bit(int $col, int $row) : array
+    {
+        // starting values for x & y
+        $startx = $col * $this->tileWidth;
+        $starty = $row * $this->tileHeight;
+
+        $attribute = [];
+
+        // rows
+        for ($y = $starty; $y < $starty + $this->tileHeight; $y++) {
+            
+            // cols
+            for ($x = $startx; $x < $startx + $this->tileWidth; $x++) {
+
+                $pixelColour1 = imagecolorat($this->image, $x, $y);
+                
+                // echo $pixelColour1.' ';
+                if( $pixelColour1 < 0 || $pixelColour1 >= 16) {
+                    $pixelColour1 = 0;
+                }
+
+                $pixelColour1 = $pixelColour1 << 4;
+                
+                // next pixel
+                $x++;
+
+                $pixelColour2 = imagecolorat($this->image, $x, $y);
+                
+                // echo $pixelColour2.' ';
+                if( $pixelColour2 < 0 || $pixelColour2 >= 16) {
+                    $pixelColour2 = 0;
+                }
+
+                // combine the two into one byte
+                $value = $pixelColour1 | $pixelColour2;
+                
+                $value = bindec($value);
+                // $bin_val = str_pad(decbin($value), 8, '0', STR_PAD_LEFT);
+                // echo '('.$x.','.$y.') '.$pixelColour1.' | '.$pixelColour2.' = '.$value.' ('.$bin_val.')'.CR;
+
+                // add row of data
+                $attribute[] = $value;
+            }
+        }
+
+        return $attribute;
+    }
+
+    /**
+     * Read an attribute using 1 bit per pixel
+     */
+    public function ReadAttribute1Bit(int $col, int $row) : array
+    {
+        // starting values for x & y
+        $startx = $col * 8;
+        $starty = $row * 8;
+
+        $attribute = [];
+
+        // rows
+        for ($y = $starty; $y < $starty + 8; $y++) {
+
+            $datarow = [];
+
+            // cols
+            for ($x = $startx; $x < $startx + 8; $x++) {
+
+                // $rgb = $this->ReadPixel($x, $y);
+                $pixel = imagecolorat($this->image, $x, $y);
+
+                if( ($this->paperColour == App::COLOUR_WHITE && $pixel > 0) ||
+                    ($this->paperColour == App::COLOUR_BLACK && $pixel == 0) ) {
+                    $pixel = 1;
+                } else {
+                    $pixel = 0;
+                }
+
+                // transparent counts as paper, or black or white depending on setting
+                // if (App::ColourIsPaper($rgb, $this->paperColour, $this->extension) === true) {
+                //     $pixel = 0;
+                // }
+                // // anything else is ink
+                // else {
+                //     $pixel = 1;
+                // }
+
+                // add pixel value to this row
+                $datarow[] = $pixel;
+            }
+
+            $datarow = bindec(implode('', $datarow));
+
+            // add row of data
+            $attribute[] = $datarow;
+        }
+        
+        return $attribute;
+        
+    }
+
     /**
      * Read pixel data
      */
@@ -98,11 +263,13 @@ abstract class Graphics extends Datatype
 
             // loop through columns of atttributes
             for ($col = 0; $col < $this->numColumns; $col++) {
+
                 $attribute = $this->ReadAttribute($col, $row);
 
-                $data[] = $attribute;
+                $data = array_merge($data, $attribute);
             }
         }
+        
 
         return $data;
     }

@@ -10,7 +10,7 @@ use \ClebinGames\SpectrumAssetMaker\Tile;
  */
 class Tileset extends Datatype
 {
-    public string $datatypeName = 'Tileset';
+    public static string $datatypeName = 'Tileset';
 
     protected bool $tilesetIsSet = false;
 

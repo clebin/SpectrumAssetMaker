@@ -7,7 +7,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 abstract class Datatype
 {
     // datatype friendly name
-    public string $datatypeName = 'Datatype';
+    public static string $datatypeName = 'Datatype';
 
     // config
     public array $config = [];
@@ -64,6 +64,9 @@ abstract class Datatype
     // output folder
     protected string $outputFolder = '';
 
+    // custom output filename
+    protected string $customOutputFilename = '';
+
     // output filename
     protected string $outputFilename = '';
 
@@ -96,6 +99,19 @@ abstract class Datatype
                 $this->createReferenceFile = false;
         }
 
+        // output folder
+        if (isset($config['output-folder'])) {
+            $this->outputFolder = rtrim($config['output-folder'], '/') . '/';
+        } else {
+            $this->outputFolder = '';
+        }
+
+        // output filename
+        if( isset($config['output-filename'])) {
+            $this->customOutputFilename = $config['output-filename'];
+
+        }
+
         // set name, including code name, define name, etc
         if (isset($config['name']))
             $this->SetName($config['name']);
@@ -116,18 +132,6 @@ abstract class Datatype
         // output format
         if (isset($config['format'])) {
             $this->SetFormat($config['format']);
-        }
-
-        // output folder
-        if (isset($config['output-folder'])) {
-            $this->outputFolder = rtrim($config['output-folder'], '/') . '/';
-        } else {
-            $this->outputFolder = '';
-        }
-
-        // output filename
-        if( isset($config['output-filename'])) {
-            $this->outputFilename = $config['output-filename'];
         }
 
         // don't add to assets lst file
@@ -178,11 +182,7 @@ abstract class Datatype
     {
         $this->name = $name;
         $this->codeName = App::GetConvertedCodeName($name, $this->codeFormat);
-
-        if( $this->outputFilename == '') {
-            $this->outputFilename = App::GetConvertedFilename($name);
-        }
-
+        $this->outputFilename = App::GetConvertedFilename($name);
         $this->defineName = App::GetConvertedConstantName($name . '-len');
     }
 
@@ -208,6 +208,23 @@ abstract class Datatype
      */
     public function GetOutputFilename(int $bank = 0) : string
     {
+        // a custom filename is set
+        if( $this->customOutputFilename != '') {
+            
+            // using banking
+            if( $this->numBanks > 1) {
+
+                $extension_pos = strrpos($this->customOutputFilename, '.');
+
+                return substr($this->customOutputFilename, 0, $extension_pos) .
+                    '_'.$bank . 
+                    substr($this->customOutputFilename, $extension_pos);
+            }
+            
+            return $this->customOutputFilename;
+        }
+
+        // build filename as normal
         return $this->outputFilename . ( $this->numBanks > 1 ? '_'.$bank : '' ). 
             '.' . $this->GetOutputFileExtension();
     }
@@ -598,14 +615,14 @@ abstract class Datatype
     }
 
     public function AddMessage($message) {
-        App::OutputMessage($message, $this->datatypeName, $this->name);
+        App::OutputMessage($message, self::$datatypeName, $this->name);
     }
 
     public function AddError($message) {
-        App::AddError($message, $this->datatypeName, $this->name);
+        App::AddError($message, self::$datatypeName, $this->name);
     }
 
     public function AddWarning($message) {
-        App::AddWarning($message, $this->datatypeName, $this->name);
+        App::AddWarning($message, self::$datatypeName, $this->name);
     }
 }

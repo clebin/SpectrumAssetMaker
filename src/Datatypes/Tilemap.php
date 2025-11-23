@@ -9,7 +9,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
  */
 class Tilemap extends Datatype
 {
-    public string $datatypeName = 'Tilemap';
+    public static string $datatypeName = 'Tilemap';
 
     // data arrays
     public array $layers = [];
