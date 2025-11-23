@@ -19,7 +19,6 @@ class Sprite extends Datatype
     public int $numColumns = 0;
     public string $spriteExtension = App::FILE_EXTENSION_GIF;
     public string $maskExtension = App::FILE_EXTENSION_GIF;
-    public string $paperColour = App::COLOUR_BLACK;
 
     public function __construct($config)
     {

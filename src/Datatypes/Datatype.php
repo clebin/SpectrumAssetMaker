@@ -25,7 +25,10 @@ abstract class Datatype
     public string $extension = App::FILE_EXTENSION_PNG;
 
     // paper colour for graphics
-    public string $paperColour = App::COLOUR_BLACK;
+    public string $paperColour = App::COLOUR_WHITE;
+
+    // binary format
+    public string $binaryFormat = App::BINARY_FORMAT_1BIT;
 
     // static define name for code
     protected string $defineName;
@@ -625,30 +628,18 @@ abstract class Datatype
      */
     public function ColourIsPaper($pixel)
     {
-        // paper colour is an index
-        if( is_int($this->paperColour) ) {
+        // get rgb values
+        $r = ($pixel >> 16) & 0xFF;
+        $g = ($pixel >> 8) & 0xFF;
+        $b = $pixel & 0xFF;
 
-            if( $pixel == $this->paperColour) {
-                return true;
-            }
-            return false;
+        $paper = App::$rgbColours[$this->paperColour];
 
+        if ($r == $paper[0] && $g == $paper[1] && $b == $paper[2]) {
+            return true;
         }
-        // paper colour is a string
-        else {
 
-            // get rgb values
-            $r = ($pixel >> 16) & 0xFF;
-            $g = ($pixel >> 8) & 0xFF;
-            $b = $pixel & 0xFF;
-
-            $paper = App::$rgbColours[$this->paperColour];
-
-            if ($r == $paper[0] && $g == $paper[1] && $b == $paper[2]) {
-                return true;
-            }
-            return false;
-        }
+        return false;
     }
 
     public function AddMessage($message) {

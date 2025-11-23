@@ -10,7 +10,6 @@ class FontNext extends GraphicsNext
 
     public string $binaryFileExtension = 'spr';
 
-    public string $paperColour = App::COLOUR_BLACK;
     public string $binaryFormat = App::BINARY_FORMAT_1BIT;
 
     public int $tileWidth = 8;

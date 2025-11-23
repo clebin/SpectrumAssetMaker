@@ -22,10 +22,15 @@ abstract class Graphics extends Datatype
     public function __construct($config)
     {
         parent::__construct($config);
-     
+
         // paper colour
         if (isset($config['paper-colour']) && in_array($config['paper-colour'], App::$coloursSupported)) {
             $this->paperColour = $config['paper-colour'];
+        }
+
+        // binary format
+        if( isset($config['binary-format']) && in_array($config['binary-format'], App::$binaryFormats)) {
+            $this->binaryFormat = $config['binary-format'];
         }
 
         // set input file
@@ -59,15 +64,27 @@ abstract class Graphics extends Datatype
         // read image file
         $this->extension = substr($filename, -3);
 
+        // png
         if ($this->extension == App::FILE_EXTENSION_PNG) {
             $this->image = imagecreatefrompng($filename);
-        } else if ($this->extension == App::FILE_EXTENSION_GIF) {
+        }
+        // gif
+        else if ($this->extension == App::FILE_EXTENSION_GIF) {
             $this->image = imagecreatefromgif($filename);
-        } else {
+        }
+        // not supported
+        else {
             $this->AddError('Filetype (' . $this->extension . ') not supported');
             return false;
         }
 
+        // convert to true colour
+        if( $this->binaryFormat == App::BINARY_FORMAT_1BIT ) {
+            echo 'test';
+            imagepalettetotruecolor($this->image);
+        }
+
+        // verbosity
         if (App::GetVerbosity() != App::VERBOSITY_SILENT) {
             $this->AddMessage('Reading ' . $this->extension . ' file');
         }

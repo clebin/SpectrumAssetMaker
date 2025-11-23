@@ -14,7 +14,7 @@ class TileLayerNext extends TileLayer
 
     public string $binaryFileExtension = 'nxm';
 
-    public $binaryFormat = App::BINARY_FORMAT_TWO_BYTE;
+    public string $binaryFormat = App::BINARY_FORMAT_TWO_BYTE;
 
     public function __construct($config)
     {

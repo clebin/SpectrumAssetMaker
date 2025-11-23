@@ -88,6 +88,15 @@ class App
     // options
     public static $options = [];
     
+    // binary formats
+    public static $binaryFormats = [
+        self::BINARY_FORMAT_ONE_BYTE,
+        self::BINARY_FORMAT_TWO_BYTE,
+        self::BINARY_FORMAT_1BIT,
+        self::BINARY_FORMAT_4BIT,
+        self::BINARY_FORMAT_8BIT
+    ];
+
     // classic colours
     public static $coloursSupported = [
         self::COLOUR_BLACK,

@@ -11,7 +11,7 @@ class TilemapNext extends Tilemap
 {
     public static string $datatypeName = 'Tilemap Next';
 
-    public $binaryFormat = App::BINARY_FORMAT_ONE_BYTE;
+    public string $binaryFormat = App::BINARY_FORMAT_ONE_BYTE;
 
     public function __construct($config)
     {

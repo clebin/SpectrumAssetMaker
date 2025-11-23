@@ -11,6 +11,7 @@ abstract class GraphicsNext extends Graphics
     public string $binaryFileExtension = 'nxt';
     public bool $addArrayLength = false;
 
+    public string $binaryFormat = App::BINARY_FORMAT_8BIT;
     protected string $codeFormat = App::FORMAT_BINARY;
 
     public function __construct($config)

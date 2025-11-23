@@ -19,11 +19,6 @@ class SpriteNext extends GraphicsNext
     {
         parent::__construct($config);
 
-        // tile layer format
-        if( isset($config['binary-format']) && $config['binary-format'] == App::BINARY_FORMAT_8BIT) {
-            $this->binaryFormat = App::BINARY_FORMAT_8BIT;
-        }
-
         // tile width
         if( isset($config['tile-width']) && intval($config['tile-width']) > 0) {
             $this->tileWidth = intval($config['tile-width']);
