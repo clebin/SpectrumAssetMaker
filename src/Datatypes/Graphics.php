@@ -23,11 +23,6 @@ abstract class Graphics extends Datatype
     {
         parent::__construct($config);
 
-        // paper colour
-        if (isset($config['paper-colour']) && in_array($config['paper-colour'], App::$coloursSupported)) {
-            $this->paperColour = $config['paper-colour'];
-        }
-
         // binary format
         if( isset($config['binary-format']) && in_array($config['binary-format'], App::$binaryFormats)) {
             $this->binaryFormat = $config['binary-format'];
@@ -280,13 +275,6 @@ abstract class Graphics extends Datatype
 
         return $data;
     }
-    
-    // if( ($this->paperColour == App3COLOUR_WHITE && $pixel > 0) ||
-    //     ($this->paperColour == App::COLOUR_BLACK && $pixel == 0) ) {
-    //     $pixel = 1;
-    // } else {
-    //     $pixel = 0;
-    // }
 
     /**
      * Get raw tile data for a numbered tile

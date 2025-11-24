@@ -15,66 +15,66 @@ namespace ClebinGames\SpectrumAssetMaker;
 class App
 {
     // app details
-    const VERSION = '1.1b1';
-    const RELEASE_YEAR = '2025';
+    public const VERSION = '1.1b1';
+    public const RELEASE_YEAR = '2025';
 
     // output formats
-    const FORMAT_ASM = 'asm';
-    const FORMAT_C = 'c';
-    const FORMAT_BINARY = 'binary';
+    public const FORMAT_ASM = 'asm';
+    public const FORMAT_C = 'c';
+    public const FORMAT_BINARY = 'binary';
 
     // file extensions
-    const FILE_EXTENSION_PNG = 'png';
-    const FILE_EXTENSION_GIF = 'gif';
+    public const FILE_EXTENSION_PNG = 'png';
+    public const FILE_EXTENSION_GIF = 'gif';
 
     // memory bank length (16k)
-    const BANK_LENGTH_BYTES = 16384;
+    public const BANK_LENGTH_BYTES = 16384;
 
     // memory page length (8k)
-    const PAGE_LENGTH_BYTES = 65536;
+    public const PAGE_LENGTH_BYTES = 65536;
 
     // byte formats
-    const BINARY_FORMAT_ONE_BYTE = '1-byte';
-    const BINARY_FORMAT_TWO_BYTE = '2-byte';
-    const BINARY_FORMAT_1BIT = '1-bit';
-    const BINARY_FORMAT_4BIT = '4-bit';
-    const BINARY_FORMAT_8BIT = '8-bit';
+    public const BINARY_FORMAT_ONE_BYTE = '1-byte';
+    public const BINARY_FORMAT_TWO_BYTE = '2-byte';
+    public const BINARY_FORMAT_1BIT = '1-bit';
+    public const BINARY_FORMAT_4BIT = '4-bit';
+    public const BINARY_FORMAT_8BIT = '8-bit';
     
     // naming
-    const NAMING_CAMELCASE = 'camelcase';
-    const NAMING_UNDERSCORES = 'underscores';
+    public const NAMING_CAMELCASE = 'camelcase';
+    public const NAMING_UNDERSCORES = 'underscores';
 
     // compression
-    const COMPRESSION_NONE = false;
-    const COMPRESSION_RLE = 'rle';
-    const COMPRESSION_ZX0 = 'zx0';
+    public const COMPRESSION_NONE = false;
+    public const COMPRESSION_RLE = 'rle';
+    public const COMPRESSION_ZX0 = 'zx0';
 
     // terminal colours
-    const TERMINAL_BOLD = "\033[1m";
-    const TERMINAL_BG_BLACK = "\033[40m";
-    const TERMINAL_BG_MAGENTA = "\033[105m";
-    const TERMINAL_BLUE = "\033[34m";
-    const TERMINAL_RED = "\033[31m";
-    const TERMINAL_MAGENTA = "\033[95m"; // 35m
-    const TERMINAL_GREEN = "\033[32m";
-    const TERMINAL_CYAN = "\033[96m"; // 34m
-    const TERMINAL_YELLOW = "\033[33m";
-    const TERMINAL_WHITE = "\033[0m";
+    public const TERMINAL_BOLD = "\033[1m";
+    public const TERMINAL_BG_BLACK = "\033[40m";
+    public const TERMINAL_BG_MAGENTA = "\033[105m";
+    public const TERMINAL_BLUE = "\033[34m";
+    public const TERMINAL_RED = "\033[31m";
+    public const TERMINAL_MAGENTA = "\033[95m"; // 35m
+    public const TERMINAL_GREEN = "\033[32m";
+    public const TERMINAL_CYAN = "\033[96m"; // 34m
+    public const TERMINAL_YELLOW = "\033[33m";
+    public const TERMINAL_WHITE = "\033[0m";
 
     // colour constants
-    const COLOUR_BLACK = 'black';
-    const COLOUR_BLUE = 'blue';
-    const COLOUR_RED = 'red';
-    const COLOUR_MAGENTA = 'magenta';
-    const COLOUR_GREEN = 'green';
-    const COLOUR_CYAN = 'cyan';
-    const COLOUR_YELLOW = 'yellow';
-    const COLOUR_WHITE = 'white';
+    public const COLOUR_BLACK = 'black';
+    public const COLOUR_BLUE = 'blue';
+    public const COLOUR_RED = 'red';
+    public const COLOUR_MAGENTA = 'magenta';
+    public const COLOUR_GREEN = 'green';
+    public const COLOUR_CYAN = 'cyan';
+    public const COLOUR_YELLOW = 'yellow';
+    public const COLOUR_WHITE = 'white';
 
     // verbosity
-    const VERBOSITY_SILENT = 0;
-    const VERBOSITY_NORMAL = 1;
-    const VERBOSITY_VERBOSE = 2;
+    public const VERBOSITY_SILENT = 0;
+    public const VERBOSITY_NORMAL = 1;
+    public const VERBOSITY_VERBOSE = 2;
 
     // layer types
     public const LAYER_TYPE_ALL = 'all';
@@ -86,10 +86,10 @@ class App
     public const NEXT_BITMAP_FORMAT_COLUMNS = 'columns';
     
     // options
-    public static $options = [];
+    public static array $options = [];
     
     // binary formats
-    public static $binaryFormats = [
+    public static array $binaryFormats = [
         self::BINARY_FORMAT_ONE_BYTE,
         self::BINARY_FORMAT_TWO_BYTE,
         self::BINARY_FORMAT_1BIT,
@@ -98,7 +98,7 @@ class App
     ];
 
     // classic colours
-    public static $coloursSupported = [
+    public static array $coloursSupported = [
         self::COLOUR_BLACK,
         self::COLOUR_BLUE,
         self::COLOUR_RED,
@@ -110,7 +110,7 @@ class App
     ];
 
     // speccy rgb colour equivalents
-    public static $rgbColours = [
+    public static array $rgbColours = [
         App::COLOUR_BLACK => [0, 0, 0],
         App::COLOUR_BLUE => [0, 0, 255],
         App::COLOUR_RED => [255, 0, 0],
@@ -122,16 +122,16 @@ class App
     ];
 
     // current output format
-    public static $formatsSupported = ['asm', 'c'];
+    public static array $formatsSupported = ['asm', 'c'];
 
-    public static $namingConvention = self::NAMING_CAMELCASE;
-    public static $namingConventionsSupported = [
+    public static string $namingConvention = self::NAMING_CAMELCASE;
+    public static array $namingConventionsSupported = [
         'camelcase',
         'underscores',
         'titlecase'
     ];
 
-    public static $compressionSupported = [
+    public static array $compressionSupported = [
         self::COMPRESSION_RLE,
         self::COMPRESSION_ZX0
     ];
@@ -144,25 +144,29 @@ class App
         self::LAYER_TYPE_TILELAYER
     ];
 
-    public static $saveGameProperties = false;
-    private static $stringDelimiter = CR;
+    public static bool $saveGameProperties = false;
+    private static string $stringDelimiter = CR;
     public static int $verbosity = self::VERBOSITY_NORMAL;
 
     // list of output files - for binaries.lst
-    private static $outputFiles = [];
+    private static array $outputFiles = [];
 
     // errors
-    private static $numErrors = 0;
+    private static int $numErrors = 0;
     
     // configuration
-    public static $configFile;
-    public static $sectionsInUse = [];
+    public static string $configFile;
+    public static array $sectionsInUse = [];
+
+    public static bool $createReferenceFile = true;
+
+    public static string $paperColour = self::COLOUR_WHITE;
 
     // next screen format - default to banks laid out as rows
-    public static $nextScreenFormat = self::NEXT_BITMAP_FORMAT_ROWS;
+    public static string $nextScreenFormat = self::NEXT_BITMAP_FORMAT_ROWS;
 
     // character set
-    public static $charset = [
+    public static array $charset = [
         ' ',
         '!',
         '"',
@@ -259,7 +263,7 @@ class App
     /**
      * Start the tool
      */
-    public static function Run($options)
+    public static function Run($options) : void
     {
         self::$options = $options;
 
@@ -369,7 +373,7 @@ class App
     /**
      * Return an array as a string in assembly format
      */
-    public static function GetAsmArray($name, $values, $numbase = 10, $length = false, $public = true)
+    public static function GetAsmArray($name, $values, $numbase = 10, $length = false, $public = true) : string
     {
         $str = '';
 
@@ -422,7 +426,7 @@ class App
     /**
      * Compress data array using ZX0 (requires Java)
      */
-    public static function CompressArrayZX0($filename)
+    public static function CompressArrayZX0($filename) : void
     {
         $zx0_path = getenv('ZX0_PATH');
 
@@ -448,7 +452,7 @@ class App
     /**
      * Compress data array using run-length encoding
      */
-    public static function CompressArrayRLE($name, $input, $add_length = true)
+    public static function CompressArrayRLE($name, $input, $add_length = true) : array
     {
         $output = [];
 
@@ -490,7 +494,7 @@ class App
     /**
      * Get C code for an array of pointers
      */
-    public static function GetPointerArrayC($arrayName, $itemsBaseName, $size = 0)
+    public static function GetPointerArrayC($arrayName, $itemsBaseName, $size = 0) : string
     {
         $str = '';
 
@@ -511,7 +515,7 @@ class App
     /**
      * Convert a regular name into a camel-case variable name to be used in code
      */
-    public static function GetConvertedCodeName($source_name, $format)
+    public static function GetConvertedCodeName($source_name, $format) : string
     {
         $name = '';
 
@@ -534,7 +538,7 @@ class App
     /**
      * Convert a regular name to constant
      */
-    public static function GetConvertedConstantName($source_name)
+    public static function GetConvertedConstantName($source_name) : string
     {
         return strtoupper(self::GetConvertedCodeNameUnderscores($source_name));
     }
@@ -542,7 +546,7 @@ class App
     /** 
      * Convert a regular name to use underscores 
      */
-    public static function GetConvertedCodeNameUnderscores($source_name)
+    public static function GetConvertedCodeNameUnderscores($source_name) : string
     {
         return strtolower(str_replace(['-', ' '], '_', $source_name));
     }
@@ -550,7 +554,7 @@ class App
     /**
      * Convert a regular name to camel-case
      */
-    public static function GetConvertedCodeNameCamelCase($source_name)
+    public static function GetConvertedCodeNameCamelCase($source_name) : string
     {
         return lcfirst(implode('', array_map('ucfirst', explode(' ', str_replace('-', ' ', $source_name)))));
     }
@@ -558,7 +562,7 @@ class App
     /**
      * Convert a regular name to title-case
      */
-    public static function GetConvertedCodeNameTitleCase($source_name)
+    public static function GetConvertedCodeNameTitleCase($source_name) : string
     {
         return implode('', array_map('ucfirst', explode(' ', str_replace('-', ' ', $source_name))));
     }
@@ -566,7 +570,7 @@ class App
     /**
      * Convert regular name to a filename format
      */
-    public static function GetConvertedFilename($source_name)
+    public static function GetConvertedFilename($source_name) : string
     {
         return strtolower(str_replace(' ', '-', $source_name));
     }
@@ -609,7 +613,7 @@ class App
     /**
      * Text delimeter for processing strings
      */
-    public static function GetStringDelimiter()
+    public static function GetStringDelimiter() : string
     {
         return self::$stringDelimiter;
     }

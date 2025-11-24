@@ -106,6 +106,15 @@ abstract class Datatype
         if( isset($config['create-binary-reference-file']) &&
             $config['create-binary-reference-file'] === false) {
                 $this->createReferenceFile = false;
+        } else {
+            $this->createReferenceFile = App::$createReferenceFile;
+        }
+
+        // paper colour
+        if (isset($config['paper-colour']) && in_array($config['paper-colour'], App::$coloursSupported)) {
+            $this->paperColour = $config['paper-colour'];
+        } else {
+            $this->paperColour = App::$paperColour;
         }
 
         // output folder
@@ -146,11 +155,6 @@ abstract class Datatype
         // don't add to assets lst file
         if( isset($config['add-to-assets-list']) && $config['add-to-assets-list'] === false) {
             $this->addToAssetsLst = false;
-        }
-
-        // binary reference file
-        if( isset($config['create-reference-file']) && $config['create-reference-file'] === false) {
-            $this->createReferenceFile = false;
         }
 
         // compression

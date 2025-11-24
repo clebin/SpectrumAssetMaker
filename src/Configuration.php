@@ -139,6 +139,18 @@ class Configuration
             App::$nextScreenFormat = App::NEXT_BITMAP_FORMAT_COLUMNS;
         }
 
+        // create binary reference file default
+        if( isset($config['create-binary-reference-file']) && 
+            $config['create-binary-reference-file'] === false ) {
+                App::$createReferenceFile = false;
+        }
+        
+        // default paper colour
+        if (isset($config['paper-colour']) && 
+            in_array($config['paper-colour'], App::$coloursSupported)) {
+            App::$paperColour = $config['paper-colour'];
+        }
+
         // save all settings here
         self::$settings = $config;
     }

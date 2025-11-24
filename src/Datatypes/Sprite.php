@@ -34,11 +34,6 @@ class Sprite extends Datatype
             return;
         }
 
-        // paper colour
-        if (isset($config['paper-colour']) && in_array($config['paper-colour'], App::$coloursSupported)) {
-            $this->paperColour = $config['paper-colour'];
-        }
-
         // set mask image
         if (isset($config['mask'])) {
             $maskFile = $config['mask'];
