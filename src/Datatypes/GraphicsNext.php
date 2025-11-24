@@ -6,7 +6,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 abstract class GraphicsNext extends Graphics
 {
-    public static string $datatypeName = 'Next Graphics';
+    public const DATATYPE_NAME = 'Next Graphics';
 
     public string $binaryFileExtension = 'nxt';
     public bool $addArrayLength = false;

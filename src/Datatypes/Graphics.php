@@ -6,7 +6,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 abstract class Graphics extends Datatype
 {
-    public static string $datatypeName = 'Graphics';
+    public const DATATYPE_NAME = 'Graphics';
     
     public int $numColumns = 0;
     public int $numRows = 0;

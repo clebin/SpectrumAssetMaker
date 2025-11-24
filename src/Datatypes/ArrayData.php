@@ -6,7 +6,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class ArrayData extends Datatype
 {
-    public static string $datatypeName = 'Array Data';
+    public const DATATYPE_NAME = 'Array Data';
 
     public string $arrayName = '';
     public array $data = [];

@@ -9,7 +9,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
  */
 class TilemapNext extends Tilemap
 {
-    public static string $datatypeName = 'Tilemap Next';
+    public const DATATYPE_NAME = 'Tilemap Next';
 
     public string $binaryFormat = App::BINARY_FORMAT_ONE_BYTE;
 

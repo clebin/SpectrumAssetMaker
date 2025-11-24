@@ -6,7 +6,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class GraphicsClassic extends Graphics
 {
-    public static string $datatypeName = 'Graphics';
+    public const DATATYPE_NAME = 'Graphics';
 
     public function __construct($config)
     {

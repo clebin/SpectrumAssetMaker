@@ -6,7 +6,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class Text extends Datatype
 {
-    public static string $datatypeName = 'Text';
+    public const DATATYPE_NAME = 'Text';
 
     protected bool $addArrayLength = false;
     protected string|false $filename = '';

@@ -10,7 +10,7 @@ use \ClebinGames\SpectrumAssetMaker\GameObject;
  */
 class ObjectLayer extends Datatype
 {
-    public static string $datatypeName = 'Object Layer';
+    public const DATATYPE_NAME = 'Object Layer';
     protected int $num = 0;
     protected array $objects = [];
     protected array $customProperties = [];

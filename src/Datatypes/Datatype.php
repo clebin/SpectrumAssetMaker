@@ -7,7 +7,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 abstract class Datatype
 {
     // datatype friendly name
-    public static string $datatypeName = 'Datatype';
+    public const DATATYPE_NAME = 'Datatype';
 
     // config
     public array $config = [];
@@ -658,14 +658,14 @@ abstract class Datatype
     }
 
     public function AddMessage($message) {
-        App::OutputMessage($message, self::$datatypeName, $this->name);
+        App::OutputMessage($message, self::DATATYPE_NAME, $this->name);
     }
 
     public function AddError($message) {
-        App::AddError($message, self::$datatypeName, $this->name);
+        App::AddError($message, self::DATATYPE_NAME, $this->name);
     }
 
     public function AddWarning($message) {
-        App::AddWarning($message, self::$datatypeName, $this->name);
+        App::AddWarning($message, self::DATATYPE_NAME, $this->name);
     }
 }

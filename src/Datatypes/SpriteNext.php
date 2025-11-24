@@ -6,7 +6,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class SpriteNext extends GraphicsNext
 {
-    public static string $datatypeName = 'Next Sprite';
+    public const DATATYPE_NAME = 'Next Sprite';
 
     public string $binaryFileExtension = 'spr';
     

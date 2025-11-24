@@ -6,7 +6,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class PaletteNext extends Datatype
 {
-    public static string $datatypeName = 'Next Palette';
+    public const DATATYPE_NAME = 'Next Palette';
     public string $binaryFileExtension = 'pal';
 
     public string $binaryFormat = App::BINARY_FORMAT_ONE_BYTE;

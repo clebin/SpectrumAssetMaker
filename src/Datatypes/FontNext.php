@@ -6,7 +6,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class FontNext extends GraphicsNext
 {
-    public static string $datatypeName = 'Next Font';
+    public const DATATYPE_NAME = 'Next Font';
 
     public string $binaryFileExtension = 'spr';
 

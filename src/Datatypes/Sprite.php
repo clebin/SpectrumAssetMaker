@@ -6,7 +6,7 @@ use \ClebinGames\SpectrumAssetMaker\App;
 
 class Sprite extends Datatype
 {
-    public static string $datatypeName = 'Sprite';
+    public const DATATYPE_NAME = 'Sprite';
 
     private $spriteImage = false;
     private $maskImage = false;

@@ -7,7 +7,7 @@ use \ClebinGames\SpectrumAssetMaker\Datatypes\BitmapNext;
 
 class ScreenNext extends BitmapNext
 {
-    public static string $datatypeName = 'Next Layer 2 Screen';
+    public const DATATYPE_NAME = 'Next Layer 2 Screen';
     public bool $addPalette = false;
 
     public function __construct($config)

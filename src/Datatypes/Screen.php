@@ -26,7 +26,7 @@ This simple program illustrates the layout of the screen display by filling it w
 
 class Screen extends Datatype
 {
-    public static string $datatypeName = 'Screen';
+    public const DATATYPE_NAME = 'Screen';
     protected $image = false;
 
     public string $binaryFileExtension = 'scr';
