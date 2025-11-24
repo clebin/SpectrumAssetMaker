@@ -80,7 +80,6 @@ abstract class Graphics extends Datatype
 
         // convert to true colour
         if( $this->binaryFormat == App::BINARY_FORMAT_1BIT ) {
-            echo 'test';
             imagepalettetotruecolor($this->image);
         }
 

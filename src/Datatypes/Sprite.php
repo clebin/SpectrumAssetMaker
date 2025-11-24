@@ -17,6 +17,9 @@ class Sprite extends Datatype
     public int $width = 0;
     public int $height = 0;
     public int $numColumns = 0;
+
+    public string $binaryFormat = App::BINARY_FORMAT_1BIT;
+
     public string $spriteExtension = App::FILE_EXTENSION_GIF;
     public string $maskExtension = App::FILE_EXTENSION_GIF;
 
@@ -96,18 +99,26 @@ class Sprite extends Datatype
         if ($mask === true) {
             $this->maskExtension = $extension;
         } else {
+            $this->extension = $extension;
             $this->spriteExtension = $extension;
         }
 
         // get the image
         if ($extension == App::FILE_EXTENSION_PNG) {
-            return imagecreatefrompng($filename);
+            $image = imagecreatefrompng($filename);
         } else if ($extension == App::FILE_EXTENSION_GIF) {
-            return imagecreatefromgif($filename);
+            $image = imagecreatefromgif($filename);
         } else {
             $this->AddError('Filetype (' . $extension . ') not supported');
             return false;
         }
+
+        // convert to true colour
+        if( $this->binaryFormat == App::BINARY_FORMAT_1BIT ) {
+            imagepalettetotruecolor($image);
+        }
+
+        return $image;
     }
 
     public function GetImageData($image, $mask = false)

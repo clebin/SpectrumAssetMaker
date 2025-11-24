@@ -176,6 +176,11 @@ abstract class Datatype
             return false;
         }
 
+        // convert to true colour
+        if( $this->binaryFormat == App::BINARY_FORMAT_1BIT ) {
+            imagepalettetotruecolor($image);
+        }
+
         return $image;
     }
 
@@ -629,9 +634,15 @@ abstract class Datatype
     public function ColourIsPaper($pixel)
     {
         // get rgb values
+        $alpha = ($pixel & 0x7F000000) >> 24;
         $r = ($pixel >> 16) & 0xFF;
         $g = ($pixel >> 8) & 0xFF;
         $b = $pixel & 0xFF;
+
+        // completely transparent is always paper
+        if( $alpha == 127 ) {
+            return true;
+        }
 
         $paper = App::$rgbColours[$this->paperColour];
 
