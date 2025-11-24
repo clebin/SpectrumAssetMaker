@@ -279,6 +279,9 @@ Input file to use
 
 Where to save the generated asset(s)
 
+### output-filename
+
+Out to a specific filename, overriding auto-generated filename.
 
 ### format
 
