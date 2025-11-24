@@ -306,14 +306,14 @@ By default, Spectrum Asset Maker creates an asm file pointing to the binary that
 ```
 section rodata_user
 
-public _gunsight
-public _gunsight_end
+public _bandit
+public _bandit_end
 
-_gunsight:
+_bandit:
 
-        BINARY "./binary/generated/gunsight.spr" ; 128 bytes
+        BINARY "./binary/generated/bandit.spr" ; 128 bytes
 
-_gunsight_end:
+_bandit_end:
 ```
 
 If this is unwanted (if you're using Next or Boriel BASIC for example), you can disable this on a per asset-basis by setting 'create-binary-reference-file' to false (see example JSON)
