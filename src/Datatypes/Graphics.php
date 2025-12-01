@@ -105,8 +105,8 @@ abstract class Graphics extends Datatype
     {
         $value = imagecolorat($this->image, $x, $y);
         
-        if( $value < 0 || $value >= 256) {
-            $value = 0;
+        if( $value < 0 || $value > 255) {
+            $value = 1;
         }
 
         return $value;
@@ -245,6 +245,7 @@ abstract class Graphics extends Datatype
 
             $datarow = bindec(implode('', $datarow));
 
+            echo $datarow.' ';
             // add row of data
             $attribute[] = $datarow;
         }
