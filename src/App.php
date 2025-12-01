@@ -124,6 +124,7 @@ class App
     // current output format
     public static array $formatsSupported = ['asm', 'c'];
 
+    // naming converntions
     public static string $namingConvention = self::NAMING_CAMELCASE;
     public static array $namingConventionsSupported = [
         'camelcase',
@@ -131,21 +132,26 @@ class App
         'titlecase'
     ];
 
+    // compression types
     public static array $compressionSupported = [
         self::COMPRESSION_RLE,
         self::COMPRESSION_ZX0
     ];
 
     // layer types
-
     public static array $layerTypesSupported = [
         self::LAYER_TYPE_ALL,
         self::LAYER_TYPE_OBJECTGROUP,
         self::LAYER_TYPE_TILELAYER
     ];
 
+    // save game properties
     public static bool $saveGameProperties = false;
+
+    // string delimiter
     private static string $stringDelimiter = CR;
+
+    // verbosity
     public static int $verbosity = self::VERBOSITY_NORMAL;
 
     // list of output files - for binaries.lst
@@ -163,8 +169,19 @@ class App
     // names to process
     public static array $namesToProcess = [];
 
+    // create asm reference file by default
     public static bool $createReferenceFile = true;
 
+    // create assets list file by default
+    public static bool $createAssetsLst = false;
+
+    // assets lst filename
+    public static string $assetsLstFilename = 'assets.lst';
+    
+    // default output folder
+    public static string $outputFolder = "./assets";
+
+    // default paper colour
     public static string $paperColour = self::COLOUR_WHITE;
 
     // next screen format - default to banks laid out as rows
@@ -299,7 +316,13 @@ class App
             self::$namesToProcess = explode(',', $options['name']);
         }
 
+        // process
         Configuration::Process();
+
+        // save binaries.lst
+        if (self::$createAssetsLst === true) {
+            self::ProcessAssetsLst();
+        }
 
         // display errors
         self::ShowErrors();
@@ -650,19 +673,23 @@ class App
     /**
      * Get binaries.lst file with list of screen files
      */
-    public static function ProcessAssetsLst($assetsLstFolder = '') : void
+    public static function ProcessAssetsLst() : void
     {
-        $strAssets = '';
+        $assetsLstFolder = rtrim(self::$outputFolder, '/') . '/';
 
-        $assetsLstFolder = rtrim($assetsLstFolder, '/') . '/';
-
+        // add assets to the list
         sort(App::$outputFiles);
 
+        $strAssets = '';
         foreach (App::$outputFiles as $path) {
             $strAssets .= str_replace($assetsLstFolder, '', $path) . CR;
         }
 
-        file_put_contents($assetsLstFolder . 'assets.lst', $strAssets);
+        // output filename
+        $filename = $assetsLstFolder . self::$assetsLstFilename;
+
+        // write file
+        file_put_contents($filename, $strAssets);
     }
 
     /**

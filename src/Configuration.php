@@ -24,10 +24,6 @@ class Configuration
     private static array $config = [];
     private static array $settings = [];
 
-    // default settings
-    public static bool $createAssetsLst = false;
-    public static string $outputFolder = "./assets";
-
     // map config sections to datatype
     private static array $sectionDatatypeMapping = [
         "sprite" => Sprite::class,
@@ -95,11 +91,6 @@ class Configuration
 
         // save in case we need it
         self::$config = $config;
-
-        // save binaries.lst
-        if (self::$createAssetsLst === true) {
-            App::ProcessAssetsLst(self::$outputFolder);
-        }
     }
 
     private static function ReadSection($datatypeName, $config) : void
@@ -118,12 +109,16 @@ class Configuration
     {
         // create binaries lst
         if (isset($config['create-assets-list'])) {
-            self::$createAssetsLst = $config['create-assets-list'];
+
+            if( is_string($config['create-assets-list']) ) {
+                App::$assetsLstFilename = $config['create-assets-list'];
+            }
+            App::$createAssetsLst = $config['create-assets-list'];
         }
 
         // base output folder
         if (isset($config['output-folder'])) {
-            self::$outputFolder = $config['output-folder'];
+            App::$outputFolder = $config['output-folder'];
         }
 
         // object types

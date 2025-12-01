@@ -245,7 +245,6 @@ abstract class Graphics extends Datatype
 
             $datarow = bindec(implode('', $datarow));
 
-            echo $datarow.' ';
             // add row of data
             $attribute[] = $datarow;
         }
