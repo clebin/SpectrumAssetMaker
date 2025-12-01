@@ -147,13 +147,14 @@ abstract class Datatype
             $this->SetCodeSection($config['section']);
         }
 
-        // output format
+        // set output format
         if (isset($config['format'])) {
             $this->SetFormat($config['format']);
         }
 
         // don't add to assets lst file
-        if( isset($config['add-to-assets-list']) && $config['add-to-assets-list'] === false) {
+        if( $this->codeFormat == App::FORMAT_C || 
+            (isset($config['add-to-assets-list']) && $config['add-to-assets-list'] === false)) {
             $this->addToAssetsLst = false;
         }
 

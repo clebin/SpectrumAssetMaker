@@ -39,7 +39,8 @@ $options = getopt('', [
     'help::',
     'verbosity::',
     'config::',
-    'section::'
+    'section::',
+    'name::'
 ]);
 
 // run

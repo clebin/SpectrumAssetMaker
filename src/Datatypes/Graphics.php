@@ -24,7 +24,7 @@ abstract class Graphics extends Datatype
         parent::__construct($config);
 
         // binary format
-        if( isset($config['binary-format']) && in_array($config['binary-format'], App::$binaryFormats)) {
+        if( isset($config['binary-format']) && in_array($config['binary-format'], App::$binaryFormatsSupported)) {
             $this->binaryFormat = $config['binary-format'];
         }
 

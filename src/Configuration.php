@@ -53,17 +53,17 @@ class Configuration
         "screens" => Screen::class
     ];
     
-    public static function Process($configPath, $sectionsInUse = []) : void
+    public static function Process() : void
     {
-        if (!file_exists($configPath)) {
+        if (!file_exists(App::$configFile)) {
             echo 'Error: Config file not found';
             return;
         }
 
-        echo 'Reading config file: ' . $configPath . CR;
+        echo 'Reading config file: ' . App::$configFile . CR;
 
         // read config file
-        $json = file_get_contents($configPath);
+        $json = file_get_contents(App::$configFile);
 
         try {
             $config = json_decode($json, true);
@@ -87,7 +87,8 @@ class Configuration
         foreach(self::$sectionDatatypeMapping as $name => $class) {
 
             // if section is set and we're doing all datatypes or datatype is specified
-            if( isset($config[$name]) && (sizeof($sectionsInUse) == 0 || in_array($name, $sectionsInUse))) {
+            if( isset($config[$name]) && 
+                (sizeof(App::$sectionsToProcess) == 0 || in_array($name, App::$sectionsToProcess))) {
                 self::ReadSection($class, $config[$name]);
             }
         }
@@ -105,8 +106,11 @@ class Configuration
     {
         foreach($config as $item)
         {
-            $datatype = new $datatypeName($item);
-            $datatype->Process();
+            // process item
+            if( sizeof(App::$namesToProcess) == 0 || in_array($item['name'], App::$namesToProcess)) {
+                $datatype = new $datatypeName($item);
+                $datatype->Process();
+            }
         }
     }
 

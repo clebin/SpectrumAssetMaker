@@ -15,7 +15,7 @@ namespace ClebinGames\SpectrumAssetMaker;
 class App
 {
     // app details
-    public const VERSION = '1.1b1';
+    public const VERSION = '2.0b1';
     public const RELEASE_YEAR = '2025';
 
     // output formats
@@ -89,7 +89,7 @@ class App
     public static array $options = [];
     
     // binary formats
-    public static array $binaryFormats = [
+    public static array $binaryFormatsSupported = [
         self::BINARY_FORMAT_ONE_BYTE,
         self::BINARY_FORMAT_TWO_BYTE,
         self::BINARY_FORMAT_1BIT,
@@ -156,7 +156,12 @@ class App
     
     // configuration
     public static string $configFile;
-    public static array $sectionsInUse = [];
+    
+    // sections to process
+    public static array $sectionsToProcess = [];
+
+    // names to process
+    public static array $namesToProcess = [];
 
     public static bool $createReferenceFile = true;
 
@@ -286,10 +291,15 @@ class App
         
         // specify datatypes to use
         if( isset($options['section'])) {
-            self::$sectionsInUse = explode(',', $options['section']);
+            self::$sectionsToProcess = explode(',', $options['section']);
         }
 
-        Configuration::Process(self::$configFile, self::$sectionsInUse);
+        // specify names to use
+        if( isset($options['name'])) {
+            self::$namesToProcess = explode(',', $options['name']);
+        }
+
+        Configuration::Process();
 
         // display errors
         self::ShowErrors();
