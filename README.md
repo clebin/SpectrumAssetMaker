@@ -93,11 +93,21 @@ On the command line, run:
 
 All assets associated with a project with a project - sprites, tilemaps, graphics etc - are specified in the JSON config file. These are created in one pass, simplifying the build process.
 
-You can pass '--section=[section name]' to only create assets of a particular type as specified in the JSON file.
+###--section
+
+Choose which sections to process (comma-separated)
 
 **Example:**
 
 > php SpectrumAssetMaker.php --config=config-assets.json --section=sprite
+
+###--name
+
+Choose individual items to process by name (comma-separated)
+
+**Example:**
+
+> php SpectrumAssetMaker.php --config=config-assets.json --name=font 
 
 
 ## Example JSON Config File
