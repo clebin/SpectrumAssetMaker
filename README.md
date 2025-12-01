@@ -87,7 +87,11 @@ Install PHP with your favourite package manager:
 
 ## Usage
 
-On the command line, run:
+Command line bash script:
+
+> ./makeassets --config=[path to JSON config file]
+
+Command line PHP script:
 
 > php SpectrumAssetMaker.php --config=[path to JSON config file]
 
