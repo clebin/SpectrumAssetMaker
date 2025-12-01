@@ -93,7 +93,7 @@ On the command line, run:
 
 All assets associated with a project with a project - sprites, tilemaps, graphics etc - are specified in the JSON config file. These are created in one pass, simplifying the build process.
 
-###--section
+### --section
 
 Choose which sections to process (comma-separated)
 
@@ -101,7 +101,7 @@ Choose which sections to process (comma-separated)
 
 > php SpectrumAssetMaker.php --config=config-assets.json --section=sprite
 
-###--name
+### --name
 
 Choose individual items to process by name (comma-separated)
 
@@ -259,11 +259,11 @@ file to your project settings with '@output-folder/assets.lst' to include the as
 
 You can exclude individual assets from the LST file using by setting 'add-to-assets-list' to false in the asset's JSON section.
 
-**Options:***
+**Supported values:**
 
 * true (create assets.lst file)
 
-* <filename> (create assets list with custom filename)
+* [filename] (create assets list with custom filename)
 
 * false (don't create lst file)
 
