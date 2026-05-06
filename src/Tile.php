@@ -13,12 +13,9 @@ class Tile
 
     public int $id = 0;
 
-    // source properties - in case we're not importing all tiled properties
-    // but want to make use of them, eg. ladders for generating path maps
-    public array $sourceProperties = [];
-
     // game properties
     public array $properties = [];
+    public array $propertiesDefinitions = [];
 
     public function __construct($id, $sourceProperties, $propertyDefinitions)
     {
@@ -26,52 +23,22 @@ class Tile
         $this->id = $id;
 
         // property definitions
-        $this->properties = $propertyDefinitions;
+        $this->propertiesDefinitions = $propertyDefinitions;
 
-        // App::$saveGameProperties = true;
+        // read all properties
+        foreach($sourceProperties as &$prop) {
 
-        // fill in values
-        foreach($this->properties as &$propertiesArray) {
-
-            foreach($propertiesArray as &$prop) {
-
-                // find value in tiled properties
-                $value = false;
-
-                // skip this value
-                if( $prop === false ) {
-                    $prop = [
-                        'name' => false,
-                        'length' => 1,
-                        'value' => false
-                    ];
+            if( $prop['type'] == 'bool') {
+                
+                if( $prop['value'] == 1) {
+                    $prop['value'] = true;
+                } else {
+                    $prop['value'] = false;
                 }
-                else {
-
-                    // property definition is not an array
-                    if( !is_array($prop)) {
-                        $prop = [
-                            'name' => strval($prop),
-                            'length' => 1
-                        ];
-                    }
-
-                    // loop through property definitions
-                    foreach($sourceProperties as $sourceProp) {
-
-                        if( $sourceProp['name'] == $prop['name'] ) {
-                            $value = $sourceProp['value'];
-                        }
-
-                        $this->sourceProperties[$prop['name']] = $value;
-                    }
-
-                    $prop['value'] = $value;
-                }
-
             }
-        }
 
+            $this->properties[$prop['name']] = $prop['value'];
+        }
     }
 
     /**
@@ -79,8 +46,8 @@ class Tile
      */
     public function IsLadder() : bool
     {
-        if( isset($this->sourceProperties['ladder']) && 
-            $this->sourceProperties['ladder'] === true ) {
+        if( isset($this->properties['ladder']) && 
+            $this->properties['ladder'] === true ) {
                 return true;
         }
         return false;
@@ -91,8 +58,8 @@ class Tile
      */
     public function IsSolid() : bool
     {
-        if( isset($this->sourceProperties['solid']) && 
-            $this->sourceProperties['solid'] === true ) {
+        if( isset($this->properties['solid']) && 
+            $this->properties['solid'] === true ) {
                 return true;
         }
         return false;
@@ -101,23 +68,23 @@ class Tile
     /* 
      * Get a tile property
      */
-    public function GetProperties($name, $array = false) : bool
+    public function GetProperty($propName, $arrayName = false) : bool
     {
         // no array specified, go searching
-        if( $array === false ) {
+        if( $arrayName === false ) {
 
             foreach($this->properties as $array) {
                 foreach($array as $prop) {
-                    if($prop['name'] == $name) {
+                    if($prop['name'] == $propName) {
                         return $prop['value'];
                     }
                 }
             }
         }
         // array specified
-        else if(isset($this->properties[$array][$name])) {
+        else if(isset($this->properties[$arrayName][$propName])) {
 
-            return $this->properties[$array][$name];
+            return $this->properties[$arrayName][$propName];
         }
 
         return false;
@@ -128,18 +95,30 @@ class Tile
      */
     public function GetPropertiesByte($name) : string
     {
-        if( !isset($this->properties[$name]) ) {
-            return false;
-        }
-
         $str = '';
 
-        foreach($this->properties[$name] as $prop) {
+        foreach($this->propertiesDefinitions[$name] as $prop) {
+
+            // property is not an array, treat as a boolean
+            if( !is_array($prop)) {
+                $prop = [
+                    'name' => $prop,
+                    'length' => 1
+                ];
+            }
+
+            // get value
+            if( isset($this->properties[$prop['name']])) {
+                $value = $this->properties[$prop['name']];
+            } else {
+                $value = 0;
+            }
 
             if( $prop['length'] > 1 ) {
-                $str .= str_pad(decbin($prop['value']), $prop['length'], '0', STR_PAD_LEFT);
+                echo 'hmm'.$prop['name'].' - '.$value.CR;
+                $str .= str_pad(decbin($value), $prop['length'], '0', STR_PAD_LEFT);
             } else {
-                $str .= ($prop['value'] == true || $prop['value'] == 1 ? '1' : '0');
+                $str .= ($value == true || $value == 1 ? '1' : '0');
             }
         }
 

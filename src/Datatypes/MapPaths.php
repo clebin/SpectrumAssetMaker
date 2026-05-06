@@ -84,6 +84,7 @@ class MapPaths extends TileLayer
                 if ($row > 0  && $col < $this->width - 1) {
 
                     $canMove = true;
+
                     for ($i = 0; $i < $this->pathWidth; $i++) {
 
                         $tile = $this->GetTile($row - 1, $col + $i);
