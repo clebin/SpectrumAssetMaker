@@ -27,10 +27,10 @@ This simple program illustrates the layout of the screen display by filling it w
 class Screen extends Datatype
 {
     public const DATATYPE_NAME = 'Screen';
-    protected $image = false;
+    protected \GDImage|bool $image = false;
 
     public string $binaryFileExtension = 'scr';
-    
+
     public string $extension = App::FILE_EXTENSION_PNG;
     public array $attributes = [];
     public array $attributeData = [];
@@ -102,7 +102,7 @@ class Screen extends Datatype
     /**
      * Read an individual attribute (or tile)
      */
-    private function SetAttribute($col, $row)
+    private function SetAttribute(int $col, int $row)
     {
         // starting values for x & y
         $startx = $col * 8;
@@ -166,7 +166,7 @@ class Screen extends Datatype
     /**
      * Return attribute object at row,col
      */
-    private function GetAttributeForRowCol($row, $col)
+    private function GetAttributeForRowCol(int $row, int $col)
     {
         return $this->attributes[($row * 32) + $col];
     }
@@ -174,7 +174,7 @@ class Screen extends Datatype
     /**
      * Correct colour to remove minor variations (ie. take any off-white as off-white)
      */
-    private function GetCorrectedColour($col)
+    private function GetCorrectedColour(int $col): int
     {
         if ($col < 50)
             return 0;
@@ -187,7 +187,7 @@ class Screen extends Datatype
     /**
      * Use rgb values to determine whether colour is BRIGHT or not
      */
-    private function GetBrightForColour($r, $g, $b)
+    private function GetBrightForColour(int $r, int $g, int $b)
     {
         if ($r == 255 || $g == 255 || $b == 255)
             return true;
@@ -198,7 +198,7 @@ class Screen extends Datatype
     /**
      * Return the colour index (0-7) according to the rgb values
      */
-    private function GetColourIndex($r, $g, $b)
+    private function GetColourIndex(int $r, int $g, int $b)
     {
         // correct minor variations in colour
         $r = $this->GetCorrectedColour($r);
@@ -297,7 +297,7 @@ class Screen extends Datatype
         }
     }
 
-    public function GetData() : array
+    public function GetData(): array
     {
         $this->attributeData = [];
 
@@ -312,13 +312,13 @@ class Screen extends Datatype
     /**
      * Return output filename only
      */
-    public function GetOutputFilename(int $bank = 0) : string
+    public function GetOutputFilename(int $bank = 0): string
     {
         return $this->outputFilename . '.scr';
     }
 
-    public function WriteFile() : void
+    public function WriteFile(): void
     {
-        $this->WriteBinaryFile($this->data, $this->GetOutputFilepath());
+        $this->WriteBinaryFile($this->GetData(), $this->GetOutputFilepath());
     }
 }

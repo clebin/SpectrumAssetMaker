@@ -103,9 +103,11 @@ abstract class Datatype
         }
 
         // create asm reference file?
-        if( isset($config['create-binary-reference-file']) &&
-            $config['create-binary-reference-file'] === false) {
-                $this->createReferenceFile = false;
+        if (
+            isset($config['create-binary-reference-file']) &&
+            $config['create-binary-reference-file'] === false
+        ) {
+            $this->createReferenceFile = false;
         } else {
             $this->createReferenceFile = App::$createReferenceFile;
         }
@@ -125,9 +127,8 @@ abstract class Datatype
         }
 
         // output filename
-        if( isset($config['output-filename'])) {
+        if (isset($config['output-filename'])) {
             $this->customOutputFilename = $config['output-filename'];
-
         }
 
         // set name, including code name, define name, etc
@@ -135,12 +136,12 @@ abstract class Datatype
             $this->SetName($config['name']);
 
         // bank
-        if( isset($config['bank'])) {
-            $this->codeSection = 'BANK_'.intval($config['bank']);
+        if (isset($config['bank'])) {
+            $this->codeSection = 'BANK_' . intval($config['bank']);
         }
         // page
-        if( isset($config['page'])) {
-            $this->codeSection = 'PAGE_'.intval($config['page']);
+        if (isset($config['page'])) {
+            $this->codeSection = 'PAGE_' . intval($config['page']);
         }
         // code section
         else if (isset($config['section'])) {
@@ -153,8 +154,10 @@ abstract class Datatype
         }
 
         // don't add to assets lst file
-        if( $this->codeFormat == App::FORMAT_C || 
-            (isset($config['add-to-assets-list']) && $config['add-to-assets-list'] === false)) {
+        if (
+            $this->codeFormat == App::FORMAT_C ||
+            (isset($config['add-to-assets-list']) && $config['add-to-assets-list'] === false)
+        ) {
             $this->addToAssetsLst = false;
         }
 
@@ -167,7 +170,7 @@ abstract class Datatype
         }
     }
 
-    public function GetImageFromFile($filename) : \GdImage|false
+    public function GetImageFromFile($filename): \GdImage|false
     {
         // read image file
         $file_extension = substr($filename, -3);
@@ -182,14 +185,14 @@ abstract class Datatype
         }
 
         // convert to true colour
-        if( $this->binaryFormat == App::BINARY_FORMAT_1BIT ) {
+        if ($this->binaryFormat == App::BINARY_FORMAT_1BIT) {
             imagepalettetotruecolor($image);
         }
 
         return $image;
     }
 
-    public function GetName() : string
+    public function GetName(): string
     {
         return $this->name;
     }
@@ -197,7 +200,7 @@ abstract class Datatype
     /**
      * Set name and filename
      */
-    public function SetName($name) : void
+    public function SetName($name): void
     {
         $this->name = $name;
         $this->codeName = App::GetConvertedCodeName($name, $this->codeFormat);
@@ -209,7 +212,7 @@ abstract class Datatype
      * 
      * Set array of data manually
      */
-    public function SetData($data) : void
+    public function SetData($data): void
     {
         $this->data = $data;
     }
@@ -217,7 +220,7 @@ abstract class Datatype
     /**
      * Return array of data
      */
-    public function GetData() : array
+    public function GetData(): array
     {
         return $this->data;
     }
@@ -225,33 +228,33 @@ abstract class Datatype
     /**
      * Return output filename only
      */
-    public function GetOutputFilename(int $bank = 0) : string
+    public function GetOutputFilename(int $bank = 0): string
     {
         // a custom filename is set
-        if( $this->customOutputFilename != '') {
-            
+        if ($this->customOutputFilename != '') {
+
             // using banking
-            if( $this->numBanks > 1) {
+            if ($this->numBanks > 1) {
 
                 $extension_pos = strrpos($this->customOutputFilename, '.');
 
                 return substr($this->customOutputFilename, 0, $extension_pos) .
-                    '_'.$bank . 
+                    '_' . $bank .
                     substr($this->customOutputFilename, $extension_pos);
             }
-            
+
             return $this->customOutputFilename;
         }
 
         // build filename as normal
-        return $this->outputFilename . ( $this->numBanks > 1 ? '_'.$bank : '' ). 
+        return $this->outputFilename . ($this->numBanks > 1 ? '_' . $bank : '') .
             '.' . $this->GetOutputFileExtension();
     }
 
     /**
      * Get output file extension for the current format/language
      */
-    public function GetOutputFileExtension() : string
+    public function GetOutputFileExtension(): string
     {
         switch ($this->codeFormat) {
             case 'c':
@@ -260,7 +263,7 @@ abstract class Datatype
 
             case 'binary':
                 return $this->GetBinaryFileExtension();
-            break;
+                break;
 
             default:
                 return 'asm';
@@ -270,7 +273,7 @@ abstract class Datatype
     /**
      * Return full output filepath
      */
-    public function GetOutputFilepath(int $bank = 0) : string
+    public function GetOutputFilepath(int $bank = 0): string
     {
         return $this->outputFolder . $this->GetOutputFilename($bank);
     }
@@ -278,15 +281,15 @@ abstract class Datatype
     /**
      * Return filepath for an asm reference file
      */
-    public function GetOutputReferenceFilepath(int $bank = 0) : string
+    public function GetOutputReferenceFilepath(int $bank = 0): string
     {
-        return $this->GetOutputFilepath($bank).'.asm';
+        return $this->GetOutputFilepath($bank) . '.asm';
     }
 
     /**
      * Set code section (eg. BANK_3)
      */
-    public function SetCodeSection($section) : void
+    public function SetCodeSection($section): void
     {
         $this->codeSection = $section;
     }
@@ -294,24 +297,22 @@ abstract class Datatype
     /**
      * Set code section to next bank or page
      */
-    public function SetCodeSectionNextBankOrPage() : void
+    public function SetCodeSectionNextBankOrPage(): void
     {
-        if( substr($this->codeSection, 0, 5) == 'PAGE_') {
+        if (substr($this->codeSection, 0, 5) == 'PAGE_') {
             $prefix = 'PAGE_';
-        }
-        else if( substr($this->codeSection, 0, 5) == 'BANK_' ) {
+        } else if (substr($this->codeSection, 0, 5) == 'BANK_') {
             $prefix = 'BANK_';
-        }
-        else {
+        } else {
             return;
         }
-        $this->codeSection = $prefix.intval(explode('_', $this->codeSection)[1])+1;
+        $this->codeSection = $prefix . intval(explode('_', $this->codeSection)[1]) + 1;
     }
 
     /**
      * Set whether to output in C or Assembly
      */
-    public function SetFormat($format) : void
+    public function SetFormat($format): void
     {
         if (in_array($format, self::$formatsSupported)) {
             $this->codeFormat = $format;
@@ -323,10 +324,10 @@ abstract class Datatype
     /**
      * Get codename
      */
-    public function GetCodeName($bank = 0) : string
+    public function GetCodeName($bank = 0): string
     {
-        if( $this->numBanks > 1) {
-            return App::GetConvertedCodeName($this->name.'-'.$bank, $this->codeFormat);
+        if ($this->numBanks > 1) {
+            return App::GetConvertedCodeName($this->name . '-' . $bank, $this->codeFormat);
         }
         return $this->codeName;
     }
@@ -334,11 +335,11 @@ abstract class Datatype
     /**
      * Get code section
      */
-    public function GetCodeSection() : string
+    public function GetCodeSection(): string
     {
         return $this->codeSection;
     }
-    
+
     /**
      * 
      * Get code for screen in currently set language
@@ -382,14 +383,14 @@ abstract class Datatype
     /**
      * Get code in binary format
      */
-    public function WriteBinaryFile($data, $filename, $start = 0, $end = false) : int
+    public function WriteBinaryFile($data, $filename, $start = 0, $end = false): int
     {
-        if( $end === false ) {
+        if ($end === false) {
             $end = sizeof($data);
         }
 
-        if(!is_dir(substr($filename, 0, strrpos($filename, '/')))) {
-            $this->AddError('Parent directory for "'.$filename.'" doesn\'t exist');
+        if (!is_dir(substr($filename, 0, strrpos($filename, '/')))) {
+            $this->AddError('Parent directory for "' . $filename . '" doesn\'t exist');
             return -1;
         }
 
@@ -402,17 +403,17 @@ abstract class Datatype
             $count = 0;
 
             // loop through data
-            for($i=$start;$i<$end;$i++) {
+            for ($i = $start; $i < $end; $i++) {
 
                 $value = $data[$i];
 
                 // value is an array - eg. array split into attributes
-                if( is_array($value)) {
+                if (is_array($value)) {
 
                     // loop through array
-                    foreach($value as $byte) {
+                    foreach ($value as $byte) {
 
-                        if( is_array($byte)) {
+                        if (is_array($byte)) {
                             $byte = implode('', $byte);
                         }
 
@@ -426,7 +427,6 @@ abstract class Datatype
                     fwrite($fp, pack("C", $value));
                     $count++;
                 }
-
             }
             $this->AddMessage('Wrote ' . $count . ' bytes to binary file.');
         }
@@ -434,7 +434,7 @@ abstract class Datatype
         // return number of bytes written
         return $count;
     }
-    
+
     /**
      * Get code in assembly format
      */
@@ -461,7 +461,7 @@ abstract class Datatype
     /**
      * Write to output file
      */
-    public function WriteFile() : void
+    public function WriteFile(): void
     {
         // use binaries for zx0 compression
         if ($this->compression == App::COMPRESSION_ZX0) {
@@ -471,23 +471,23 @@ abstract class Datatype
         // number of banks
         $this->numBanks = ceil(sizeof($this->data) / App::BANK_LENGTH_BYTES);
 
-         // binary
-        if( $this->codeFormat == App::FORMAT_BINARY) {
+        // binary
+        if ($this->codeFormat == App::FORMAT_BINARY) {
 
             $data = $this->GetData();
 
             // loop through banks
-            for($bank=0;$bank<$this->numBanks;$bank++) {
+            for ($bank = 0; $bank < $this->numBanks; $bank++) {
 
                 $dataFilename = $this->GetOutputFilepath($bank);
 
                 // write this section of the binary file
-                if( $this->numBanks > 1) {
+                if ($this->numBanks > 1) {
 
                     $start = $bank * App::BANK_LENGTH_BYTES;
-                    
-                    if( $bank < $this->numBanks-1 ) {
-                        $end = ($bank+1) * App::BANK_LENGTH_BYTES;
+
+                    if ($bank < $this->numBanks - 1) {
+                        $end = ($bank + 1) * App::BANK_LENGTH_BYTES;
                     } else {
                         $end = sizeof($this->data);
                     }
@@ -499,7 +499,7 @@ abstract class Datatype
                     $numBytesWritten = $this->WriteBinaryFile($data, $dataFilename);
                 }
 
-                if( $numBytesWritten <= 0) {
+                if ($numBytesWritten <= 0) {
                     return;
                 }
 
@@ -509,8 +509,8 @@ abstract class Datatype
                 }
 
                 // create binary reference file
-                if( $this->createReferenceFile === true) {
-                    
+                if ($this->createReferenceFile === true) {
+
                     $asmReference = $this->GetBinaryReferenceAsmFile($dataFilename, $bank, $numBytesWritten);
                     file_put_contents($this->GetOutputReferenceFilepath($bank), $asmReference);
                 }
@@ -521,7 +521,7 @@ abstract class Datatype
                 }
 
                 // move to the next bank
-                if( $this->numBanks > 0) {
+                if ($this->numBanks > 0) {
                     $this->SetCodeSectionNextBankOrPage();
                 }
             }
@@ -537,25 +537,24 @@ abstract class Datatype
         }
     }
 
-    public function AddToAssetsLst($bank = 0) : void
+    public function AddToAssetsLst($bank = 0): void
     {
-        if( $this->codeFormat == App::FORMAT_BINARY) {
+        if ($this->codeFormat == App::FORMAT_BINARY) {
 
-            if( $this->createReferenceFile === true) {
+            if ($this->createReferenceFile === true) {
                 App::AddOutputFile($this->GetOutputReferenceFilepath($bank));
             }
-
         } else {
-            App::AddOutputFile($this->GetOutputFilepath($bank)) . CR;
+            App::AddOutputFile($this->GetOutputFilepath($bank));
         }
     }
 
-    public function DoZX0Compression(string $dataFilename, $bank) : void
+    public function DoZX0Compression(string $dataFilename, $bank): void
     {
         // reference file
-        if( $this->createReferenceFile === true) {
+        if ($this->createReferenceFile === true) {
 
-            $asmReference = $this->GetBinaryReferenceAsmFile($dataFilename, $bank);
+            $asmReference = $this->GetBinaryReferenceAsmFile($dataFilename . '.zx0', $bank);
             file_put_contents($this->GetOutputReferenceFilepath(), $asmReference);
         }
 
@@ -568,7 +567,7 @@ abstract class Datatype
         );
     }
 
-    public function GetHeader() : string
+    public function GetHeader(): string
     {
         switch ($this->codeFormat) {
             case App::FORMAT_C:
@@ -581,7 +580,7 @@ abstract class Datatype
     /**
      * Get C header
      */
-    public function GetHeaderC() : string
+    public function GetHeaderC(): string
     {
         return '// file generated by Spectrum Asset Maker' . CR .
             '// https://github.com/clebin/SpectrumAssetMaker' . CR . CR;
@@ -590,22 +589,22 @@ abstract class Datatype
     /**
      * Get header for asm reference to binary file (for zx0)
      */
-    public function GetBinaryReferenceAsmFile($dataFilename, $bank, $size = 0) : string
+    public function GetBinaryReferenceAsmFile($dataFilename, $bank, $size = 0): string
     {
         return '; file generated by Spectrum Asset Maker' . CR .
             '; https://github.com/clebin/SpectrumAssetMaker' . CR . CR .
             'section ' . $this->GetCodeSection() . CR . CR .
             'public ' . $this->GetCodeName($bank)  . CR .
-            'public ' . $this->GetCodeName($bank).'_end' . CR . CR .
+            'public ' . $this->GetCodeName($bank) . '_end' . CR . CR .
             $this->GetCodeName($bank) . ':' . CR . CR .
-            '        BINARY "' . $dataFilename . '"'.($size > 0 ? ' ; '. $size.' bytes' : '') . CR . CR .
-            $this->GetCodeName($bank).'_end:' . CR;
+            '        BINARY "' . $dataFilename . '"' . ($size > 0 ? ' ; ' . $size . ' bytes' : '') . CR . CR .
+            $this->GetCodeName($bank) . '_end:' . CR;
     }
 
     /**
      * Get standard asm header
      */
-    public function GetHeaderAsm() : string
+    public function GetHeaderAsm(): string
     {
         return '; file generated by Spectrum Asset Maker' . CR .
             '; https://github.com/clebin/SpectrumAssetMaker' . CR . CR .
@@ -615,15 +614,15 @@ abstract class Datatype
     /**
      * Get the file extension for a binary file
      */
-    public function GetBinaryFileExtension() : string
+    public function GetBinaryFileExtension(): string
     {
         return $this->binaryFileExtension;
     }
-    
+
     /**
      * Process the file
      */
-    public function Process() : void
+    public function Process(): void
     {
         // check if everything's ok
         if ($this->isValid === true) {
@@ -645,7 +644,7 @@ abstract class Datatype
         $b = $pixel & 0xFF;
 
         // completely transparent is always paper
-        if( $alpha == 127 ) {
+        if ($alpha == 127) {
             return true;
         }
 
@@ -658,15 +657,18 @@ abstract class Datatype
         return false;
     }
 
-    public function AddMessage($message) {
+    public function AddMessage($message)
+    {
         App::OutputMessage($message, self::DATATYPE_NAME, $this->name);
     }
 
-    public function AddError($message) {
+    public function AddError($message)
+    {
         App::AddError($message, self::DATATYPE_NAME, $this->name);
     }
 
-    public function AddWarning($message) {
+    public function AddWarning($message)
+    {
         App::AddWarning($message, self::DATATYPE_NAME, $this->name);
     }
 }
