@@ -115,7 +115,6 @@ class Tile
             }
 
             if( $prop['length'] > 1 ) {
-                echo 'hmm'.$prop['name'].' - '.$value.CR;
                 $str .= str_pad(decbin($value), $prop['length'], '0', STR_PAD_LEFT);
             } else {
                 $str .= ($value == true || $value == 1 ? '1' : '0');
