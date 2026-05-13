@@ -572,7 +572,8 @@ abstract class Datatype
         switch ($this->codeFormat) {
             case App::FORMAT_C:
                 return $this->GetHeaderC();
-            default;
+                
+            default:
                 return $this->GetHeaderAsm();
         }
     }

@@ -2,6 +2,8 @@
 
 namespace ClebinGames\SpectrumAssetMaker;
 
+use ClebinGames\SpectrumAssetMaker\Configuration;
+
 /**
  * Spectrum Asset Maker
  * Chris Owen 2025
@@ -15,8 +17,8 @@ namespace ClebinGames\SpectrumAssetMaker;
 class App
 {
     // app details
-    public const VERSION = '2.0b1';
-    public const RELEASE_YEAR = '2025';
+    public const VERSION = '2.0b2';
+    public const RELEASE_YEAR = '2026';
 
     // output formats
     public const FORMAT_ASM = 'asm';
@@ -285,7 +287,7 @@ class App
     /**
      * Start the tool
      */
-    public static function Run($options) : void
+    public static function RunCommandLine(mixed $options) : void
     {
         self::$options = $options;
 

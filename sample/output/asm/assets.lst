@@ -3,7 +3,6 @@ array-data/car-models.asm
 blank-data/tileset.asm
 graphics-next/gunsight.asm
 graphics/font.asm
-palettes-next/palette1.asm
 sprites/player-sprite.asm
 tilemaps/level-1-bandits.asm
 tilemaps/level-1-collectables.asm
@@ -14,10 +13,5 @@ tilemaps/level-1-slopes.asm
 tilemaps/level-1-tilemap-paths.asm
 tilemaps/level-1-tilemap.asm
 tilesets/game-tiles-properties.asm
-./output/binary/graphics/canal-with-palette.nxi
-./output/binary/graphics/canal.nxi
-./output/binary/graphics/font-compressed.asm
-./output/binary/palettes-next/palette2.pal
-./output/binary/sprites-next/gunsight-4bit.spr
-./output/binary/sprites-next/gunsight-8bit.spr
+./output/binary/graphics/font-compressed.bin.asm
 sample-text.asm

@@ -1,0 +1,17 @@
+{
+    "name": "clebingames/spectrum-asset-maker",
+    "description": "A tool to automatically create all kinds of assets for ZX Spectrum and Spectrum Next development.",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "ClebinGames\\SpectrumAssetMaker\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Chris Owen",
+            "email": "795836+clebin@users.noreply.github.com"
+        }
+    ],
+    "require": {}
+}
