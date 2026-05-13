@@ -11,3 +11,6 @@ sample/output/c/*.c
 sample/output/c/tilemaps/*.c
 sample/output/c/object-maps/*.c
 /vendor/
+
+twig_cache/*
+!twig_cache/.gitignore
