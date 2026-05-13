@@ -11,10 +11,11 @@ class AssetMakerWeb
     public static function Initialise()
     {
         // initialise twig
-        $loader = new \Twig\Loader\FilesystemLoader('../../templates');
+        $loader = new \Twig\Loader\FilesystemLoader('../templates');
 
         self::$twig = new \Twig\Environment($loader, [
-            'cache' => '../../twig_cache'
+            'cache' => '../twig_cache',
+            'auto_reload' => true
         ]);
     }
 

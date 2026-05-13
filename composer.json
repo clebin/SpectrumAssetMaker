@@ -13,5 +13,7 @@
             "email": "795836+clebin@users.noreply.github.com"
         }
     ],
-    "require": {}
+    "require": {
+        "twig/twig": "^3.24"
+    }
 }

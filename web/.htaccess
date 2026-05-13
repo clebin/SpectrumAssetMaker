@@ -1,0 +1,4 @@
+
+Options +FollowSymLinks +Includes -MultiViews -Indexes
+DirectoryIndex index.php
+AddType application/x-httpd-php .php
